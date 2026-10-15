@@ -1,0 +1,9 @@
+#!/usr/bin/env python3
+"""Launcher: runs the package in ../src without installing anything."""
+import pathlib
+import sys
+
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1] / "src"))
+from weatherdeck.cli import main  # noqa: E402
+
+sys.exit(main())

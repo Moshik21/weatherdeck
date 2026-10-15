@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en" data-layout="tv" data-theme="day">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self'; font-src 'self'; script-src 'self'; connect-src 'self'">
+<title>Fleet Command</title>
+<link rel="stylesheet" href="css/command.css">
+</head>
+<body>
+<!-- Concept A, 16-bit strategy command screen. Read-only wall display: nothing here is a button
+     except the hidden dev switcher. Data comes only from fixture.json (wrapped as fixture.js). -->
+<main id="stage" class="stage" aria-live="polite" aria-busy="true">
+  <p class="boot">Fleet command is starting.</p>
+</main>
+<nav id="dev" class="dev" hidden aria-label="Scenario switcher (development only)"></nav>
+<script src="fixture.js"></script>
+<script src="js/model.js"></script>
+<script src="js/sprites.js"></script>
+<script src="js/render.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

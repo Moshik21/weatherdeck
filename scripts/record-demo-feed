@@ -1,0 +1,62 @@
+#!/usr/bin/env python3
+"""Record the synthetic demo as a few feed frames: examples/static-demo/recorded-feed.json (what build-static-demo ships).
+
+    python3 scripts/record-demo-feed [--scenario sea-life] [--at 5,140,205] [--theme ship-deck] [--out FILE]
+
+Runs the demo host (synthetic sources only) on a free local port with a throwaway data folder, reads /api/view at
+each --at second (counted from the start) and saves what the host answered, unchanged, with the host clock of each
+answer. Nothing is edited or invented: a frame is exactly one answer of the real code path to the demo sources, except
+one label: the host's own name (server.host) is replaced by "demo host", so a recording never carries the name of the
+machine it was made on.
+Takes as long as the last --at. Standard library only.
+"""
+import argparse
+import email.utils
+import json
+import socket
+import subprocess
+import sys
+import tempfile
+import time
+import urllib.request
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
+    ap.add_argument("--scenario", default="sea-life")
+    ap.add_argument("--theme", default="ship-deck", help="the theme the page opens in (the ship deck draws the weather)")
+    ap.add_argument("--at", default="5,140,205", help="seconds after the start of the demo, comma separated, increasing")
+    ap.add_argument("--out", default=str(ROOT / "examples" / "static-demo" / "recorded-feed.json"))
+    args = ap.parse_args()
+    times = [float(x) for x in args.at.split(",")]
+    with socket.socket() as s:
+        s.bind(("127.0.0.1", 0))
+        port = s.getsockname()[1]
+    with tempfile.TemporaryDirectory() as data:
+        conf = Path(data) / "config.json"
+        conf.write_text(json.dumps({"theme": {"name": args.theme}}))
+        proc = subprocess.Popen([sys.executable, str(ROOT / "bin" / "weatherdeck"), "--data", data, "--config", str(conf), "--demo", "run", "--port", str(port), "--scenario", args.scenario],
+                                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        frames = []
+        try:
+            start = time.time()
+            for at in times:
+                time.sleep(max(0, start + at - time.time()))
+                with urllib.request.urlopen(f"http://127.0.0.1:{port}/api/view", timeout=10) as resp:
+                    served = email.utils.parsedate_to_datetime(resp.headers["Date"]).timestamp()
+                    doc = json.loads(resp.read().decode())
+                frames.append({"after_s": at, "served_at": served, "view": doc["view"], "server": dict(doc["server"], host="demo host")})
+                print(f"frame at {at:g} s recorded")
+        finally:
+            proc.terminate()
+            proc.wait(timeout=10)
+    Path(args.out).write_text(json.dumps({"scenario": args.scenario, "frames": frames}, indent=1) + "\n")
+    print(f"{args.out} ({len(frames)} frames)")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

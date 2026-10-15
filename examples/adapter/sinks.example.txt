@@ -1,0 +1,14 @@
+# One dashboard host per line: name  transport  target  credential
+# Start a line with ! to switch that host off without deleting it.
+# A host that is down is normal: the adapter logs it once and retries with backoff.
+#
+# The first line works as it is on a fresh machine: a host you started on this machine
+# (`weatherdeck run`) with no tokens accepts pushes from this machine with no credential (`-`).
+local-board  http   http://127.0.0.1:8787   -
+#
+# Once the host has any token (`weatherdeck token new <source-id>`), every push needs one: save the
+# token it printed to a file, put the file in the credential column, and drop the line above.
+#local-board http   http://127.0.0.1:8787   token-file:~/.config/weatherdeck/local-board.token
+# A token-file line whose file does not exist is reported as "token file not found: <path>".
+!laptop      http   http://laptop.example:8787   token-file:~/.config/weatherdeck/laptop.token
+# Same machine as the host, no network:  kiosk  local  /path/to/weatherdeck/bin/weatherdeck  -

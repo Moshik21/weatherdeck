@@ -1,0 +1,16 @@
+{
+  "schema": "lookout.card",
+  "schema_version": "1.0",
+  "tool": "site-doctor",
+  "title": "Site Doctor",
+  "status": "warn",
+  "headline": "2 findings, 1 repair plan waits for you",
+  "numbers": [
+    { "label": "findings", "value": 2 },
+    { "label": "critical", "value": 0 },
+    { "label": "plans waiting", "value": 1 }
+  ],
+  "updated_at": "2026-01-01T09:00:00Z",
+  "mode": "advice-only",
+  "stale_after_s": 600
+}

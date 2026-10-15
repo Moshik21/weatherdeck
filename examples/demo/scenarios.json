@@ -1,0 +1,406 @@
+{
+ "note": "Named changes to the synthetic demo sources, applied before replay: `weatherdeck run --demo --scenario NAME` or `weatherdeck replay --scenario NAME`. Each patch is keyed by source id; a key is a dotted path where a list element is named by its id ('items.bo-installer.state'), and a key starting with '+' appends to a list. Times are retimed to now like the rest of the fixture. A scenario may also run `steps` while it plays: each applies its patch `after_s` seconds from the start (the string \"@now\" is the time it applies), a key starting with '^' puts entries first (the newest, within the feed's cap), `silence` stops a source and `resume` starts it again; `silent_after_s` overrides the manifest's.",
+ "scenarios": {
+  "all-clear": {
+   "what": "Nothing waits on the viewer: no calls, the approval already merged.",
+   "patch": {
+    "atlas-main": {
+     "attention": [],
+     "items.iw-export.state": "running",
+     "items.iw-export.needs_you": false,
+     "items.iw-export.flags": [],
+     "items.iw-export.progress.current.activity": "active",
+     "items.iw-export.progress.current.waiting_since": null,
+     "items.iw-export.progress.current.elapsed_s": 120,
+     "items.tw-feed.handoff": {"state": "complete", "since": "2026-10-08T19:20:00Z"}
+    }
+   }
+  },
+  "trouble": {
+   "what": "A critical on Borealis: its signing service is down, the installer build failed and the pathfinding run is blocked behind it.",
+   "patch": {
+    "borealis-lanes": {
+     "+attention": [
+      {"id": "service:signing", "kind": "service", "severity": "critical", "title": "Package signing service is down",
+       "detail": "The installer build cannot sign its package", "since": "2026-10-08T19:24:10Z", "machine": "borealis",
+       "item": "bo-installer", "group": null, "link": null, "how": "Restart the signing service on Borealis"}
+     ],
+     "items.bo-installer.state": "failed",
+     "items.bo-installer.state_detail": "signing failed: the service did not answer",
+     "items.bo-pathing.state": "blocked",
+     "items.bo-pathing.state_detail": "blocked on the installer build"
+    }
+   }
+  },
+  "overflow": {
+   "what": "Eight lanes off track, more than the TV log holds: the log shows five and counts the rest.",
+   "patch": {
+    "atlas-main": {
+     "items.sf-lobby.progress.current.elapsed_s": 3600,
+     "items.sf-lobby.flags": ["running_long"]
+    },
+    "borealis-lanes": {
+     "items.bo-installer.state": "failed",
+     "items.bo-installer.state_detail": "signing failed: the service did not answer",
+     "items.bo-pathing.state": "blocked",
+     "items.bo-pathing.state_detail": "blocked on the installer build",
+     "+items": [
+      {"id": "bo-docs", "owner": "borealis-lanes", "relayed": false, "group": "tidewatch", "machine": "borealis", "kind": "task",
+       "title": "Docs site: search index", "doing": "index build failed twice", "state": "failed", "state_detail": "index build failed twice",
+       "started_at": "2026-10-08T18:40:00Z", "progress": {"basis": "coarse", "percent_floor": null, "percent_ceiling": null, "regressed": false,
+       "reason": null, "current": null, "steps": []}, "flags": []}
+     ]
+    },
+    "cinder-lanes": {
+     "items.ci-index.state": "unknown",
+     "items.ci-index.doing": "state file unreadable for 14 min",
+     "items.ci-replay.flags": ["running_long"],
+     "+items": [
+      {"id": "ci-assets", "owner": "cinder-lanes", "relayed": false, "group": "skyforge", "machine": "cinder", "kind": "task",
+       "title": "Asset bake: terrain atlas", "doing": "waiting for the art export", "state": "waiting", "state_detail": "waiting for the art export",
+       "started_at": "2026-10-08T18:55:00Z", "needs_you": false, "progress": {"basis": "coarse", "percent_floor": null, "percent_ceiling": null,
+       "regressed": false, "reason": null, "current": null, "steps": []}, "flags": []}
+     ]
+    }
+   }
+  },
+  "machine-health": {
+   "what": "Borealis is draining (its check failed) and Cinder's health beat stopped while its reporter lives on: a draining card and a lost-host critical.",
+   "patch": {
+    "borealis-lanes": {
+     "machines.borealis.health": {"state": "draining", "since": "2026-10-08T19:20:00Z", "reason": "disk check failed: Data below 80 GB"}
+    },
+    "cinder-lanes": {
+     "machines.cinder.beat.age_s": 1100
+    }
+   }
+  },
+  "sea-life": {
+   "what": "Sea life (0.1.8): every station staffed, then, one push at a time, each creature's news: a lane lands (a longboat, dolphins escorting), a sailor walks to a new station, a release goes live (the whale), Borealis goes becalmed, two landings meet in one longboat, Cinder goes quiet (its gulls fly off, then fog) and comes back (the gulls return), a new call, a second release inside the hour (said in words), the wind returning, a critical, and a landing during it (said in words). About four minutes at the 10 s demo interval.",
+   "silent_after_s": {"cinder-lanes": null},
+   "patch": {
+    "borealis-lanes": {"items.bo-pathing.phase": "verify", "items.bo-installer.phase": "build"},
+    "cinder-lanes": {"items.ci-index.phase": "plan", "items.ci-replay.phase": "build"}
+   },
+   "steps": [
+    {"after_s": 20, "what": "the ready-check lane lands: a longboat rows it home, dolphins escort it", "patch": {"atlas-main": {
+     "items.sf-lobby.state": "done", "items.sf-lobby.handoff": {"state": "complete", "since": "@now"},
+     "^done": [{"id": "sf-lobby", "owner": "atlas-main", "group": "skyforge", "title": "Lobby: ready-check countdown", "via": "pull request", "link": null, "at": "@now"}]}}},
+    {"after_s": 35, "what": "fog of war moves from test to push: its sailor walks from inspection to the signal staff", "patch": {"atlas-main": {
+     "items.sf-fog.progress.current.step": "push"}}},
+    {"after_s": 45, "what": "Skyforge 0.15 goes live: a whale breaches", "patch": {"atlas-main": {
+     "groups.skyforge.checkpoint.live": {"version": "0.15", "since": "@now"}}}},
+    {"after_s": 60, "what": "both Borealis lanes have been quiet for over 40 min: becalmed", "patch": {"borealis-lanes": {
+     "items.bo-pathing.progress.current": {"step": "working", "elapsed_s": null, "typical_s": null, "p90_s": null, "round": null, "activity": "quiet", "last_activity_age_s": 2520, "waiting_since": null},
+     "items.bo-installer.progress.current": {"step": "working", "elapsed_s": null, "typical_s": null, "p90_s": null, "round": null, "activity": "quiet", "last_activity_age_s": 2700, "waiting_since": null}}}},
+    {"after_s": 75, "what": "two lanes land in one push: one longboat with two chests (dolphins come once in 10 min)", "patch": {"atlas-main": {
+     "^done": [{"id": "sf-tooltips", "owner": "atlas-main", "group": "skyforge", "title": "Tooltips: wrap long unit names", "via": "pull request", "link": null, "at": "@now"},
+               {"id": "iw-margins", "owner": "atlas-main", "group": "inkwell", "title": "Inkwell: mirror margins in print", "via": "pull request", "link": null, "at": "@now"}]}}},
+    {"after_s": 90, "what": "Cinder stops reporting: its gulls fly off when it goes late, fog follows when it goes stale", "silence": ["cinder-lanes"]},
+    {"after_s": 100, "what": "a new call: the crow flies in (and, with sound on, two bells)", "patch": {"atlas-main": {
+     "+attention": [{"id": "decision:sf-budget", "kind": "decision", "severity": "action", "title": "Skyforge: raise the pathfinding time budget to 6 ms?", "detail": "The large-map suite needs 5.4 ms a tick; the budget is 4 ms.", "since": "@now", "machine": "atlas", "item": null, "group": "skyforge", "link": null, "how": "Answer in the team chat", "say": "sf-budget: raise to 6 ms"}]}}},
+    {"after_s": 150, "what": "Cinder reports again: the gulls come back", "resume": ["cinder-lanes"]},
+    {"after_s": 170, "what": "Inkwell 1.9 goes live inside the hour: no second whale; the bar says it in words", "patch": {"atlas-main": {
+     "groups.inkwell.checkpoint.live": {"version": "1.9", "since": "@now"}}}},
+    {"after_s": 185, "what": "the wind returns on Borealis", "patch": {"borealis-lanes": {
+     "items.bo-pathing.progress.current.activity": "active", "items.bo-installer.progress.current.activity": "active"}}},
+    {"after_s": 200, "what": "a critical on Borealis: the storm (and, with sound on, thunder)", "patch": {"borealis-lanes": {
+     "+attention": [{"id": "service:signing", "kind": "service", "severity": "critical", "title": "Package signing service is down", "detail": "The installer build cannot sign its package", "since": "@now", "machine": "borealis", "item": "bo-installer", "group": null, "link": null, "how": "Restart the signing service on Borealis"}]}}},
+    {"after_s": 210, "what": "a lane lands while the critical is open: no longboat, the bar says it in words", "patch": {"atlas-main": {
+     "^done": [{"id": "iw-toc", "owner": "atlas-main", "group": "inkwell", "title": "Inkwell: table of contents links", "via": "pull request", "link": null, "at": "@now"}]}}},
+    {"after_s": 230, "what": "the critical clears", "patch": {"borealis-lanes": {"attention": []}}}
+   ]
+  },
+  "honest-board": {
+   "what": "The honest board (0.2.0): rows with a project chip and a one-line summary; a lane paused on a person and one held at a gate until a set time, counted as waiting and drawn calmly; allowance chips that name provider, account, window, percent left and reset; a note in the Logbook; and Cinder reserved for two hours: it goes quiet after a minute and reads Reserved, never Silent, and its gulls stay put.",
+   "silent_after_s": {"cinder-lanes": 60},
+   "patch": {
+    "atlas-main": {"items.iw-export.waiting_on": "human"},
+    "borealis-lanes": {"items.bo-pathing.state": "paused", "items.bo-pathing.waiting_on": "gate", "items.bo-pathing.until": "2026-10-08T21:00:00Z",
+     "items.bo-pathing.summary": "held at the performance gate until the reference rig is free"},
+    "cinder-lanes": {"machines.cinder.health": {"state": "reserved", "since": "2026-10-08T19:00:00Z", "reason": "held for a hardware test", "until": "2026-10-08T21:30:00Z"},
+     "events": [{"at": 1791487850, "item": null, "kind": "note", "text": "cinder-lanes: lane history is not recorded on this source, so start and merge times are missing (turn on its event log)"}]}
+   }
+  },
+  "gaps": {
+   "what": "Black holes (0.3.0): a lane whose agent's session ended twenty minutes ago (needs action) beside one idle between turns (fine); work held by an upstream maintainer for two days and a review for five hours; a test floor queue backed up for over an hour; a deploy four merges behind; a hold that ends tomorrow and Cinder's reservation ending tonight; the waiting number's answer 12 minutes old and an allowance answer past its limit; the allowance counting down to its projected exhaustion.",
+   "patch": {
+    "atlas-main": {
+     "items.sf-fog.agent": {
+      "state": "ended",
+      "since": "2026-10-08T19:11:40Z",
+      "as_of": "2026-10-08T19:31:30Z",
+      "reason": "the session closed without a final report"
+     },
+     "items.sf-lobby.agent": {
+      "state": "alive",
+      "since": "2026-10-08T18:40:00Z",
+      "as_of": "2026-10-08T19:31:30Z"
+     },
+     "+items": [
+      {
+       "id": "hb-upstream-cache",
+       "owner": "atlas-main",
+       "group": "harbor",
+       "machine": "atlas",
+       "kind": "task",
+       "project": "Harbor",
+       "title": "Cache warm-up for cold starts",
+       "summary": "PR open upstream, approved by CI, waiting for a maintainer",
+       "state": "waiting",
+       "waiting_on": "external",
+       "waiting_for": "upstream maintainer",
+       "waiting_since": "2026-10-06T15:31:40Z",
+       "state_since": "2026-10-06T15:31:40Z",
+       "started_at": "2026-10-06T09:00:00Z",
+       "link": {
+        "url": "https://example.com/harbor/pulls/218",
+        "label": "pull request"
+       }
+      },
+      {
+       "id": "iw-spell-review",
+       "owner": "atlas-main",
+       "group": "inkwell",
+       "machine": "atlas",
+       "kind": "task",
+       "project": "Inkwell",
+       "title": "Spell-check rules for code blocks",
+       "summary": "review requested from the docs team",
+       "state": "waiting",
+       "waiting_on": "external",
+       "waiting_for": "a reviewer",
+       "waiting_since": "2026-10-08T14:31:40Z",
+       "started_at": "2026-10-08T10:00:00Z"
+      }
+     ],
+     "next.iw-dict.until": "2026-10-09",
+     "next.iw-dict.kind": "held",
+     "next.iw-dict.reason": "held until the dictionary format is settled",
+     "queues": [
+      {
+       "id": "build",
+       "label": "Build",
+       "machine": "atlas",
+       "length": 0,
+       "held": 2,
+       "cap": 2,
+       "as_of": "2026-10-08T19:31:35Z",
+       "holders": [
+        {
+         "label": "sf-lobby",
+         "since": "2026-10-08T19:25:00Z"
+        },
+        {
+         "label": "bo-pathing",
+         "since": "2026-10-08T19:29:00Z"
+        }
+       ]
+      },
+      {
+       "id": "floor",
+       "label": "Test floor",
+       "machine": "atlas",
+       "length": 6,
+       "oldest_wait_s": 4800,
+       "held": 3,
+       "cap": 3,
+       "as_of": "2026-10-08T19:31:35Z",
+       "holders": [
+        {
+         "label": "sf-fog",
+         "since": "2026-10-08T18:50:00Z"
+        },
+        {
+         "label": "iw-export",
+         "since": "2026-10-08T19:02:00Z"
+        },
+        {
+         "label": "tw-feed",
+         "since": "2026-10-08T19:20:00Z"
+        }
+       ]
+      },
+      {
+       "id": "device",
+       "label": "Device lab",
+       "machine": "atlas",
+       "length": 1,
+       "oldest_wait_s": 240,
+       "held": 1,
+       "cap": 1,
+       "as_of": "2026-10-08T19:31:35Z"
+      }
+     ],
+     "deploys": [
+      {
+       "id": "harbor-web",
+       "label": "Harbor web",
+       "group": "harbor",
+       "deployed": {
+        "version": "a1b2c3d4",
+        "at": "2026-10-06T08:00:00Z"
+       },
+       "head": {
+        "version": "e5f6a7b8",
+        "at": "2026-10-08T16:00:00Z"
+       },
+       "behind": 4,
+       "oldest_unshipped_at": "2026-10-06T21:31:40Z",
+       "as_of": "2026-10-08T19:31:30Z"
+      }
+     ],
+     "waiting": {
+      "basis": "answer",
+      "verified": true,
+      "as_of": "2026-10-08T19:19:40Z"
+     },
+     "collectors.queue.as_of": "2026-10-08T19:06:40Z",
+     "collectors.queue.label": "Ahead list",
+     "collectors.queue.stale_after_s": 900,
+     "collectors.attention.label": "Calls"
+    },
+    "cinder-lanes": {
+     "machines.cinder.health": {
+      "state": "reserved",
+      "since": "2026-10-08T19:00:00Z",
+      "reason": "held for a hardware test",
+      "until": "2026-10-08T23:30:00Z"
+     }
+    }
+   }
+  },
+  "version-skew": {
+   "what": "Three machines at different adapter versions: Atlas on the newest, Borealis two releases behind (flagged, with the reason), Cinder never said which version it runs (shown as version unknown, never guessed).",
+   "patch": {
+    "atlas-main": {
+     "producer.name": "demo-adapter",
+     "producer.version": "1.4",
+     "producer.host": "atlas-box",
+     "producer.pusher": {"name": "demo-pusher", "version": "2.0"},
+     "producer.meaning": [
+      {"since": "1.3", "effect": "it sends no agent state, so no agent at the work cannot be said for its lanes"},
+      {"since": "1.4", "effect": "a meter that is switched off reads as failed, not as off"}
+     ]
+    },
+    "borealis-lanes": {
+     "producer.name": "demo-adapter",
+     "producer.version": "1.2",
+     "producer.host": "borealis-box",
+     "producer.pusher": {"name": "demo-pusher", "version": "1.9"}
+    },
+    "cinder-lanes": {
+     "producer.name": "demo-adapter",
+     "producer.version": null
+    }
+   }
+  },
+  "horizon": {
+   "what": "The far horizon and the stern windows: five items next (a gate due today, a hold due tomorrow, one queued for a later date, two undated), so three islands are drawn and the bar counts every source's; each lane's agent says alive, ended (dark glass, still inside the grace before AGENT GONE) or nothing (a shuttered window). After 45 s the ahead list's report goes stale (the islands become dotted outlines), after 90 s Atlas stops reporting (its islands and windows fog over).",
+   "patch": {
+    "atlas-main": {
+     "next": [
+      {"id": "hz-ship", "group": "skyforge", "title": "Cut the weekly build", "kind": "gate", "blocked_by": [], "reason": "waits for the review gate", "until": "2026-10-08", "filed": "2026-10-06"},
+      {"id": "hz-notes", "group": "inkwell", "title": "Release notes", "kind": "held", "blocked_by": [], "reason": "held until tomorrow", "until": "2026-10-09", "filed": "2026-10-05"},
+      {"id": "hz-later", "group": "skyforge", "title": "Profile the render box", "kind": "queued", "blocked_by": [], "reason": "next free slot", "until": "2026-10-12", "filed": "2026-10-07"},
+      {"id": "hz-q1", "group": "skyforge", "title": "Tech tree: tier 3 screen", "kind": "queued", "blocked_by": [], "reason": "starts after the lobby lands", "until": null, "filed": "2026-10-07"},
+      {"id": "hz-q2", "group": "inkwell", "title": "Custom dictionary import", "kind": "queued", "blocked_by": [], "reason": "waits for a free slot", "until": null, "filed": "2026-10-08"}
+     ],
+     "items.sf-fog.agent": {"state": "alive", "since": "2026-10-08T18:40:00Z", "as_of": "2026-10-08T19:31:30Z"},
+     "items.sf-lobby.agent": {"state": "ended", "since": "2026-10-08T19:29:40Z", "as_of": "2026-10-08T19:31:30Z", "reason": "the session closed"}
+    },
+    "borealis-lanes": {
+     "items.bo-pathing.agent": {"state": "alive", "since": "2026-10-08T18:00:00Z", "as_of": "2026-10-08T19:31:30Z"},
+     "items.bo-installer.agent": {"state": "alive", "since": "2026-10-08T18:00:00Z", "as_of": "2026-10-08T19:31:30Z"}
+    },
+    "cinder-lanes": {
+     "items.ci-replay.agent": {"state": "gone", "since": "2026-10-08T19:30:40Z", "as_of": "2026-10-08T19:31:30Z"}
+    }
+   },
+   "steps": [
+    {"after_s": 45, "what": "the ahead list's report goes stale: the islands become dotted outlines", "patch": {"atlas-main": {"collectors.queue.status": "stale", "collectors.queue.as_of": "2026-10-08T19:06:40Z"}}},
+    {"after_s": 90, "what": "Atlas stops reporting: its islands and windows fog over", "silence": ["atlas-main"]}
+   ]
+  },
+  "horizon-open": {
+   "what": "The far horizon and the stern windows on the open sea: the `horizon` scenario with nothing waiting on the viewer (the `all-clear` patch), so the sea takes the whole upper area and up to three ships sail at full scale.",
+   "patch": {
+    "atlas-main": {
+     "next": [{"id": "hz-ship", "group": "skyforge", "title": "Cut the weekly build", "kind": "gate", "blocked_by": [], "reason": "waits for the review gate", "until": "2026-10-08", "filed": "2026-10-06"}, {"id": "hz-notes", "group": "inkwell", "title": "Release notes", "kind": "held", "blocked_by": [], "reason": "held until tomorrow", "until": "2026-10-09", "filed": "2026-10-05"}, {"id": "hz-later", "group": "skyforge", "title": "Profile the render box", "kind": "queued", "blocked_by": [], "reason": "next free slot", "until": "2026-10-12", "filed": "2026-10-07"}, {"id": "hz-q1", "group": "skyforge", "title": "Tech tree: tier 3 screen", "kind": "queued", "blocked_by": [], "reason": "starts after the lobby lands", "until": null, "filed": "2026-10-07"}, {"id": "hz-q2", "group": "inkwell", "title": "Custom dictionary import", "kind": "queued", "blocked_by": [], "reason": "waits for a free slot", "until": null, "filed": "2026-10-08"}],
+     "items.sf-fog.agent": {"state": "alive", "since": "2026-10-08T18:40:00Z", "as_of": "2026-10-08T19:31:30Z"},
+     "items.sf-lobby.agent": {"state": "ended", "since": "2026-10-08T19:29:40Z", "as_of": "2026-10-08T19:31:30Z", "reason": "the session closed"},
+     "attention": [],
+     "items.iw-export.state": "running",
+     "items.iw-export.needs_you": false,
+     "items.iw-export.flags": [],
+     "items.iw-export.progress.current.activity": "active",
+     "items.iw-export.progress.current.waiting_since": null,
+     "items.iw-export.progress.current.elapsed_s": 120,
+     "items.tw-feed.handoff": {"state": "complete", "since": "2026-10-08T19:20:00Z"}
+    },
+    "borealis-lanes": {
+     "items.bo-pathing.agent": {"state": "alive", "since": "2026-10-08T18:00:00Z", "as_of": "2026-10-08T19:31:30Z"},
+     "items.bo-installer.agent": {"state": "alive", "since": "2026-10-08T18:00:00Z", "as_of": "2026-10-08T19:31:30Z"}
+    },
+    "cinder-lanes": {
+     "items.ci-replay.agent": {"state": "gone", "since": "2026-10-08T19:30:40Z", "as_of": "2026-10-08T19:31:30Z"}
+    }
+   },
+   "steps": [
+    {"after_s": 45, "what": "the ahead list's report goes stale: the islands become dotted outlines", "patch": {"atlas-main": {"collectors.queue.status": "stale", "collectors.queue.as_of": "2026-10-08T19:06:40Z"}}},
+    {"after_s": 90, "what": "Atlas stops reporting: its islands and windows fog over", "silence": ["atlas-main"]}
+   ]
+  },
+  "call-last-known": {
+   "what": "Feed 1.8: the call that waits on you comes from a copy of the answer eight hours older than its source's own limit; the card reads last known, not confirmed, and the number reads at least.",
+   "patch": {
+    "atlas-main": {
+     "collectors.attention.stale_after_s": 600,
+     "attention.decision:iw-export.as_of": "2026-10-08T11:30:00Z"
+    }
+   }
+  },
+  "call-fresh": {
+   "what": "Feed 1.8: the same call from a copy inside the limit; no marker, and the number reads as it is.",
+   "patch": {
+    "atlas-main": {
+     "collectors.attention.stale_after_s": 600,
+     "attention.decision:iw-export.as_of": "2026-10-08T19:31:30Z"
+    }
+   }
+  },
+  "call-options": {
+   "what": "Feed 1.9: the call lists its choices as read-only chips under the question.",
+   "patch": {
+    "atlas-main": {
+     "attention.decision:iw-export.options": ["Ship it as is", "Wait for the review", "Drop the export"]
+    }
+   }
+  },
+  "board-link-none": {
+   "what": "Answer link (feed 1.6): the call that waits on you has no link to a review board, and says why in the source's words (no board is open for this home) and when that was last checked.",
+   "patch": {
+    "atlas-main": {
+     "attention.decision:iw-export.answer_link": {"url": null, "label": null, "state": "none", "state_as_of": "2026-10-08T19:30:40Z", "why": "no review board is open for this home"}
+    }
+   }
+  },
+  "lane-state": {
+   "what": "Lane state (feed 1.5, the page board): every one of the nine words on one board: four lanes waiting on a check (folded into one line), a pause after a failed run, a lane behind another lane and a lane whose title is only the task's name, beside the default board's call, problem, supervisor stop and unreadable lane.",
+   "patch": {
+    "atlas-main": {
+     "+items": [
+      {"id": "sf-check-1", "owner": "atlas-main", "relayed": false, "group": "skyforge", "machine": "atlas", "kind": "task", "project": "Skyforge", "title": "Suite 1: replay determinism across map sizes", "state": "running", "started_at": "2026-10-08T17:00:00Z", "flags": [], "lane": {"state": "Waiting on a check", "cause": "tests-running", "since": "2026-10-08T18:11:00Z", "last_word": {"verb": "working", "at": "2026-10-08T18:11:00Z"}, "short_title": "Suite 1: replay determinism across map sizes"}, "say": [{"t": "tests-running", "step": 2, "of": 4}]},
+      {"id": "sf-check-2", "owner": "atlas-main", "relayed": false, "group": "skyforge", "machine": "atlas", "kind": "task", "project": "Skyforge", "title": "Suite 2: replay determinism across map sizes", "state": "running", "started_at": "2026-10-08T17:00:00Z", "flags": [], "lane": {"state": "Waiting on a check", "cause": "tests-running", "since": "2026-10-08T18:12:00Z", "last_word": {"verb": "working", "at": "2026-10-08T18:12:00Z"}, "short_title": "Suite 2: replay determinism across map sizes"}, "say": [{"t": "tests-running", "step": 2, "of": 4}]},
+      {"id": "sf-check-3", "owner": "atlas-main", "relayed": false, "group": "skyforge", "machine": "atlas", "kind": "task", "project": "Skyforge", "title": "Suite 3: replay determinism across map sizes", "state": "running", "started_at": "2026-10-08T17:00:00Z", "flags": [], "lane": {"state": "Waiting on a check", "cause": "tests-running", "since": "2026-10-08T18:13:00Z", "last_word": {"verb": "working", "at": "2026-10-08T18:13:00Z"}, "short_title": "Suite 3: replay determinism across map sizes"}, "say": [{"t": "tests-running", "step": 2, "of": 4}, {"t": "no-news", "at": "2026-10-08T17:05:00Z"}]},
+      {"id": "sf-check-4", "owner": "atlas-main", "relayed": false, "group": "skyforge", "machine": "atlas", "kind": "task", "project": "Skyforge", "title": "Suite 4: replay determinism across map sizes", "state": "running", "started_at": "2026-10-08T17:00:00Z", "flags": [], "lane": {"state": "Waiting on a check", "cause": "tests-running", "since": "2026-10-08T18:14:00Z", "last_word": {"verb": "working", "at": "2026-10-08T18:14:00Z"}, "short_title": "Suite 4: replay determinism across map sizes"}, "say": [{"t": "tests-running", "step": 2, "of": 4}, {"t": "no-news", "at": "2026-10-08T17:05:00Z"}]},
+      {"id": "sf-pause", "owner": "atlas-main", "relayed": false, "group": "skyforge", "machine": "atlas", "kind": "task", "project": "Skyforge", "title": "Terrain streaming: hitch on first load", "state": "paused", "started_at": "2026-10-08T17:00:00Z", "flags": [], "lane": {"state": "Paused on purpose", "cause": "paused-run-failed", "since": "2026-10-08T17:40:00Z", "last_word": {"verb": "paused", "at": "2026-10-08T17:40:00Z"}, "short_title": "Terrain streaming: hitch on first load"}, "say": [{"t": "paused-by-worker", "until": "2026-10-09T08:00:00Z"}, {"t": "run-failed"}, {"t": "holds-others", "n": 1}]},
+      {"id": "sf-behind", "owner": "atlas-main", "relayed": false, "group": "skyforge", "machine": "atlas", "kind": "task", "project": "Skyforge", "title": "Lobby polish after the netcode lands", "state": "waiting", "started_at": "2026-10-08T17:00:00Z", "flags": [], "lane": {"state": "Waiting on another lane", "cause": "behind-lane", "since": null, "last_word": null, "short_title": "Lobby polish after the netcode lands"}, "say": [{"t": "starts-when-lands", "title": "Netcode rewrite", "more": 0}]},
+      {"id": "sf-short", "owner": "atlas-main", "relayed": false, "group": "skyforge", "machine": "atlas", "kind": "task", "project": "Skyforge", "title": "Nightly index rebuild", "state": "running", "started_at": "2026-10-08T17:00:00Z", "flags": [], "lane": {"state": "Working", "cause": "worker-busy", "since": "2026-10-08T19:00:00Z", "last_word": {"verb": "working", "at": "2026-10-08T19:00:00Z"}, "short_title": null}, "say": [{"t": "worker-busy"}]}
+     ]
+    }
+   }
+  },
+  "goals": {"what": "Goals (feed 1.7, the page board): lanes under the goal they serve with a count of lanes, next and done rows (\"or more\" where the feed says a count may be low), beside the lanes no goal names, which stay grouped by project and say so.", "patch": {"atlas-main": {"items.sf-fog.goal": "Ship the Skyforge launch", "items.sf-lobby.goal": "Ship the Skyforge launch", "items.bo-pathing.goal": "Ship the Skyforge launch", "items.iw-export.goal": "Polish the Inkwell exporter", "items.bo-installer.goal": "Polish the Inkwell exporter", "next.sf-tech-ui.goal": "Ship the Skyforge launch", "next.sf-cut-015.goal": "Ship the Skyforge launch", "next.iw-dict.goal": "Polish the Inkwell exporter", "done.sf-minimap.goal": "Ship the Skyforge launch", "done.sf-hotkeys.goal": "Ship the Skyforge launch", "done.iw-autosave.goal": "Polish the Inkwell exporter", "goals": [{"name": "Ship the Skyforge launch", "lanes": 3, "next": 2, "done": 2, "or_more": ["done"]}, {"name": "Polish the Inkwell exporter", "lanes": 2, "next": 1, "done": 1, "or_more": ["done"]}]}, "borealis-lanes": {"items.bo-pathing.goal": "Ship the Skyforge launch", "items.bo-installer.goal": "Polish the Inkwell exporter"}}}
+ }
+}

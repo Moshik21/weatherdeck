@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<title>Weatherdeck</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip" href="#board">Skip to the board</a>
+<canvas class="px scene" id="scene" aria-hidden="true" hidden></canvas>
+<div class="crt" id="crt" aria-hidden="true"></div>
+<main class="board" id="board" aria-live="off">
+  <p class="boot-note">Loading...</p>
+</main>
+<canvas class="px flight" id="flight" aria-hidden="true" hidden></canvas>
+<canvas class="px move" id="move" aria-hidden="true" hidden></canvas>
+<p class="sr" id="announce" aria-live="polite"></p>
+<p class="sr" id="receipt" aria-live="polite"></p>
+<div class="devbar" id="devbar" role="group" aria-label="Preview controls" hidden></div>
+<script src="theme.js"></script>
+<script src="frontdoor.js"></script>
+<script src="model.js"></script>
+<script src="board.js"></script>
+<script src="decks.js"></script>
+<script src="page.js"></script>
+<script src="sightings.js"></script>
+<script src="livery.js"></script>
+<script src="weather.js"></script>
+<script src="world.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+{
+  "schema": "lookout.card",
+  "schema_version": "1.0",
+  "tool": "host-pool",
+  "title": "Host Pool",
+  "status": "ok",
+  "headline": "4 hosts probed, all as expected",
+  "numbers": [
+    { "label": "hosts", "value": 4 },
+    { "label": "probed", "value": 4 },
+    { "label": "need a look", "value": 0 }
+  ],
+  "updated_at": "2026-01-01T09:00:00Z"
+}

@@ -1,0 +1,406 @@
+{
+ "schema": "lookout.feed",
+ "schema_version": "1.1",
+ "source": {
+  "id": "borealis-lanes",
+  "label": "Borealis, secondary",
+  "machine": "borealis",
+  "kind": "secondary",
+  "peers": [
+   "atlas-main"
+  ]
+ },
+ "producer": {
+  "name": "demo-replay",
+  "version": "0.1.0",
+  "boot_id": "demo-boot",
+  "seq": 1,
+  "mode": "sample"
+ },
+ "generated_at": "2026-10-08T19:31:40Z",
+ "interval_s": 10,
+ "collect_ms": 900,
+ "collectors": [
+  {
+   "id": "items",
+   "as_of": "2026-10-08T19:31:38Z",
+   "status": "ok",
+   "error": null,
+   "warnings": 0
+  },
+  {
+   "id": "machines",
+   "as_of": "2026-10-08T19:31:35Z",
+   "status": "ok",
+   "error": null,
+   "warnings": 0
+  },
+  {
+   "id": "queue",
+   "as_of": "2026-10-08T19:31:37Z",
+   "status": "ok",
+   "error": null,
+   "warnings": 0
+  },
+  {
+   "id": "attention",
+   "as_of": "2026-10-08T19:31:37Z",
+   "status": "ok",
+   "error": null,
+   "warnings": 0
+  },
+  {
+   "id": "meters",
+   "as_of": "2026-10-08T19:29:10Z",
+   "status": "ok",
+   "error": null,
+   "warnings": 0
+  }
+ ],
+ "machines": [
+  {
+   "id": "borealis",
+   "label": "Borealis",
+   "role": "render box",
+   "status": "ok",
+   "as_of": "2026-10-08T19:31:35Z",
+   "reach": {
+    "probe_ok": true,
+    "rtt_ms": null,
+    "last_ok_at": "2026-10-08T19:31:35Z",
+    "error": null
+   },
+   "load": {
+    "l1": 5.8,
+    "l5": 5.1,
+    "cores": 24,
+    "runq_per_core": 0.3,
+    "runq_now": 7,
+    "runq_basis": "runnable tasks"
+   },
+   "mem": {
+    "used_pct": 48,
+    "swap_used_pct": 0,
+    "swap_rate_pps_1m": 0,
+    "avail_gb": 33.4,
+    "total_gb": 64
+   },
+   "disks": [
+    {
+     "label": "SSD",
+     "free_gb": 743,
+     "free_pct": 74,
+     "warn_gb": 100,
+     "crit_gb": 50
+    },
+    {
+     "label": "Data",
+     "free_gb": 336,
+     "free_pct": 35,
+     "warn_gb": 80,
+     "crit_gb": 60
+    }
+   ],
+   "uptime_s": 3400,
+   "on_battery": false,
+   "extras": [
+    {
+     "label": "worker pool",
+     "value": "up",
+     "severity": null
+    }
+   ],
+   "pressure": {
+    "level": "ok",
+    "why": []
+   },
+   "beat": {
+    "seq": 5311,
+    "interval_s": 15,
+    "age_s": 0,
+    "version": "1.0",
+    "cost": {
+     "cpu_pct": 0.09,
+     "rss_mb": 21.2,
+     "collect_ms": 1.4,
+     "budget_cpu_pct": 0.5,
+     "over_budget": false
+    }
+   }
+  }
+ ],
+ "items": [
+  {
+   "id": "bo-pathing",
+   "owner": "borealis-lanes",
+   "relayed": false,
+   "group": "skyforge",
+   "machine": "borealis",
+   "kind": "task",
+   "title": "Pathfinding benchmark on large maps",
+   "doing": "Running the 4096-tile suite, 6 of 9 maps done",
+   "state": "running",
+   "state_detail": null,
+   "started_at": "2026-10-08T17:31:40Z",
+   "last_event": {
+    "state": "running",
+    "text": "map 6 of 9 done",
+    "at": "2026-10-08T19:23:40Z"
+   },
+   "progress": {
+    "basis": "coarse",
+    "history_n": 0,
+    "percent_floor": null,
+    "percent_ceiling": null,
+    "regressed": false,
+    "reason": "state only: no step data from this source",
+    "current": null,
+    "steps": [
+     {
+      "id": "started",
+      "label": "Started",
+      "status": "done",
+      "weight": null,
+      "elapsed_s": null,
+      "typical_s": null,
+      "p90_s": null,
+      "round": null
+     },
+     {
+      "id": "working",
+      "label": "Working",
+      "status": "current",
+      "weight": null,
+      "elapsed_s": null,
+      "typical_s": null,
+      "p90_s": null,
+      "round": null
+     },
+     {
+      "id": "ready",
+      "label": "Ready",
+      "status": "pending",
+      "weight": null,
+      "elapsed_s": null,
+      "typical_s": null,
+      "p90_s": null,
+      "round": null
+     }
+    ]
+   },
+   "handoff": {
+    "state": "none",
+    "since": null
+   },
+   "link": null,
+   "flags": [],
+   "needs_you": false,
+   "summary": "6 of 9 maps done in the 4096-tile suite",
+   "lane": {
+    "state": "Waiting on the supervisor",
+    "cause": "at-gate",
+    "since": "2026-10-08T18:55:00Z",
+    "last_word": {
+     "verb": "parked",
+     "at": "2026-10-08T18:55:00Z"
+    },
+    "short_title": "Pathfinding benchmark on large maps"
+   },
+   "say": [
+    {
+     "t": "gate-stop",
+     "gate": "review",
+     "decides": "supervisor",
+     "findings": 2
+    }
+   ]
+  },
+  {
+   "id": "bo-installer",
+   "owner": "borealis-lanes",
+   "relayed": false,
+   "group": "inkwell",
+   "machine": "borealis",
+   "kind": "task",
+   "title": "Installer: signed package build",
+   "doing": "Signing step queued behind the key prompt",
+   "state": "paused",
+   "state_detail": null,
+   "started_at": "2026-10-08T18:21:40Z",
+   "last_event": {
+    "state": "running",
+    "text": "build finished, signing",
+    "at": "2026-10-08T19:26:40Z"
+   },
+   "progress": {
+    "basis": "coarse",
+    "history_n": 0,
+    "percent_floor": null,
+    "percent_ceiling": null,
+    "regressed": false,
+    "reason": "state only: no step data from this source",
+    "current": null,
+    "steps": [
+     {
+      "id": "started",
+      "label": "Started",
+      "status": "done",
+      "weight": null,
+      "elapsed_s": null,
+      "typical_s": null,
+      "p90_s": null,
+      "round": null
+     },
+     {
+      "id": "working",
+      "label": "Working",
+      "status": "current",
+      "weight": null,
+      "elapsed_s": null,
+      "typical_s": null,
+      "p90_s": null,
+      "round": null
+     },
+     {
+      "id": "ready",
+      "label": "Ready",
+      "status": "pending",
+      "weight": null,
+      "elapsed_s": null,
+      "typical_s": null,
+      "p90_s": null,
+      "round": null
+     }
+    ]
+   },
+   "handoff": {
+    "state": "none",
+    "since": null
+   },
+   "link": null,
+   "flags": [],
+   "needs_you": false,
+   "reported": {
+    "label": "signing step",
+    "percent": 70,
+    "basis": "reported",
+    "at": "2026-10-08T19:30:40Z"
+   },
+   "waiting_on": "human",
+   "summary": "signing step waits for the key prompt",
+   "project": "Inkwell",
+   "lane": {
+    "state": "Needs attention",
+    "cause": "worker-gone",
+    "since": "2026-10-08T17:31:40Z",
+    "last_word": {
+     "verb": "working",
+     "at": "2026-10-08T16:50:00Z"
+    },
+    "short_title": "Installer: signed package build"
+   },
+   "say": [
+    {
+     "t": "tests-running",
+     "step": 2,
+     "of": 4
+    },
+    {
+     "t": "worker-gone",
+     "how": "ended",
+     "at": "2026-10-08T17:31:40Z"
+    }
+   ]
+  },
+  {
+   "id": "bo-design",
+   "owner": "borealis-lanes",
+   "relayed": false,
+   "group": "tidewatch",
+   "machine": "borealis",
+   "kind": "investigation",
+   "title": "Status board: design report and feed spec",
+   "doing": "Writing the feed spec",
+   "state": "running",
+   "state_detail": null,
+   "started_at": "2026-10-08T18:31:40Z",
+   "last_event": null,
+   "progress": {
+    "basis": "none",
+    "history_n": 0,
+    "percent_floor": null,
+    "percent_ceiling": null,
+    "regressed": false,
+    "reason": "investigation: no midpoints to measure",
+    "current": null,
+    "steps": []
+   },
+   "handoff": {
+    "state": "none",
+    "since": null
+   },
+   "link": null,
+   "flags": [],
+   "needs_you": false
+  }
+ ],
+ "done": [
+  {
+   "id": "bo-netcode",
+   "owner": "borealis-lanes",
+   "group": "skyforge",
+   "title": "Netcode fuzz harness runs on the render box",
+   "via": "pull request",
+   "link": null,
+   "at": "2026-10-08T16:40:40Z"
+  }
+ ],
+ "next": [
+  {
+   "id": "bo-gpu-profile",
+   "group": "skyforge",
+   "title": "Profile the simulation tick on the render box",
+   "kind": "queued",
+   "blocked_by": [],
+   "reason": "next free slot on that machine",
+   "until": null,
+   "filed": "2026-10-08"
+  }
+ ],
+ "meters": {
+  "as_of": "2026-10-08T19:29:10Z",
+  "accounts": [
+   {
+    "id": "borealis-plan",
+    "provider": "Orbit",
+    "account": "Borealis",
+    "label": "Orbit, Borealis",
+    "machine": "borealis",
+    "windows": [
+     {
+      "id": "short",
+      "label": "5-hour",
+      "short": "5h",
+      "percent_remaining": 81,
+      "resets_at": "2026-10-08T21:40:00Z",
+      "pace": "behind"
+     },
+     {
+      "id": "week",
+      "label": "Week",
+      "short": "wk",
+      "percent_remaining": 57,
+      "resets_at": "2026-10-12T09:00:00Z",
+      "pace": "behind"
+     }
+    ],
+    "runway": {
+     "status": "through_reset",
+     "confidence": "medium",
+     "projected_empty_at": null,
+     "source": "the provider's own projection"
+    }
+   }
+  ]
+ }
+}

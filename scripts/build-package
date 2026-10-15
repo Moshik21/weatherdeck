@@ -1,0 +1,93 @@
+"""Build the distributable archives into dist/ (or --out DIR):
+
+    python3 scripts/build-package [--out DIR]
+
+* weatherdeck-<version>.zip: the product only (command, package, page, docs, demo feeds, the generic example
+  adapter, MIT licence, package metadata, contributing guide and the community files) under one top-level folder, so it unzips
+  cleanly on Windows, macOS and Linux. Never adapters for specific tools, scripts, data, or anything
+  ignored by git.
+
+It builds that one zip and nothing else. A package that bundles an adapter for a specific tool (its pusher, or a host
+package that is the product plus the adapter's own files) is built from that adapter's own repository, which runs this
+script for the product part.
+
+The Windows launcher and .cmd files are written with CRLF line endings; scripts are marked executable.
+Every entry is stamped with one fixed time, so the same commit gives the same bytes in any clone: SOURCE_DATE_EPOCH when set,
+else the commit time of HEAD, else (not a git checkout, e.g. an unzipped source tree) 1980-01-01. The build prints the stamp.
+Standard library only.
+"""
+import argparse
+import functools
+import os
+import re
+import subprocess
+import sys
+import time
+import zipfile
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+INCLUDE = ["README.md", "LICENSE", "CONTRIBUTING.md", "SECURITY.md", "SUPPORT.md", "CODE_OF_CONDUCT.md", "CHANGELOG.md", "pyproject.toml", "pip_not_supported.py", "bin", "src", "web", "docs", "examples"]
+SKIP_PARTS = {"__pycache__", ".git", "dist", "runtime", "fixtures"}
+
+
+def version():
+    m = re.search(r'VERSION = "([^"]+)"', (ROOT / "src" / "weatherdeck" / "__init__.py").read_text())
+    return m.group(1)
+
+
+def collect(items, skip=SKIP_PARTS):
+    out = []
+    for item in items:
+        path = ROOT / item
+        if path.is_file():
+            out.append(path)
+        else:
+            out += [p for p in sorted(path.rglob("*")) if p.is_file() and not (skip & set(p.relative_to(ROOT).parts)) and p.suffix != ".pyc"]
+    return out
+
+
+@functools.cache
+def stamp_epoch():
+    """The one time every zip entry carries: not the working tree's mtimes, which differ between clones of the same commit."""
+    if os.environ.get("SOURCE_DATE_EPOCH", "").strip():
+        return int(os.environ["SOURCE_DATE_EPOCH"])
+    try:
+        git = lambda *a: subprocess.run(["git", "-C", str(ROOT), *a], capture_output=True, text=True, check=True).stdout.strip()
+        if Path(git("rev-parse", "--show-toplevel")).resolve() == ROOT:  # ROOT itself is the checkout, not a folder inside another repo
+            return int(git("log", "-1", "--format=%ct", "HEAD"))
+    except (OSError, ValueError, subprocess.CalledProcessError):
+        pass
+    return 315532800  # 1980-01-01, the earliest time a zip entry can hold
+
+
+def write_zip(target, top, entries):
+    """entries: [(path on disk, path inside the folder)]"""
+    stamp = time.gmtime(max(stamp_epoch(), 315532800))[:6]
+    with zipfile.ZipFile(target, "w", zipfile.ZIP_DEFLATED) as zf:
+        for path, rel in entries:
+            data = path.read_bytes()
+            if rel.endswith(".cmd"):
+                data = data.replace(b"\r\n", b"\n").replace(b"\n", b"\r\n")
+            info = zipfile.ZipInfo(f"{top}/{rel}", date_time=stamp)
+            info.compress_type = zipfile.ZIP_DEFLATED
+            info.external_attr = ((0o755 if path.stat().st_mode & 0o111 else 0o644) << 16)  # executable as in the checkout
+            zf.writestr(info, data)
+    print(f"{target} ({target.stat().st_size // 1024} KiB, {len(entries)} files)")
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
+    ap.add_argument("--out", default=str(ROOT / "dist"))
+    args = ap.parse_args()
+    ver = version()
+    print("entry time " + time.strftime("%Y-%m-%d %H:%M:%SZ", time.gmtime(max(stamp_epoch(), 315532800))))
+    out_dir = Path(args.out)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    product = [(p, p.relative_to(ROOT).as_posix()) for p in collect(INCLUDE)]
+    write_zip(out_dir / f"weatherdeck-{ver}.zip", f"weatherdeck-{ver}", product)
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

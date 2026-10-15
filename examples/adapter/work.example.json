@@ -1,0 +1,14 @@
+{
+  "source": { "id": "my-laptop", "label": "My laptop", "kind": "standalone", "peers": [] },
+  "groups": [{ "id": "site", "label": "Website" }],
+  "items": [
+    { "id": "rebuild-index", "group": "site", "title": "Rebuild the search index", "state": "running", "doing": "shard 2 of 6", "percent": 33 },
+    { "id": "write-docs", "group": "site", "title": "Write the deploy guide", "state": "waiting", "doing": "needs a review",
+      "summary": "draft done, waiting for a review", "waiting_on": "human" }
+  ],
+  "attention": [
+    { "id": "review-docs", "kind": "approval", "severity": "action", "title": "Review the deploy guide", "since": "2026-01-01T09:00:00Z", "how": "Reply in the tracker" }
+  ],
+  "next": [{ "id": "release-notes", "group": "site", "title": "Release notes", "kind": "queued", "reason": "after the guide" }],
+  "done": []
+}

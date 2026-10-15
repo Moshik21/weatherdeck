@@ -1,0 +1,30 @@
+# Package metadata only. Weatherdeck runs from a source checkout or the release zip (bin/weatherdeck);
+# installing it as a wheel is not supported yet because the page assets live beside the package,
+# so the build backend below refuses with a plain message instead of installing something that cannot run.
+[build-system]
+requires = []
+build-backend = "pip_not_supported"
+backend-path = ["."]
+
+[project]
+name = "weatherdeck"
+dynamic = ["version"]
+description = "A read-only, at-a-glance status board for work reported by many sources."
+readme = "README.md"
+requires-python = ">=3.9"
+classifiers = [
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+]
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Moshik21" }]
+dependencies = []
+
+[project.urls]
+Source = "https://github.com/Moshik21/weatherdeck"
+Issues = "https://github.com/Moshik21/weatherdeck/issues"

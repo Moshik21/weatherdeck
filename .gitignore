@@ -1,0 +1,6 @@
+# Local run state, if someone points the data dir inside the checkout.
+/runtime/
+__pycache__/
+*.pyc
+/dist/
+*.egg-info/

@@ -1,0 +1,231 @@
+/* Ship deck concept.
+   Layout: a 640 x 360 art-pixel seascape (art px = 6 device px) with three solid plates on it:
+   the voyage bar on top, the call dialog top left (the one focal point), the ship's log below the waterline.
+   Every size on the TV is a whole number of art pixels (--ap); text never sits on the art itself. */
+
+@font-face { font-family: "Departure Mono"; src: url(../fonts/DepartureMono-Regular.woff2) format("woff2"); font-display: block; }
+@font-face { font-family: "Jersey 15"; src: url(../fonts/Jersey15-Regular.woff2) format("woff2"); font-display: block; }
+@font-face { font-family: "Atkinson Next"; src: url(../fonts/AtkinsonHyperlegibleNext-Variable.woff2) format("woff2"); font-weight: 200 800; font-display: block; }
+
+:root {
+  color-scheme: dark;
+  --ap: 3px;
+  /* status: fixed, from the research palette (c.4) */
+  --needs: #F7B733; --trouble: #FF5F4A; --moving: #5C9DFF; --done: #93DDB4;
+  --ink: #E8ECF1; --ink2: #B4BDC9; --fog: #8D97A5;
+  /* plates: tarred plank, the only surfaces text sits on */
+  --plate: #0F131A; --plate-hi: #2E3846; --plate-lo: #05070A; --rule: #252D3A; --track: #222A36;
+  /* the call: parchment under an amber band */
+  --parch: #ECE2C8; --parch-edge: #C9B88E; --parch-ink: #20160C; --parch-ink2: #4A3C2C; --band-ink: #1C1206;
+  --ground: #0B0F16;
+  --f-pixel: "Departure Mono", ui-monospace, monospace;
+  --f-num: "Jersey 15", "Departure Mono", ui-monospace, monospace;
+  --f-text: "Atkinson Next", "Atkinson Hyperlegible", system-ui, sans-serif;
+}
+/* Night is its own table, not a dimmer: only calls and trouble keep their hue. */
+body[data-night] {
+  --needs: #C49023; --trouble: #D55240; --moving: #4974B5; --done: #6A717B;
+  --ink: #8F9397; --ink2: #6A717B; --fog: #6A717B;
+  --plate: #07090C; --plate-hi: #1A1F26; --plate-lo: #000000; --rule: #151A20; --track: #14181E;
+  --parch: #16130E; --parch-edge: #3A3224; --parch-ink: #A39A86; --parch-ink2: #8A8270; --band-ink: #0C0804;
+  --ground: #04060A;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body { background: var(--ground); color: var(--ink); font-family: var(--f-text); -webkit-font-smoothing: antialiased; overflow: hidden; }
+[hidden] { display: none !important; }
+.px { image-rendering: pixelated; image-rendering: crisp-edges; }
+canvas.px { image-rendering: pixelated; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+/* ---------- TV: one fixed 640 x 360 art-px stage ---------- */
+.scenebox { position: fixed; inset: 0; }
+#scene { position: absolute; left: 0; top: 0; }
+.deck { position: absolute; left: var(--ox, 0); top: var(--oy, 0); width: calc(var(--ap) * 640); height: calc(var(--ap) * 360); transform: translate(var(--dx, 0), var(--dy, 0)); }
+.deck > * { position: absolute; }
+
+/* Plates: notched pixel corners, a 1 art px bevel, never a radius. */
+.plate {
+  background: var(--plate);
+  clip-path: polygon(var(--ap) 0, calc(100% - var(--ap)) 0, calc(100% - var(--ap)) var(--ap), 100% var(--ap), 100% calc(100% - var(--ap)), calc(100% - var(--ap)) calc(100% - var(--ap)), calc(100% - var(--ap)) 100%, var(--ap) 100%, var(--ap) calc(100% - var(--ap)), 0 calc(100% - var(--ap)), 0 var(--ap), var(--ap) var(--ap));
+  box-shadow: inset 0 var(--ap) 0 var(--plate-hi), inset 0 calc(var(--ap) * -1) 0 var(--plate-lo), inset var(--ap) 0 0 var(--plate-hi), inset calc(var(--ap) * -1) 0 0 var(--plate-lo);
+}
+
+/* Type, in art px. Departure Mono: one font px = one art px (11 px/em). Jersey 15: 27 px/em. */
+.lbl { font-family: var(--f-pixel); font-size: calc(var(--ap) * 11); line-height: 1; letter-spacing: 0; text-transform: uppercase; font-variant-numeric: tabular-nums; }
+.num { font-family: var(--f-num); font-size: calc(var(--ap) * 27); line-height: 0.6; }
+.glyph { width: calc(var(--ap) * 12); height: calc(var(--ap) * 12); flex: none; display: block; }
+.pip { width: calc(var(--ap) * 8); height: calc(var(--ap) * 8); flex: none; display: block; }
+
+/* ---------- The voyage bar ---------- */
+.bar { left: calc(var(--ap) * 20); top: calc(var(--ap) * 8); width: calc(var(--ap) * 600); height: calc(var(--ap) * 27); display: flex; align-items: center; gap: calc(var(--ap) * 10); padding: 0 calc(var(--ap) * 8); }
+.bar .score { display: flex; align-items: center; gap: calc(var(--ap) * 6); }
+.bar .score .num { color: var(--ink); }
+.bar .stack { display: grid; gap: calc(var(--ap) * 2); min-width: 0; }
+.bar .stack .lbl { color: var(--ink2); }
+.bar .sub { font-size: calc(var(--ap) * 11); line-height: 1.1; color: var(--ink2); white-space: nowrap; }
+.bar .chart { width: calc(var(--ap) * 150); height: calc(var(--ap) * 20); flex: none; }
+.bar .ahead { color: var(--ink2); }
+.bar .spacer { flex: 1; }
+.bar .clock { color: var(--ink); }
+.bar .trust { display: flex; align-items: center; gap: calc(var(--ap) * 5); }
+.bar .trust .lbl { color: var(--ink); }
+.bar .alarm { display: flex; align-items: center; gap: calc(var(--ap) * 7); min-width: 0; }
+.bar .alarm .t { font-size: calc(var(--ap) * 13); font-weight: 650; line-height: 1.05; color: var(--ink); white-space: nowrap; }
+.bar .alarm .h { font-size: calc(var(--ap) * 11); line-height: 1.1; color: var(--ink2); white-space: nowrap; }
+.bar .alarm .w { color: var(--trouble); }
+.bar.critical { box-shadow: inset 0 0 0 var(--ap) var(--trouble), inset 0 0 0 calc(var(--ap) * 2) var(--plate-lo); }
+.bar.notice .alarm .w { color: var(--fog); }
+
+/* ---------- The call: amber band over parchment, the one focal point ---------- */
+.call { left: calc(var(--ap) * 20); top: calc(var(--ap) * 41); width: calc(var(--ap) * 356); background: var(--parch); color: var(--parch-ink);
+  box-shadow: inset 0 0 0 var(--ap) var(--band-ink), inset 0 0 0 calc(var(--ap) * 3) var(--needs), inset 0 0 0 calc(var(--ap) * 4) var(--band-ink); }
+.call .band { background: var(--needs); color: var(--band-ink); display: flex; align-items: flex-end; gap: calc(var(--ap) * 8); padding: calc(var(--ap) * 3) calc(var(--ap) * 10) calc(var(--ap) * 2); margin: calc(var(--ap) * 4) calc(var(--ap) * 4) 0; }
+.call .band .hero { font-family: var(--f-num); font-size: calc(var(--ap) * 54); line-height: 0.56; }
+.call .band .lbl { padding-bottom: calc(var(--ap) * 1); }
+.call .band .lbl.age { margin-left: auto; margin-right: calc(var(--ap) * 30); }
+.call .body { padding: calc(var(--ap) * 6) calc(var(--ap) * 12) calc(var(--ap) * 10); display: grid; gap: calc(var(--ap) * 4); }
+.call .top { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; column-gap: calc(var(--ap) * 6); row-gap: calc(var(--ap) * 2); align-items: start; }
+.call .top .t { font-size: calc(var(--ap) * 13); line-height: calc(var(--ap) * 15); font-weight: 680; text-wrap: balance; }
+.call .top .h { grid-column: 2 / 4; font-size: calc(var(--ap) * 11); line-height: calc(var(--ap) * 13); color: var(--parch-ink2); }
+.call .top .d { grid-column: 2 / 4; font-size: calc(var(--ap) * 11); line-height: calc(var(--ap) * 13); color: var(--parch-ink2); }
+.call .top .lbl, .call .row .lbl { color: var(--parch-ink); padding-top: calc(var(--ap) * 2); white-space: nowrap; }
+.call hr { border: 0; height: var(--ap); margin: 0; background: repeating-linear-gradient(90deg, var(--parch-edge) 0 calc(var(--ap) * 2), transparent calc(var(--ap) * 2) calc(var(--ap) * 4)); }
+.call .rows { display: grid; gap: calc(var(--ap) * 3); }
+.call .row { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; column-gap: calc(var(--ap) * 6); align-items: start; }
+.call .row .t { font-size: calc(var(--ap) * 11); line-height: calc(var(--ap) * 13); font-weight: 500; }
+.call .row .glyph, .call .top .glyph { margin-top: calc(var(--ap) * 1); }
+.call .also { font-size: calc(var(--ap) * 11); line-height: calc(var(--ap) * 13); color: var(--parch-ink2); display: flex; gap: calc(var(--ap) * 6); }
+.call .also .lbl { color: var(--parch-ink2); padding-top: calc(var(--ap) * 2); }
+.call .cursor { position: absolute; right: calc(var(--ap) * 12); bottom: calc(var(--ap) * 5); width: calc(var(--ap) * 7); height: calc(var(--ap) * 4); background: var(--parch-ink);
+  clip-path: polygon(0 0, 100% 0, 100% 25%, 85.7% 25%, 85.7% 50%, 71.4% 50%, 71.4% 75%, 57.1% 75%, 57.1% 100%, 42.9% 100%, 42.9% 75%, 28.6% 75%, 28.6% 50%, 14.3% 50%, 14.3% 25%, 0 25%); }
+.call .frozen .t, .call .frozen .lbl { color: var(--parch-ink2); }
+.call .tag { font-family: var(--f-pixel); font-size: calc(var(--ap) * 11); text-transform: uppercase; color: var(--parch-ink2); white-space: nowrap; }
+
+/* The calm state: not amber, not a box shouting; a statement. */
+.call.calm { background: var(--plate); color: var(--ink); box-shadow: inset 0 var(--ap) 0 var(--plate-hi), inset 0 calc(var(--ap) * -1) 0 var(--plate-lo), inset var(--ap) 0 0 var(--plate-hi), inset calc(var(--ap) * -1) 0 0 var(--plate-lo); padding: calc(var(--ap) * 12) calc(var(--ap) * 14); display: grid; gap: calc(var(--ap) * 7); }
+.call.calm .big { font-family: var(--f-num); font-size: calc(var(--ap) * 27); line-height: 0.9; color: var(--ink); }
+.call.calm .h { font-size: calc(var(--ap) * 12); line-height: calc(var(--ap) * 15); color: var(--ink2); }
+.call.calm .lbl { color: var(--ink2); }
+.call.notice { background: var(--plate); color: var(--ink); box-shadow: inset 0 0 0 var(--ap) var(--fog); padding: calc(var(--ap) * 12) calc(var(--ap) * 14); display: grid; gap: calc(var(--ap) * 7); }
+.call.notice .t { font-size: calc(var(--ap) * 14); line-height: calc(var(--ap) * 17); font-weight: 680; }
+.call.notice .h { font-size: calc(var(--ap) * 12); line-height: calc(var(--ap) * 15); color: var(--ink2); }
+.call.notice .lbl { color: var(--fog); }
+.skel { height: calc(var(--ap) * 4); background: repeating-linear-gradient(90deg, var(--rule) 0 calc(var(--ap) * 2), transparent calc(var(--ap) * 2) calc(var(--ap) * 4)); }
+
+/* Arrival: the dialog unrolls in four stepped frames, the border blinks three times at 2 Hz. */
+.call.arrive { animation: unroll 400ms steps(4, jump-start) both; }
+@keyframes unroll { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0 0 0 0); } }
+.call.blink .band { animation: blink 1.5s steps(1, end) 400ms both; }
+@keyframes blink { 0%, 33%, 66% { background: var(--needs); } 16%, 50%, 83% { background: var(--parch); } 100% { background: var(--needs); } }
+.call .bounce { animation: bounce 600ms steps(3, end) 400ms 2; }
+@keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(calc(var(--ap) * -3)); } }
+
+/* The lookout crow, flying over the plates on the TV */
+.crow { position: absolute; width: calc(var(--ap) * 20); height: calc(var(--ap) * 14); z-index: 3; }
+
+/* ---------- Machine plates on the hull ---------- */
+.hulls { position: absolute; inset: 0; pointer-events: none; }
+.hull { position: absolute; display: flex; align-items: center; gap: calc(var(--ap) * 4); padding: calc(var(--ap) * 3) calc(var(--ap) * 5); white-space: nowrap; transform: translateX(-50%); }
+.hull .lbl { color: var(--ink); }
+.hull .lbl.dim { color: var(--ink2); }
+.hull.stale .lbl { color: var(--fog); }
+
+/* ---------- The ship's log ---------- */
+.log { left: calc(var(--ap) * 20); top: calc(var(--ap) * 213); width: calc(var(--ap) * 600); height: calc(var(--ap) * 139); padding: calc(var(--ap) * 6) calc(var(--ap) * 10) calc(var(--ap) * 4); display: grid; grid-template-rows: auto 1fr; gap: calc(var(--ap) * 4); }
+.log .head { display: flex; align-items: center; gap: calc(var(--ap) * 10); }
+.log .head .lbl { color: var(--ink2); }
+.log .head .lbl.on { color: var(--ink); }
+.log .head .count { display: flex; align-items: center; gap: calc(var(--ap) * 4); }
+.log .head .push { margin-left: auto; }
+.log .off { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-auto-flow: column; grid-template-rows: repeat(3, auto); column-gap: calc(var(--ap) * 16); row-gap: calc(var(--ap) * 4); align-content: start; }
+.lane { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; column-gap: calc(var(--ap) * 6); row-gap: calc(var(--ap) * 1); align-items: start; padding-bottom: calc(var(--ap) * 3); background: linear-gradient(var(--rule), var(--rule)) bottom / 100% var(--ap) no-repeat; }
+.lane .glyph { grid-row: 1 / 3; margin-top: calc(var(--ap) * 1); }
+.lane .t { font-size: calc(var(--ap) * 13); line-height: calc(var(--ap) * 15); font-weight: 650; color: var(--ink); min-width: 0; }
+.lane .r { display: flex; align-items: center; gap: calc(var(--ap) * 5); padding-top: calc(var(--ap) * 2); }
+.lane .r .lbl { color: var(--ink); }
+.lane .s { grid-column: 2 / 4; font-size: calc(var(--ap) * 11); line-height: calc(var(--ap) * 13); color: var(--ink2); display: flex; gap: calc(var(--ap) * 6); align-items: baseline; flex-wrap: wrap; row-gap: 0; }
+.lane .s .lbl { color: var(--ink); }
+.lane .s .lbl.trouble { color: var(--trouble); }
+.lane .s .lbl.fog { color: var(--fog); }
+.lane.stale .t, .lane.stale .r .lbl { color: var(--fog); }
+.rng { width: calc(var(--ap) * 30); height: calc(var(--ap) * 4); background: var(--track); position: relative; flex: none; }
+.rng i { position: absolute; top: 0; bottom: 0; left: 0; display: block; }
+.rng i.floor { background: var(--c, var(--moving)); }
+.rng i.span { background: repeating-linear-gradient(90deg, var(--c, var(--moving)) 0 var(--ap), transparent var(--ap) calc(var(--ap) * 2)); }
+.log .ledger { display: grid; grid-template-columns: auto auto auto minmax(0, 1fr) auto auto; column-gap: calc(var(--ap) * 7); row-gap: 0; grid-template-rows: none; grid-auto-flow: row; }
+.ledger .row { display: contents; }
+.ledger .row > * { padding: calc(var(--ap) * 1) 0 calc(var(--ap) * 2); background: linear-gradient(var(--rule), var(--rule)) bottom / 100% var(--ap) no-repeat; align-self: stretch; }
+.ledger .row:last-child > * { background: none; }
+.ledger .glyph { box-sizing: content-box; height: calc(var(--ap) * 12); padding-top: calc(var(--ap) * 2); }
+.ledger .t { font-size: calc(var(--ap) * 12); line-height: calc(var(--ap) * 14); font-weight: 650; color: var(--ink); white-space: nowrap; }
+.ledger .w { color: var(--ink); white-space: nowrap; padding-top: calc(var(--ap) * 3); }
+.ledger .w.trouble { color: var(--trouble); }
+.ledger .w.fog { color: var(--fog); }
+.ledger .d { font-size: calc(var(--ap) * 11); line-height: calc(var(--ap) * 13); color: var(--ink2); padding-top: calc(var(--ap) * 2); }
+.ledger .r { display: flex; align-items: flex-start; gap: calc(var(--ap) * 5); padding-top: calc(var(--ap) * 3); }
+.ledger .r .rng { margin-top: calc(var(--ap) * 2); }
+.ledger .r .lbl { color: var(--ink); }
+.ledger .r .lbl.dim { color: var(--ink2); }
+.ledger .m { color: var(--ink2); padding-top: calc(var(--ap) * 3); }
+.ledger .row.stale .t, .ledger .row.stale .r .lbl { color: var(--fog); }
+.log .empty { color: var(--ink2); font-size: calc(var(--ap) * 12); }
+.log .fold { font-size: calc(var(--ap) * 11); color: var(--ink2); }
+
+.more { display: none; }
+
+/* ---------- Dev switcher (hidden by default; press D or add &dev to the hash) ---------- */
+.dev { position: fixed; right: 8px; bottom: 8px; z-index: 10; background: #0F131A; color: #E8ECF1; border: 2px solid #3A4656; padding: 8px 10px; font: 13px/1.3 var(--f-text); display: grid; gap: 6px; max-width: min(560px, calc(100vw - 16px)); }
+.dev .grp { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
+.dev .grp b { font: 12px var(--f-pixel); text-transform: uppercase; color: #B4BDC9; margin-right: 4px; }
+.dev button { font: 12px var(--f-pixel); background: #1A2130; color: #E8ECF1; border: 1px solid #3A4656; padding: 3px 6px; cursor: pointer; }
+.dev button[aria-pressed="true"] { background: #E8ECF1; color: #0F131A; }
+.dev button:focus-visible { outline: 2px solid #5C9DFF; outline-offset: 1px; }
+.dev p { margin: 0; color: #B4BDC9; font-size: 12px; }
+
+/* ---------- Phone: one column, the scene as a banner, the full log below ---------- */
+body[data-layout="phone"] { overflow: visible; height: auto; }
+body[data-layout="phone"] .deck > .scenebox { position: relative; inset: auto; width: auto; margin: 0 -16px; height: var(--banner-h, 224px); overflow: hidden; }
+body[data-layout="phone"] .deck { position: static; width: auto; height: auto; transform: none; display: flex; flex-direction: column; gap: 12px; padding: 0 16px 24px; }
+body[data-layout="phone"] .deck > * { position: relative; left: auto; top: auto; width: auto; height: auto; }
+body[data-layout="phone"] .lbl { font-size: 14.667px; } /* 4 device px per font px at DPR 3 */
+body[data-layout="phone"] .lbl.big { font-size: 18.333px; }
+body[data-layout="phone"] .bar { order: -2; margin: 0 -16px; padding: 10px 16px; flex-wrap: wrap; row-gap: 8px; height: auto; clip-path: none; box-shadow: none; background: var(--plate); }
+body[data-layout="phone"] .bar .chart, body[data-layout="phone"] .bar .score, body[data-layout="phone"] .bar .ahead { display: none; }
+body[data-layout="phone"] .bar .num { font-size: 27px; }
+body[data-layout="phone"] .bar .pips { display: flex; gap: 12px; width: 100%; flex-wrap: wrap; }
+body[data-layout="phone"] .bar .alarm { width: 100%; order: 5; }
+body[data-layout="phone"] .bar .alarm .t, body[data-layout="phone"] .bar .alarm .h { white-space: normal; }
+body[data-layout="phone"] .bar .alarm .t { font-size: 17px; }
+body[data-layout="phone"] .bar .alarm .h { font-size: 15px; }
+body[data-layout="phone"] .bar .sub { font-size: 15px; white-space: normal; }
+body[data-layout="phone"] .deck > .scenebox { order: -1; }
+body[data-layout="phone"] .bar .spacer { display: none; }
+body[data-layout="phone"] .bar .trust { margin-left: auto; }
+body[data-layout="phone"] .hulls { display: none; }
+body[data-layout="phone"] .call { margin-top: -12px; }
+body[data-layout="phone"] .call .band .hero { font-size: 54px; }
+body[data-layout="phone"] .call .top .t { font-size: 19px; line-height: 24px; }
+body[data-layout="phone"] .call .top .h, body[data-layout="phone"] .call .top .d,
+body[data-layout="phone"] .call .row .t, body[data-layout="phone"] .call .also { font-size: 16px; line-height: 21px; }
+body[data-layout="phone"] .call.calm .big { font-size: 40px; }
+body[data-layout="phone"] .call.calm .h, body[data-layout="phone"] .call.notice .h { font-size: 16px; line-height: 21px; }
+body[data-layout="phone"] .call.notice .t { font-size: 19px; line-height: 24px; }
+body[data-layout="phone"] .log { height: auto; padding: 12px; }
+body[data-layout="phone"] .log .off { grid-template-columns: minmax(0, 1fr); grid-auto-flow: row; grid-template-rows: none; row-gap: 8px; }
+body[data-layout="phone"] .log .head { flex-wrap: wrap; row-gap: 6px; }
+body[data-layout="phone"] .lane .t { font-size: 18px; line-height: 23px; }
+body[data-layout="phone"] .lane .s { font-size: 15.5px; line-height: 20px; }
+body[data-layout="phone"] .more { display: grid; gap: 12px; }
+body[data-layout="phone"] .more section { padding: 12px; display: grid; gap: 8px; }
+body[data-layout="phone"] .more h2 { margin: 0; font-weight: 400; color: var(--ink2); }
+body[data-layout="phone"] .more .item { font-size: 16px; line-height: 21px; color: var(--ink); display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 10px; align-items: start; }
+body[data-layout="phone"] .more .item small { display: block; font-size: 15px; color: var(--ink2); }
+body[data-layout="phone"] .more .item .lbl { color: var(--ink2); padding-top: 3px; }
+body[data-layout="phone"] .more .kv { font-size: 15.5px; line-height: 20px; color: var(--ink2); }
+body[data-layout="phone"] .more .kv b { color: var(--ink); font-weight: 600; }
+
+@media (prefers-reduced-motion: reduce) {
+  .call.arrive, .call.blink .band, .call .bounce { animation: none !important; }
+}

@@ -1,0 +1,1468 @@
+{
+ "schema": "lookout.feed",
+ "schema_version": "1.1",
+ "source": {
+  "id": "atlas-main",
+  "label": "Atlas, primary",
+  "machine": "atlas",
+  "kind": "primary",
+  "peers": [
+   "borealis-lanes",
+   "cinder-lanes"
+  ]
+ },
+ "producer": {
+  "name": "demo-replay",
+  "version": "0.1.0",
+  "boot_id": "demo-boot",
+  "seq": 1,
+  "mode": "sample"
+ },
+ "generated_at": "2026-10-08T19:31:40Z",
+ "interval_s": 10,
+ "collect_ms": 900,
+ "collectors": [
+  {
+   "id": "items",
+   "as_of": "2026-10-08T19:31:38Z",
+   "status": "ok",
+   "error": null,
+   "warnings": 0
+  },
+  {
+   "id": "machines",
+   "as_of": "2026-10-08T19:31:35Z",
+   "status": "ok",
+   "error": null,
+   "warnings": 0
+  },
+  {
+   "id": "queue",
+   "as_of": "2026-10-08T19:31:37Z",
+   "status": "ok",
+   "error": null,
+   "warnings": 0
+  },
+  {
+   "id": "attention",
+   "as_of": "2026-10-08T19:31:37Z",
+   "status": "ok",
+   "error": null,
+   "warnings": 0
+  },
+  {
+   "id": "meters",
+   "as_of": "2026-10-08T19:29:10Z",
+   "status": "ok",
+   "error": null,
+   "warnings": 0
+  }
+ ],
+ "machines": [
+  {
+   "id": "atlas",
+   "label": "Atlas",
+   "role": "primary workstation",
+   "status": "warn",
+   "as_of": "2026-10-08T19:31:35Z",
+   "reach": {
+    "probe_ok": true,
+    "rtt_ms": null,
+    "last_ok_at": "2026-10-08T19:31:35Z",
+    "error": null
+   },
+   "load": {
+    "l1": 3.1,
+    "l5": 2.7,
+    "cores": 12,
+    "runq_per_core": 2.1,
+    "runq_now": 24,
+    "runq_basis": "load1 per performance core"
+   },
+   "mem": {
+    "used_pct": 71,
+    "swap_used_pct": 6,
+    "swap_rate_pps_1m": 410,
+    "avail_gb": 4.6,
+    "total_gb": 16
+   },
+   "disks": [
+    {
+     "label": "SSD",
+     "free_gb": 312,
+     "free_pct": 34,
+     "warn_gb": 50,
+     "crit_gb": 25
+    }
+   ],
+   "uptime_s": 1206000,
+   "on_battery": false,
+   "extras": [
+    {
+     "label": "queue",
+     "value": "0",
+     "severity": null
+    },
+    {
+     "label": "worker pool",
+     "value": "up",
+     "severity": null
+    }
+   ],
+   "pressure": {
+    "level": "warn",
+    "why": [
+     "swapping 410 pages/s",
+     "run queue 2.1 per core"
+    ]
+   },
+   "beat": {
+    "seq": 8120,
+    "interval_s": 15,
+    "age_s": 0,
+    "version": "1.0",
+    "cost": {
+     "cpu_pct": 0.12,
+     "rss_mb": 19.8,
+     "collect_ms": 0.9,
+     "budget_cpu_pct": 0.5,
+     "over_budget": false
+    }
+   }
+  }
+ ],
+ "items": [
+  {
+   "id": "sf-fog",
+   "owner": "atlas-main",
+   "relayed": false,
+   "group": "skyforge",
+   "machine": "atlas",
+   "kind": "task",
+   "title": "Fog of war: hide units outside sight radius",
+   "doing": "Review fixed 2 findings; tests running",
+   "state": "running",
+   "state_detail": "validating (running)",
+   "started_at": "2026-10-08T17:51:40Z",
+   "last_event": {
+    "state": "running",
+    "text": "review round 2 clean",
+    "at": "2026-10-08T19:00:40Z"
+   },
+   "progress": {
+    "basis": "history",
+    "history_n": 14,
+    "percent_floor": 41,
+    "percent_ceiling": 75,
+    "regressed": false,
+    "reason": null,
+    "current": {
+     "step": "test",
+     "elapsed_s": 1860,
+     "typical_s": 2640,
+     "p90_s": 4200,
+     "round": 2,
+     "activity": "active",
+     "last_activity_age_s": 35,
+     "waiting_since": null
+    },
+    "steps": [
+     {
+      "id": "dispatched",
+      "label": "Dispatched",
+      "status": "done",
+      "weight": 0,
+      "elapsed_s": 0,
+      "typical_s": 0,
+      "p90_s": 0,
+      "round": null
+     },
+     {
+      "id": "build",
+      "label": "Build",
+      "status": "done",
+      "weight": 0.387,
+      "elapsed_s": 2980,
+      "typical_s": 3120,
+      "p90_s": 6900,
+      "round": null
+     },
+     {
+      "id": "intent",
+      "label": "Intent",
+      "status": "done",
+      "weight": 0,
+      "elapsed_s": 1,
+      "typical_s": 1,
+      "p90_s": 3,
+      "round": 1
+     },
+     {
+      "id": "rebase",
+      "label": "Rebase",
+      "status": "done",
+      "weight": 0.001,
+      "elapsed_s": 9,
+      "typical_s": 8,
+      "p90_s": 40,
+      "round": 1
+     },
+     {
+      "id": "review",
+      "label": "Review",
+      "status": "done",
+      "weight": 0.03,
+      "elapsed_s": 410,
+      "typical_s": 240,
+      "p90_s": 600,
+      "round": 2
+     },
+     {
+      "id": "test",
+      "label": "Test",
+      "status": "current",
+      "weight": 0.327,
+      "elapsed_s": 1860,
+      "typical_s": 2640,
+      "p90_s": 4200,
+      "round": null
+     },
+     {
+      "id": "document",
+      "label": "Document",
+      "status": "pending",
+      "weight": 0.015,
+      "elapsed_s": null,
+      "typical_s": 120,
+      "p90_s": 300,
+      "round": null
+     },
+     {
+      "id": "lint",
+      "label": "Lint",
+      "status": "pending",
+      "weight": 0.002,
+      "elapsed_s": null,
+      "typical_s": 15,
+      "p90_s": 40,
+      "round": null
+     },
+     {
+      "id": "push",
+      "label": "Push",
+      "status": "pending",
+      "weight": 0.001,
+      "elapsed_s": null,
+      "typical_s": 6,
+      "p90_s": 20,
+      "round": null
+     },
+     {
+      "id": "pr",
+      "label": "Publish",
+      "status": "pending",
+      "weight": 0.007,
+      "elapsed_s": null,
+      "typical_s": 60,
+      "p90_s": 150,
+      "round": null
+     },
+     {
+      "id": "ci",
+      "label": "Checks",
+      "status": "pending",
+      "weight": 0.229,
+      "elapsed_s": null,
+      "typical_s": 1860,
+      "p90_s": 3000,
+      "round": null
+     }
+    ]
+   },
+   "handoff": {
+    "state": "none",
+    "since": null
+   },
+   "link": null,
+   "flags": [
+    "fix_round"
+   ],
+   "needs_you": false,
+   "project": "Skyforge",
+   "summary": "review fixed 2 findings; tests running",
+   "lane": {
+    "state": "Working",
+    "cause": "worker-busy",
+    "since": "2026-10-08T19:12:00Z",
+    "last_word": {
+     "verb": "working",
+     "at": "2026-10-08T19:12:00Z"
+    },
+    "short_title": "Fog of war: hide units outside sight radius"
+   },
+   "say": [
+    {
+     "t": "worker-busy"
+    }
+   ]
+  },
+  {
+   "id": "sf-lobby",
+   "owner": "atlas-main",
+   "relayed": false,
+   "group": "skyforge",
+   "machine": "atlas",
+   "kind": "task",
+   "title": "Skyforge: lobby ready-check countdown",
+   "doing": "Change request open, waiting on checks",
+   "state": "running",
+   "state_detail": "checks running",
+   "started_at": "2026-10-08T16:01:40Z",
+   "last_event": {
+    "state": "running",
+    "text": "waiting on checks",
+    "at": "2026-10-08T19:18:40Z"
+   },
+   "progress": {
+    "basis": "history",
+    "history_n": 14,
+    "percent_floor": 77,
+    "percent_ceiling": 100,
+    "regressed": false,
+    "reason": null,
+    "current": {
+     "step": "ci",
+     "elapsed_s": 760,
+     "typical_s": 1860,
+     "p90_s": 3000,
+     "round": 1,
+     "activity": "active",
+     "last_activity_age_s": 35,
+     "waiting_since": null
+    },
+    "steps": [
+     {
+      "id": "dispatched",
+      "label": "Dispatched",
+      "status": "done",
+      "weight": 0,
+      "elapsed_s": 0,
+      "typical_s": 0,
+      "p90_s": 0,
+      "round": null
+     },
+     {
+      "id": "build",
+      "label": "Build",
+      "status": "done",
+      "weight": 0.387,
+      "elapsed_s": 4100,
+      "typical_s": 3120,
+      "p90_s": 6900,
+      "round": null
+     },
+     {
+      "id": "intent",
+      "label": "Intent",
+      "status": "done",
+      "weight": 0,
+      "elapsed_s": 1,
+      "typical_s": 1,
+      "p90_s": 3,
+      "round": 1
+     },
+     {
+      "id": "rebase",
+      "label": "Rebase",
+      "status": "done",
+      "weight": 0.001,
+      "elapsed_s": 6,
+      "typical_s": 8,
+      "p90_s": 40,
+      "round": 1
+     },
+     {
+      "id": "review",
+      "label": "Review",
+      "status": "done",
+      "weight": 0.03,
+      "elapsed_s": 220,
+      "typical_s": 240,
+      "p90_s": 600,
+      "round": 1
+     },
+     {
+      "id": "test",
+      "label": "Test",
+      "status": "done",
+      "weight": 0.327,
+      "elapsed_s": 2510,
+      "typical_s": 2640,
+      "p90_s": 4200,
+      "round": 1
+     },
+     {
+      "id": "document",
+      "label": "Document",
+      "status": "done",
+      "weight": 0.015,
+      "elapsed_s": 140,
+      "typical_s": 120,
+      "p90_s": 300,
+      "round": 1
+     },
+     {
+      "id": "lint",
+      "label": "Lint",
+      "status": "done",
+      "weight": 0.002,
+      "elapsed_s": 12,
+      "typical_s": 15,
+      "p90_s": 40,
+      "round": 1
+     },
+     {
+      "id": "push",
+      "label": "Push",
+      "status": "done",
+      "weight": 0.001,
+      "elapsed_s": 5,
+      "typical_s": 6,
+      "p90_s": 20,
+      "round": 1
+     },
+     {
+      "id": "pr",
+      "label": "Publish",
+      "status": "done",
+      "weight": 0.007,
+      "elapsed_s": 55,
+      "typical_s": 60,
+      "p90_s": 150,
+      "round": 1
+     },
+     {
+      "id": "ci",
+      "label": "Checks",
+      "status": "current",
+      "weight": 0.229,
+      "elapsed_s": 760,
+      "typical_s": 1860,
+      "p90_s": 3000,
+      "round": null
+     }
+    ]
+   },
+   "handoff": {
+    "state": "automatic",
+    "since": null
+   },
+   "link": {
+    "url": "https://example.com/changes/418",
+    "label": "#418"
+   },
+   "flags": [],
+   "needs_you": false,
+   "project": "Skyforge",
+   "summary": "change request open, waiting on its checks",
+   "lane": {
+    "state": "Waiting on a check",
+    "cause": "ci-running",
+    "since": "2026-10-08T19:19:00Z",
+    "last_word": {
+     "verb": "working",
+     "at": "2026-10-08T19:12:00Z"
+    },
+    "short_title": "Lobby ready-check countdown"
+   },
+   "say": [
+    {
+     "t": "ci-running",
+     "step": 3,
+     "of": 4
+    }
+   ]
+  },
+  {
+   "id": "iw-export",
+   "owner": "atlas-main",
+   "relayed": false,
+   "group": "inkwell",
+   "machine": "atlas",
+   "kind": "task",
+   "title": "EPUB export: cover art handling",
+   "doing": "Stopped at review: 1 finding needs a product call",
+   "state": "waiting",
+   "state_detail": "stopped at review: 1 finding",
+   "started_at": "2026-10-08T15:57:40Z",
+   "last_event": {
+    "state": "waiting",
+    "text": "cover art: embed full-size or downscale?",
+    "at": "2026-10-08T17:19:40Z"
+   },
+   "progress": {
+    "basis": "history",
+    "history_n": 9,
+    "percent_floor": 38,
+    "percent_ceiling": 42,
+    "regressed": false,
+    "reason": null,
+    "current": {
+     "step": "review",
+     "elapsed_s": 1310,
+     "typical_s": 240,
+     "p90_s": 600,
+     "round": 1,
+     "activity": "waiting",
+     "last_activity_age_s": 7720,
+     "waiting_since": "2026-10-08T17:20:40Z"
+    },
+    "steps": [
+     {
+      "id": "dispatched",
+      "label": "Dispatched",
+      "status": "done",
+      "weight": 0,
+      "elapsed_s": 0,
+      "typical_s": 0,
+      "p90_s": 0,
+      "round": null
+     },
+     {
+      "id": "build",
+      "label": "Build",
+      "status": "done",
+      "weight": 0.387,
+      "elapsed_s": 2650,
+      "typical_s": 3120,
+      "p90_s": 6900,
+      "round": null
+     },
+     {
+      "id": "intent",
+      "label": "Intent",
+      "status": "done",
+      "weight": 0,
+      "elapsed_s": 1,
+      "typical_s": 1,
+      "p90_s": 3,
+      "round": 1
+     },
+     {
+      "id": "rebase",
+      "label": "Rebase",
+      "status": "done",
+      "weight": 0.001,
+      "elapsed_s": 4,
+      "typical_s": 8,
+      "p90_s": 40,
+      "round": 1
+     },
+     {
+      "id": "review",
+      "label": "Review",
+      "status": "current",
+      "weight": 0.03,
+      "elapsed_s": 1310,
+      "typical_s": 240,
+      "p90_s": 600,
+      "round": 1
+     },
+     {
+      "id": "test",
+      "label": "Test",
+      "status": "pending",
+      "weight": 0.327,
+      "elapsed_s": null,
+      "typical_s": 2640,
+      "p90_s": 4200,
+      "round": null
+     },
+     {
+      "id": "document",
+      "label": "Document",
+      "status": "pending",
+      "weight": 0.015,
+      "elapsed_s": null,
+      "typical_s": 120,
+      "p90_s": 300,
+      "round": null
+     },
+     {
+      "id": "lint",
+      "label": "Lint",
+      "status": "pending",
+      "weight": 0.002,
+      "elapsed_s": null,
+      "typical_s": 15,
+      "p90_s": 40,
+      "round": null
+     },
+     {
+      "id": "push",
+      "label": "Push",
+      "status": "pending",
+      "weight": 0.001,
+      "elapsed_s": null,
+      "typical_s": 6,
+      "p90_s": 20,
+      "round": null
+     },
+     {
+      "id": "pr",
+      "label": "Publish",
+      "status": "pending",
+      "weight": 0.007,
+      "elapsed_s": null,
+      "typical_s": 60,
+      "p90_s": 150,
+      "round": null
+     },
+     {
+      "id": "ci",
+      "label": "Checks",
+      "status": "pending",
+      "weight": 0.229,
+      "elapsed_s": null,
+      "typical_s": 1860,
+      "p90_s": 3000,
+      "round": null
+     }
+    ]
+   },
+   "handoff": {
+    "state": "none",
+    "since": null
+   },
+   "link": null,
+   "flags": [
+    "gate"
+   ],
+   "needs_you": true,
+   "project": "Inkwell",
+   "summary": "stopped at review: one finding needs a product call",
+   "lane": {
+    "state": "Waiting on you",
+    "cause": "owner-hold",
+    "since": "2026-10-08T17:20:00Z",
+    "last_word": {
+     "verb": "needs-decision",
+     "at": "2026-10-08T17:20:00Z"
+    },
+    "short_title": "EPUB export: cover art handling"
+   },
+   "say": [
+    {
+     "t": "call-open"
+    }
+   ]
+  },
+  {
+   "id": "tw-feed",
+   "owner": "atlas-main",
+   "relayed": false,
+   "group": "tidewatch",
+   "machine": "atlas",
+   "kind": "task",
+   "title": "Tidewatch: status feed adapter for the primary workstation",
+   "doing": "Checks green: ready for review",
+   "state": "done",
+   "state_detail": null,
+   "started_at": "2026-10-08T17:39:40Z",
+   "last_event": {
+    "state": "done",
+    "text": "ready, checks green",
+    "at": "2026-10-08T19:17:40Z"
+   },
+   "progress": {
+    "basis": "default",
+    "history_n": 0,
+    "percent_floor": 100,
+    "percent_ceiling": 100,
+    "regressed": false,
+    "reason": null,
+    "current": null,
+    "steps": [
+     {
+      "id": "dispatched",
+      "label": "Dispatched",
+      "status": "done",
+      "weight": 0,
+      "elapsed_s": 5,
+      "typical_s": null,
+      "p90_s": null,
+      "round": null
+     },
+     {
+      "id": "build",
+      "label": "Build",
+      "status": "done",
+      "weight": 0.97,
+      "elapsed_s": 4620,
+      "typical_s": null,
+      "p90_s": null,
+      "round": null
+     },
+     {
+      "id": "push",
+      "label": "Push",
+      "status": "done",
+      "weight": 0.01,
+      "elapsed_s": 5,
+      "typical_s": null,
+      "p90_s": null,
+      "round": null
+     },
+     {
+      "id": "pr",
+      "label": "Publish",
+      "status": "done",
+      "weight": 0.02,
+      "elapsed_s": 5,
+      "typical_s": null,
+      "p90_s": null,
+      "round": null
+     }
+    ]
+   },
+   "handoff": {
+    "state": "awaiting_you",
+    "since": "2026-10-08T19:17:40Z"
+   },
+   "link": {
+    "url": "https://example.com/changes/3",
+    "label": "#3"
+   },
+   "flags": [],
+   "needs_you": false,
+   "project": "Tidewatch",
+   "summary": "checks green, ready for review",
+   "lane": {
+    "state": "Finished",
+    "cause": "pr-ready",
+    "since": "2026-10-08T19:17:40Z",
+    "last_word": {
+     "verb": "done",
+     "at": "2026-10-08T19:17:40Z"
+    },
+    "short_title": "Status feed adapter for the primary workstation"
+   },
+   "say": [
+    {
+     "t": "finished",
+     "how": "pr-ready"
+    },
+    {
+     "t": "your-merge"
+    }
+   ]
+  },
+  {
+   "id": "bo-pathing",
+   "owner": "borealis-lanes",
+   "relayed": true,
+   "group": "skyforge",
+   "machine": "borealis",
+   "kind": "task",
+   "title": "Pathfinding benchmark on large maps",
+   "doing": "second-hand summary",
+   "state": "running",
+   "state_detail": null,
+   "started_at": "2026-10-08T17:31:40Z",
+   "last_event": null,
+   "progress": {
+    "basis": "coarse",
+    "history_n": 0,
+    "percent_floor": null,
+    "percent_ceiling": null,
+    "regressed": false,
+    "reason": "state only: no step data from this source",
+    "current": null,
+    "steps": [
+     {
+      "id": "started",
+      "label": "Started",
+      "status": "done",
+      "weight": null,
+      "elapsed_s": null,
+      "typical_s": null,
+      "p90_s": null,
+      "round": null
+     },
+     {
+      "id": "working",
+      "label": "Working",
+      "status": "current",
+      "weight": null,
+      "elapsed_s": null,
+      "typical_s": null,
+      "p90_s": null,
+      "round": null
+     },
+     {
+      "id": "ready",
+      "label": "Ready",
+      "status": "pending",
+      "weight": null,
+      "elapsed_s": null,
+      "typical_s": null,
+      "p90_s": null,
+      "round": null
+     }
+    ]
+   },
+   "handoff": {
+    "state": "none",
+    "since": null
+   },
+   "link": null,
+   "flags": [],
+   "needs_you": false,
+   "lane": {
+    "state": "Waiting on the supervisor",
+    "cause": "at-gate",
+    "since": "2026-10-08T18:55:00Z",
+    "last_word": {
+     "verb": "parked",
+     "at": "2026-10-08T18:55:00Z"
+    },
+    "short_title": "Pathfinding benchmark on large maps"
+   },
+   "say": [
+    {
+     "t": "gate-stop",
+     "gate": "review",
+     "decides": "supervisor",
+     "findings": 2
+    }
+   ]
+  },
+  {
+   "id": "bo-installer",
+   "owner": "borealis-lanes",
+   "relayed": true,
+   "group": "inkwell",
+   "machine": "borealis",
+   "kind": "task",
+   "title": "Installer: signed package build",
+   "doing": "second-hand summary",
+   "state": "running",
+   "state_detail": null,
+   "started_at": "2026-10-08T18:21:40Z",
+   "last_event": null,
+   "progress": {
+    "basis": "coarse",
+    "history_n": 0,
+    "percent_floor": null,
+    "percent_ceiling": null,
+    "regressed": false,
+    "reason": "state only: no step data from this source",
+    "current": null,
+    "steps": [
+     {
+      "id": "started",
+      "label": "Started",
+      "status": "done",
+      "weight": null,
+      "elapsed_s": null,
+      "typical_s": null,
+      "p90_s": null,
+      "round": null
+     },
+     {
+      "id": "working",
+      "label": "Working",
+      "status": "current",
+      "weight": null,
+      "elapsed_s": null,
+      "typical_s": null,
+      "p90_s": null,
+      "round": null
+     },
+     {
+      "id": "ready",
+      "label": "Ready",
+      "status": "pending",
+      "weight": null,
+      "elapsed_s": null,
+      "typical_s": null,
+      "p90_s": null,
+      "round": null
+     }
+    ]
+   },
+   "handoff": {
+    "state": "none",
+    "since": null
+   },
+   "link": null,
+   "flags": [],
+   "needs_you": false,
+   "lane": {
+    "state": "Needs attention",
+    "cause": "worker-gone",
+    "since": "2026-10-08T17:31:40Z",
+    "last_word": {
+     "verb": "working",
+     "at": "2026-10-08T16:50:00Z"
+    },
+    "short_title": "Installer: signed package build"
+   },
+   "say": [
+    {
+     "t": "tests-running",
+     "step": 2,
+     "of": 4
+    },
+    {
+     "t": "worker-gone",
+     "how": "ended",
+     "at": "2026-10-08T17:31:40Z"
+    }
+   ]
+  },
+  {
+   "id": "ci-replay",
+   "owner": "cinder-lanes",
+   "relayed": true,
+   "group": "skyforge",
+   "machine": "cinder",
+   "kind": "task",
+   "title": "Replay files: delta compression",
+   "doing": "second-hand summary: its home is not answering",
+   "state": "unknown",
+   "state_detail": null,
+   "started_at": "2026-10-08T15:31:40Z",
+   "last_event": null,
+   "progress": {
+    "basis": "none",
+    "history_n": 0,
+    "percent_floor": null,
+    "percent_ceiling": null,
+    "regressed": false,
+    "reason": "state unknown: no live report from this item's source",
+    "current": null,
+    "steps": []
+   },
+   "handoff": {
+    "state": "none",
+    "since": null
+   },
+   "link": null,
+   "flags": [],
+   "needs_you": false,
+   "lane": {
+    "state": "Can't tell",
+    "cause": "state-unread",
+    "since": null,
+    "last_word": {
+     "verb": "paused",
+     "at": "2026-10-08T17:02:00Z"
+    },
+    "short_title": "Replay files: delta compression"
+   },
+   "say": [
+    {
+     "t": "unreadable"
+    },
+    {
+     "t": "last-word",
+     "verb": "paused",
+     "at": "2026-10-08T17:02:00Z"
+    }
+   ]
+  }
+ ],
+ "attention": [
+  {
+   "id": "decision:iw-export",
+   "kind": "decision",
+   "severity": "action",
+   "title": "Inkwell: how should EPUB export handle cover art?",
+   "detail": "Embed the full-size image, or downscale to 1600 px. The export item is stopped until you choose.",
+   "since": "2026-10-08T17:20:40Z",
+   "machine": "atlas",
+   "item": "iw-export",
+   "group": "inkwell",
+   "link": null,
+   "answer_link": {"url": "http://board-host.example:4387/session/0123456789abcdef", "label": "review board", "state": "open", "state_as_of": "2026-10-08T19:30:40Z", "why": null},
+   "how": "Answer in the team chat",
+   "say": "iw-export: downscale to 1600 px"
+  },
+  {
+   "id": "approval:tw-feed",
+   "kind": "approval",
+   "severity": "action",
+   "title": "Ready for approval: status feed adapter",
+   "detail": "Checks green for 14 min, nothing left to review.",
+   "since": "2026-10-08T19:17:40Z",
+   "machine": "atlas",
+   "item": "tw-feed",
+   "group": "tidewatch",
+   "link": {
+    "url": "https://example.com/changes/3",
+    "label": "#3"
+   },
+   "how": "Approve in the team chat",
+   "say": "tw-feed: approve"
+  },
+  {
+   "id": "capacity:week",
+   "kind": "capacity",
+   "severity": "action",
+   "title": "The primary plan's week runs out before it resets",
+   "detail": "18% left. At this pace it empties Sat 10:00, 9 h before the Sat 19:00 reset.",
+   "since": "2026-10-08T17:05:40Z",
+   "machine": "atlas",
+   "item": null,
+   "group": null,
+   "link": null,
+   "how": "Move heavy work to another machine or slow new starts"
+  },
+  {
+   "id": "credential:sample-provider",
+   "kind": "credential",
+   "severity": "info",
+   "title": "Sample provider sign-in expired",
+   "detail": "Nothing uses it right now; its allowance is unreadable until it is refreshed.",
+   "since": "2026-10-08T11:02:40Z",
+   "machine": "atlas",
+   "item": null,
+   "group": null,
+   "link": null,
+   "how": "Sign in once"
+  }
+ ],
+ "next": [
+  {
+   "id": "sf-tech-ui",
+   "group": "skyforge",
+   "title": "Tech tree: tier 3 unlock screen",
+   "kind": "queued",
+   "blocked_by": [
+    "sf-lobby"
+   ],
+   "reason": "starts after the lobby countdown lands",
+   "until": null,
+   "filed": "2026-10-07"
+  },
+  {
+   "id": "bo-gpu-profile",
+   "group": "skyforge",
+   "title": "Profile the simulation tick on the render box",
+   "kind": "queued",
+   "blocked_by": [],
+   "reason": "next free slot on that machine",
+   "until": null,
+   "filed": "2026-10-08"
+  },
+  {
+   "id": "iw-dict",
+   "group": "inkwell",
+   "title": "Custom dictionary import",
+   "kind": "queued",
+   "blocked_by": [],
+   "reason": "waits for a free slot",
+   "until": null,
+   "filed": "2026-10-08"
+  },
+  {
+   "id": "sf-cut-015",
+   "group": "skyforge",
+   "title": "Cut Skyforge 0.15",
+   "kind": "gate",
+   "blocked_by": [
+    "sf-fog"
+   ],
+   "reason": "waits for fog of war",
+   "until": null,
+   "filed": "2026-10-05"
+  },
+  {
+   "id": "iw-notes-19",
+   "group": "inkwell",
+   "title": "Inkwell 1.9 release notes",
+   "kind": "held",
+   "blocked_by": [],
+   "reason": "you deferred it",
+   "until": "2026-10-12",
+   "filed": "2026-10-03"
+  }
+ ],
+ "done": [
+  {
+   "id": "sf-minimap",
+   "owner": "atlas-main",
+   "group": "skyforge",
+   "title": "Minimap pings fade after 4 s",
+   "via": "pull request",
+   "link": null,
+   "at": "2026-10-08T18:50:40Z"
+  },
+  {
+   "id": "iw-autosave",
+   "owner": "atlas-main",
+   "group": "inkwell",
+   "title": "Autosave no longer crashes on long chapters",
+   "via": "pull request",
+   "link": null,
+   "at": "2026-10-08T17:12:40Z"
+  },
+  {
+   "id": "bo-netcode",
+   "owner": "borealis-lanes",
+   "group": "skyforge",
+   "title": "Netcode fuzz harness runs on the render box",
+   "via": "pull request",
+   "link": null,
+   "at": "2026-10-08T16:40:40Z"
+  },
+  {
+   "id": "tw-routing",
+   "owner": "atlas-main",
+   "group": "tidewatch",
+   "title": "Heavy work routes by allowance runway",
+   "via": "local merge",
+   "link": null,
+   "at": "2026-10-08T16:26:40Z"
+  },
+  {
+   "id": "iw-scout",
+   "owner": "atlas-main",
+   "group": "inkwell",
+   "title": "Export formats: findings report",
+   "via": "report",
+   "link": null,
+   "at": "2026-10-08T15:51:40Z"
+  },
+  {
+   "id": "sf-hotkeys",
+   "owner": "atlas-main",
+   "group": "skyforge",
+   "title": "Unit hotkeys remember their groups",
+   "via": "pull request",
+   "link": null,
+   "at": "2026-10-08T14:21:40Z"
+  },
+  {
+   "id": "hist-1-0",
+   "owner": "atlas-main",
+   "group": "inkwell",
+   "title": "Earlier work 1d-0",
+   "via": "pull request",
+   "link": null,
+   "at": "2026-10-07T18:31:40Z"
+  },
+  {
+   "id": "hist-1-1",
+   "owner": "atlas-main",
+   "group": "tidewatch",
+   "title": "Earlier work 1d-1",
+   "via": "pull request",
+   "link": null,
+   "at": "2026-10-07T17:31:40Z"
+  },
+  {
+   "id": "hist-1-2",
+   "owner": "atlas-main",
+   "group": "skyforge",
+   "title": "Earlier work 1d-2",
+   "via": "pull request",
+   "link": null,
+   "at": "2026-10-07T16:31:40Z"
+  },
+  {
+   "id": "hist-1-3",
+   "owner": "atlas-main",
+   "group": "inkwell",
+   "title": "Earlier work 1d-3",
+   "via": "pull request",
+   "link": null,
+   "at": "2026-10-07T15:31:40Z"
+  },
+  {
+   "id": "hist-1-0",
+   "owner": "atlas-main",
+   "group": "inkwell",
+   "title": "Earlier work 1d-0",
+   "via": "pull request",
+   "link": null,
+   "at": "2026-10-07T18:31:40Z"
+  },
+  {
+   "id": "hist-1-1",
+   "owner": "atlas-main",
+   "group": "tidewatch",
+   "title": "Earlier work 1d-1",
+   "via": "pull request",
+   "link": null,
+   "at": "2026-10-07T17:31:40Z"
+  },
+  {
+   "id": "hist-1-2",
+   "owner": "atlas-main",
+   "group": "skyforge",
+   "title": "Earlier work 1d-2",
+   "via": "pull request",
+   "link": null,
+   "at": "2026-10-07T16:31:40Z"
+  },
+  {
+   "id": "hist-2-0",
+   "owner": "atlas-main",
+   "group": "tidewatch",
+   "title": "Earlier work 2d-0",
+   "via": "pull request",
+   "link": null,
+   "at": "2026-10-06T18:31:40Z"
+  },
+  {
+   "id": "hist-2-1",
+   "owner": "atlas-main",
+   "group": "skyforge",
+   "title": "Earlier work 2d-1",
+   "via": "pull request",
+   "link": null,
+   "at": "2026-10-06T17:31:40Z"
+  },
+  {
+   "id": "hist-2-2",
+   "owner": "atlas-main",
+   "group": "inkwell",
+   "title": "Earlier work 2d-2",
+   "via": "pull request",
+   "link": null,
+   "at": "2026-10-06T16:31:40Z"
+  },
+  {
+   "id": "hist-3-0",
+   "owner": "atlas-main",
+   "group": "skyforge",
+   "title": "Earlier work 3d-0",
+   "via": "pull request",
+   "link": null,
+   "at": "2026-10-05T18:31:40Z"
+  },
+  {
+   "id": "hist-4-0",
+   "owner": "atlas-main",
+   "group": "inkwell",
+   "title": "Earlier work 4d-0",
+   "via": "pull request",
+   "link": null,
+   "at": "2026-10-04T18:31:40Z"
+  },
+  {
+   "id": "hist-4-1",
+   "owner": "atlas-main",
+   "group": "tidewatch",
+   "title": "Earlier work 4d-1",
+   "via": "pull request",
+   "link": null,
+   "at": "2026-10-04T17:31:40Z"
+  },
+  {
+   "id": "hist-4-2",
+   "owner": "atlas-main",
+   "group": "skyforge",
+   "title": "Earlier work 4d-2",
+   "via": "pull request",
+   "link": null,
+   "at": "2026-10-04T16:31:40Z"
+  },
+  {
+   "id": "hist-4-3",
+   "owner": "atlas-main",
+   "group": "inkwell",
+   "title": "Earlier work 4d-3",
+   "via": "pull request",
+   "link": null,
+   "at": "2026-10-04T15:31:40Z"
+  },
+  {
+   "id": "hist-5-0",
+   "owner": "atlas-main",
+   "group": "tidewatch",
+   "title": "Earlier work 5d-0",
+   "via": "pull request",
+   "link": null,
+   "at": "2026-10-03T18:31:40Z"
+  },
+  {
+   "id": "hist-5-1",
+   "owner": "atlas-main",
+   "group": "skyforge",
+   "title": "Earlier work 5d-1",
+   "via": "pull request",
+   "link": null,
+   "at": "2026-10-03T17:31:40Z"
+  },
+  {
+   "id": "hist-5-2",
+   "owner": "atlas-main",
+   "group": "inkwell",
+   "title": "Earlier work 5d-2",
+   "via": "pull request",
+   "link": null,
+   "at": "2026-10-03T16:31:40Z"
+  },
+  {
+   "id": "hist-5-3",
+   "owner": "atlas-main",
+   "group": "tidewatch",
+   "title": "Earlier work 5d-3",
+   "via": "pull request",
+   "link": null,
+   "at": "2026-10-03T15:31:40Z"
+  },
+  {
+   "id": "hist-6-0",
+   "owner": "atlas-main",
+   "group": "skyforge",
+   "title": "Earlier work 6d-0",
+   "via": "pull request",
+   "link": null,
+   "at": "2026-10-02T18:31:40Z"
+  },
+  {
+   "id": "hist-6-1",
+   "owner": "atlas-main",
+   "group": "inkwell",
+   "title": "Earlier work 6d-1",
+   "via": "pull request",
+   "link": null,
+   "at": "2026-10-02T17:31:40Z"
+  },
+  {
+   "id": "hist-7-0",
+   "owner": "atlas-main",
+   "group": "inkwell",
+   "title": "Earlier work 7d-0",
+   "via": "pull request",
+   "link": null,
+   "at": "2026-10-01T18:31:40Z"
+  },
+  {
+   "id": "hist-7-1",
+   "owner": "atlas-main",
+   "group": "tidewatch",
+   "title": "Earlier work 7d-1",
+   "via": "pull request",
+   "link": null,
+   "at": "2026-10-01T17:31:40Z"
+  },
+  {
+   "id": "hist-8-0",
+   "owner": "atlas-main",
+   "group": "tidewatch",
+   "title": "Earlier work 8d-0",
+   "via": "pull request",
+   "link": null,
+   "at": "2026-09-30T18:31:40Z"
+  }
+ ],
+ "events": [
+  {
+   "at": 1791485440,
+   "item": "sf-lobby",
+   "kind": "update",
+   "text": "Lobby countdown: change open, waiting on checks"
+  },
+  {
+   "at": 1791479980,
+   "item": "iw-export",
+   "kind": "waiting",
+   "text": "EPUB cover art needs your call"
+  }
+ ],
+ "groups": [
+  {
+   "id": "skyforge",
+   "label": "Skyforge",
+   "color": null,
+   "checkpoint": {
+    "as_of": "2026-10-08T16:00:40Z",
+    "live": {
+     "version": "0.14.2",
+     "since": "2026-10-06"
+    },
+    "next": {
+     "version": "0.15",
+     "waiting_on": [
+      "sf-fog"
+     ],
+     "items_ready": 3
+    },
+    "gate": {
+     "value": "pass",
+     "as_of": "2026-10-08T15:40:40Z",
+     "note": "frame-time floor held on the reference map"
+    }
+   }
+  },
+  {
+   "id": "inkwell",
+   "label": "Inkwell",
+   "color": null,
+   "checkpoint": {
+    "as_of": "2026-10-08T16:00:40Z",
+    "live": {
+     "version": "1.8.3",
+     "since": "2026-10-01"
+    },
+    "next": {
+     "version": "1.9",
+     "waiting_on": [
+      "iw-export"
+     ],
+     "items_ready": 4
+    },
+    "gate": {
+     "value": "unknown",
+     "as_of": null,
+     "note": "no floor run since the last cut"
+    }
+   }
+  },
+  {
+   "id": "tidewatch",
+   "label": "Tidewatch",
+   "color": null,
+   "checkpoint": null
+  }
+ ],
+ "meters": {
+  "as_of": "2026-10-08T19:29:10Z",
+  "accounts": [
+   {
+    "id": "primary-plan",
+    "label": "Orbit, Team plan",
+    "machine": "atlas",
+    "windows": [
+     {
+      "id": "short",
+      "label": "5-hour",
+      "percent_remaining": 62,
+      "resets_at": "2026-10-08T22:19:40Z",
+      "pace": "ahead"
+     },
+     {
+      "id": "week",
+      "label": "Week",
+      "percent_remaining": 18,
+      "resets_at": "2026-10-11T01:31:40Z",
+      "pace": "ahead"
+     }
+    ],
+    "runway": {
+     "status": "exhausts_before_reset",
+     "confidence": "medium",
+     "projected_empty_at": "2026-10-10T17:31:40Z",
+     "source": "the provider's own projection"
+    },
+    "provider": "Orbit",
+    "account": "Team plan"
+   }
+  ]
+ }
+}

@@ -1,0 +1,178 @@
+#!/usr/bin/env python3
+"""Pre-release scan: the working tree (scripts/self-audit) and every commit on every ref.
+
+    scripts/release-scan [--denylist FILE] [--allow VALUE ...] [--allow-file FILE] [PATH]
+
+Runs scripts/self-audit on PATH (default: this repository), with --denylist FILE when one is given. Then reads
+the whole history, every ref (branches, tags, remote and pull refs, stash), and counts:
+
+  * author and committer names and e-mail addresses that are not on the allow list: --allow VALUE (repeatable;
+    a name or an e-mail address, matched whole and case-insensitively) and --allow-file FILE (one value per
+    line, "#" starts a comment). With no allow list, every identity in the history is a finding.
+  * home paths and token shapes (the same patterns as the self-audit) in added lines of any commit, also in a
+    line a later commit removed.
+  * a shallow clone, whose history is incomplete.
+
+It prints counts and kinds only, never the text of a hit, so its output is safe to paste anywhere; the
+self-audit's own output is reduced to kind counts the same way (run scripts/self-audit directly, on a machine
+you trust, to see where a tree hit is). Exit status 0 when nothing is found, 1 on any finding, 2 when it could
+not run. Not covered: tag messages and taggers, commit messages, objects no ref reaches, forge records
+(pull request text). Standard library only.
+"""
+import argparse
+import collections
+import importlib.machinery
+import importlib.util
+import re
+import subprocess
+import sys
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+IDENTITY = (("author name", 0), ("author e-mail address", 1), ("committer name", 2), ("committer e-mail address", 3))
+MARK = "\x01"
+
+
+def load_audit():
+    sys.dont_write_bytecode = True
+    loader = importlib.machinery.SourceFileLoader("self_audit", str(HERE / "self-audit"))
+    spec = importlib.util.spec_from_loader("self_audit", loader)
+    audit = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(audit)
+    return audit
+
+
+def git(root, *args):
+    return subprocess.run(["git", "-C", str(root), "-c", "core.quotepath=false", "-c", "log.showSignature=false", *args],
+                          capture_output=True, text=True, encoding="utf-8", errors="replace")
+
+
+def scan_tree(root, denylist):
+    cmd = [sys.executable, str(HERE / "self-audit"), str(root)] + (["--denylist", denylist] if denylist else [])
+    out = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace")
+    kinds, summary = collections.Counter(), None
+    for line in out.stdout.splitlines():
+        if line.startswith("self-audit: "):
+            summary = line
+            continue
+        m = re.match(r"^.+?:\d+: (.+?): ", line)
+        if m:
+            kinds[m.group(1)] += 1
+    if summary is None:
+        print(f"working tree: self-audit did not finish (exit status {out.returncode})")
+        return None
+    # Keep the counts and drop whatever follows them: the summary line carries no hit text.
+    print("working tree: " + re.sub(r"^self-audit: ", "", summary))
+    for kind, n in sorted(kinds.items()):
+        print(f"  {kind}: {n} line(s)")
+    return sum(kinds.values()) + (1 if out.returncode != 0 and not kinds else 0)
+
+
+def scan_identities(root, allowed):
+    out = git(root, "log", "--all", "--format=%an%x00%ae%x00%cn%x00%ce")
+    if out.returncode != 0:
+        return None
+    commits = collections.Counter()
+    seen = collections.defaultdict(set)
+    total = 0
+    for line in out.stdout.splitlines():
+        parts = line.split("\0")
+        if len(parts) != 4:
+            continue
+        total += 1
+        for kind, i in IDENTITY:
+            if parts[i].strip().lower() not in allowed:
+                commits[kind] += 1
+                seen[kind].add(parts[i].strip().lower())
+    print(f"history, identities: {total} commit(s) on all refs")
+    for kind, _ in IDENTITY:
+        if commits[kind]:
+            print(f"  {kind} not on the allow list: {commits[kind]} commit(s), {len(seen[kind])} distinct value(s)")
+    return sum(commits.values())
+
+
+def scan_added_lines(root, audit):
+    secrets = [(kind, re.compile(pat)) for kind, pat in audit.SECRETS]
+    paths = list(audit.PATHS)
+    proc = subprocess.Popen(
+        ["git", "-C", str(root), "-c", "core.quotepath=false", "-c", "log.showSignature=false", "log", "--all",
+         "--no-color", "--no-ext-diff", "--no-textconv", "-p", "-U0", "--format=" + MARK + "%H"],
+        stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+    kinds = collections.Counter()
+    in_hunk, is_doc = False, False
+    for raw in proc.stdout:
+        line = raw.decode("utf-8", errors="replace").rstrip("\n")
+        if in_hunk and line[:1] in ("+", "-", " ", "\\"):
+            if line[0] != "+":
+                continue
+            text = line[1:]
+            for kind, pat in secrets:
+                if kind == "long hex or base64 run" and is_doc:
+                    continue
+                if pat.search(text):
+                    kinds[kind] += 1
+            for kind, pat in paths:
+                if pat.search(text):
+                    kinds[kind] += 1
+            continue
+        in_hunk = line.startswith("@@")
+        if line.startswith(MARK) or line.startswith("diff --git "):
+            is_doc = False
+        elif line.startswith("+++ "):
+            is_doc = line.rstrip().lower().endswith(".md")
+    proc.stdout.close()
+    if proc.wait() != 0:
+        return None
+    print("history, added lines: " + ("clean" if not kinds else f"{sum(kinds.values())} line(s)"))
+    for kind, n in sorted(kinds.items()):
+        print(f"  {kind}: {n} added line(s)")
+    return sum(kinds.values())
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
+    ap.add_argument("path", nargs="?", default=str(HERE.parent))
+    ap.add_argument("--denylist", help="file of names that must not appear, passed to scripts/self-audit")
+    ap.add_argument("--allow", action="append", default=[], metavar="VALUE", help="an author or committer name or e-mail address that may appear in the history (repeatable)")
+    ap.add_argument("--allow-file", help="file of allowed names and e-mail addresses, one per line")
+    args = ap.parse_args()
+    root = Path(args.path).resolve()
+    allowed = {v.strip().lower() for v in args.allow if v.strip()}
+    try:
+        if args.allow_file:
+            allowed |= {v.strip().lower() for v in Path(args.allow_file).read_text(encoding="utf-8").splitlines()
+                        if v.strip() and not v.strip().startswith("#")}
+        if args.denylist:
+            Path(args.denylist).read_text(encoding="utf-8")
+    except (OSError, UnicodeDecodeError):
+        print("release-scan: cannot read the allow file or the denylist file", file=sys.stderr)
+        return 2
+    try:
+        inside = git(root, "rev-parse", "--is-inside-work-tree")
+    except OSError:
+        print("release-scan: git is not available", file=sys.stderr)
+        return 2
+    if inside.returncode != 0 or inside.stdout.strip() != "true":
+        print("release-scan: not a git working tree, so there is no history to scan", file=sys.stderr)
+        return 2
+    audit = load_audit()
+    found = 0
+    tree = scan_tree(root, args.denylist)
+    if tree is None:
+        return 2
+    found += tree
+    ids = scan_identities(root, allowed)
+    lines = scan_added_lines(root, audit)
+    if ids is None or lines is None:
+        print("release-scan: git could not read the history", file=sys.stderr)
+        return 2
+    found += ids + lines
+    if git(root, "rev-parse", "--is-shallow-repository").stdout.strip() == "true":
+        print("history: shallow clone, so the history above is incomplete (fetch it all and run again)")
+        found += 1
+    print("release-scan: " + (f"{found} finding(s)" if found else "clean"))
+    return 1 if found else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

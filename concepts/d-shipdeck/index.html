@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; connect-src 'self'">
+<title>Ship Deck</title>
+<link rel="stylesheet" href="css/shipdeck.css">
+</head>
+<body data-layout="tv">
+<div class="scenebox" id="scenebox">
+  <canvas class="px" id="scene" role="img" aria-label="The fleet as a ship at sea"></canvas>
+  <div class="hulls" id="hulls"></div>
+</div>
+<main class="deck" id="deck" aria-label="Fleet board">
+  <header class="bar" id="bar"></header>
+  <section class="call" id="call" aria-live="polite"></section>
+  <canvas class="px crow" id="crow" width="20" height="14" aria-hidden="true" hidden></canvas>
+  <section class="log" id="log" aria-label="Ship's log"></section>
+  <div class="more" id="more"></div>
+</main>
+<aside class="dev" id="dev" aria-label="Preview controls" hidden></aside>
+<script src="js/model.js"></script>
+<script src="js/art.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

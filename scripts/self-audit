@@ -1,0 +1,133 @@
+#!/usr/bin/env python3
+"""Pre-release audit: scan the product directory for things that must not ship.
+
+    scripts/self-audit [--denylist FILE ...] [--exempt DIR ...] [PATH]
+
+Looks for secrets and tokens, e-mail addresses, absolute home paths, IP addresses, the generic vendor and
+provider names the core must not mention (an AI provider, a VPN), and every word in each --denylist file
+(repeatable; one regex-free word or phrase per line, matched case-insensitively on word boundaries). Keep
+denylists OUTSIDE the product directory: they hold the names that must not leak (your machines, hosts,
+accounts, projects, the vendors and tools you only meet through an adapter, and words of your own), so this public
+script never spells them. Nothing is exempt by default. A directory given with --exempt is treated as a
+tool-specific adapter: an adapter speaks its tool's vocabulary, so it is skipped by the vendor and provider
+check, but its fixtures and docs still get every other name check (paths, e-mail, IP addresses, the
+denylists), and nothing is ever skipped by the secret checks. This script is not scanned.
+Two documented exemptions: the copyright holder line of LICENSE ("Copyright (c) ...") is skipped by the
+name checks, since the author's name must appear there; and the long-hex check is skipped in Markdown
+files, where font and archive integrity digests legitimately live (every other check still applies).
+Exit status 1 when anything is found.
+"""
+import argparse
+import os
+import re
+import subprocess
+import sys
+from pathlib import Path
+
+SECRETS = [
+    ("github token", r"\bgh[pousr]_[A-Za-z0-9]{20,}"),
+    ("github token", r"\bgithub_pat_[A-Za-z0-9_]{20,}"),
+    ("api key", r"\bsk-[A-Za-z0-9_-]{20,}"),
+    ("cloud key", r"\bAKIA[0-9A-Z]{16}\b"),
+    ("chat token", r"\bxox[abprs]-[A-Za-z0-9-]{10,}"),
+    ("private key", r"-----BEGIN [A-Z ]*PRIVATE KEY"),
+    ("jwt", r"\beyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{5,}"),
+    ("bearer token", r"Bearer\s+(?!<)[A-Za-z0-9._~+/=-]{24,}"),
+    ("credential assignment", r"(?i)\b(password|passwd|secret|api[_-]?key|token)\b\s*[:=]\s*['\"][^'\"\s<{$]{8,}['\"]"),
+    ("long hex or base64 run", r"(?<![A-Za-z0-9/+_-])[A-Fa-f0-9]{40,}(?![A-Za-z0-9])"),
+]
+EMAIL = re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}")
+EMAIL_OK = re.compile(r"@(example\.(com|org|net)|[a-z0-9.-]*\.example|[a-z0-9.-]*\.invalid)$", re.I)
+PATHS = [
+    ("macOS home path", re.compile(r"/Users/(?!me\b|you\b|demo\b|example\b|name\b)[A-Za-z][^\s/'\"]*")),
+    ("Linux home path", re.compile(r"/home/(?!user\b|you\b|example\b|name\b|demo\b|me\b)[a-z][a-z0-9_-]*/")),
+    ("Windows home path", re.compile(r"[A-Za-z]:\\Users\\[A-Za-z]")),
+]
+IP = re.compile(r"(?<![\d.])(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})(?![\d.]|/)")
+IP_OK = ("127.", "0.0.0.0", "192.0.2.", "198.51.100.", "203.0.113.")
+VENDOR = [w for w in ("tail" + "scale", "tail" + "net", "ts" + ".net", "clau" + "de", "anthro" + "pic")]
+# AI providers and their tools: the core and its docs name allowances generically ("a provider"); only an adapter
+# that reads a provider's figures names it, through its own mapping.
+PROVIDERS = [w for w in ("open" + "ai", "chat" + "gpt", "co" + "dex", "gem" + "ini", "co" + "pilot", "mis" + "tral")]
+SKIP_DIRS = {".git", "runtime", "__pycache__", "node_modules"}
+
+
+def files(root):
+    try:
+        out = subprocess.run(["git", "-C", str(root), "ls-files", "-co", "--exclude-standard"], capture_output=True, text=True, timeout=20)
+        if out.returncode == 0 and out.stdout.strip():
+            return [root / p for p in out.stdout.splitlines()]
+    except (OSError, subprocess.SubprocessError):
+        pass
+    found = []
+    for base, dirs, names in os.walk(root):
+        dirs[:] = [d for d in dirs if d not in SKIP_DIRS]
+        found += [Path(base) / n for n in names]
+    return found
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
+    ap.add_argument("path", nargs="?", default=str(Path(__file__).resolve().parents[1]))
+    ap.add_argument("--denylist", action="append", default=[], help="file of names that must not appear (kept outside the product dir); repeatable")
+    ap.add_argument("--exempt", action="append", default=[], help="adapter dirs skipped by the name checks (default: none)")
+    args = ap.parse_args()
+    root = Path(args.path).resolve()
+    exempt = [root / e for e in args.exempt]
+    deny = []
+    for denylist in args.denylist:
+        for line in Path(denylist).read_text().splitlines():
+            line = line.strip()
+            if line and not line.startswith("#"):
+                deny.append((line, re.compile(r"(?<![A-Za-z0-9])" + re.escape(line) + r"(?![A-Za-z0-9])", re.I)))
+    vendor = [(w, re.compile(re.escape(w), re.I)) for w in VENDOR]
+    vendor += [(w, re.compile(r"(?<![A-Za-z0-9])" + re.escape(w) + r"(?![A-Za-z0-9])", re.I)) for w in PROVIDERS]
+    me = Path(__file__).resolve()
+    hits, scanned = [], 0
+    for path in files(root):
+        if path.resolve() == me or not path.is_file():
+            continue
+        try:
+            text = path.read_text(encoding="utf-8")
+        except (UnicodeDecodeError, OSError):
+            continue  # binary
+        scanned += 1
+        rel = path.relative_to(root)
+        in_adapter = any(e in path.parents for e in exempt)
+        # An adapter's code may name its tool and the paths it reads; its fixtures and docs get the name checks.
+        names_ok = in_adapter and not ("fixtures" in rel.parts or path.suffix.lower() == ".md")
+        is_doc = path.suffix.lower() == ".md"
+        is_license = rel.as_posix() == "LICENSE"
+        for n, line in enumerate(text.splitlines(), 1):
+            def hit(kind, snippet):
+                hits.append(f"{rel}:{n}: {kind}: {snippet.strip()[:100]}")
+            for kind, pat in SECRETS:
+                if kind == "long hex or base64 run" and is_doc:
+                    continue
+                if re.search(pat, line):
+                    hit(kind, line)
+            if names_ok or (is_license and line.startswith("Copyright (c)")):
+                continue
+            for m in EMAIL.finditer(line):
+                if not EMAIL_OK.search(m.group(0)):
+                    hit("e-mail address", m.group(0))
+            for kind, pat in PATHS:
+                if pat.search(line):
+                    hit(kind, line)
+            for m in IP.finditer(line):
+                if all(0 <= int(g) <= 255 for g in m.groups()) and not m.group(0).startswith(IP_OK):
+                    hit("IP address", m.group(0))
+            for word, pat in ([] if in_adapter else vendor):
+                if pat.search(line):
+                    hit("vendor-specific name", word)
+            for word, pat in deny:
+                if pat.search(line):
+                    hit("denylisted name", word)
+    for h in hits:
+        print(h)
+    print(f"self-audit: {scanned} files scanned, {len(hits)} finding(s)" + ("" if hits else ": clean"))
+    return 1 if hits else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

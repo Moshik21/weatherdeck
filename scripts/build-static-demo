@@ -1,0 +1,74 @@
+#!/usr/bin/env python3
+"""Build the static demo: one folder of plain files that shows the board with no server.
+
+    python3 scripts/build-static-demo [--out DIR]       (default: dist/static-demo)
+
+The folder is the page from web/ plus a recorded feed (examples/static-demo/recorded-feed.json, made by scripts/record-demo-feed
+from the synthetic demo sources). Open index.html from the folder, or put the folder on any static host. The page shows
+a "DEMO: recorded synthetic feed" label that is plain markup in index.html, so no feed can remove it, and replays the
+recorded frames in order, unchanged, on a slow timer (held, with a button, under reduced motion). The files the page
+would ask a host for (theme tokens, glyphs, sprites) travel as scripts, so it also runs from file: URLs, where a
+browser refuses to fetch a file. If demo-feed.js is missing the page says so and shows no board.
+Refuses to build if the folder would carry a name from the generic audit (scripts/self-audit). Standard library only.
+"""
+import argparse
+import json
+import shutil
+import subprocess
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+HEAD = '<link rel="stylesheet" href="demo.css">\n'
+LABEL = ('<div class="demo-label" id="demo-label" role="note"><b>DEMO: recorded synthetic feed</b> '
+         '<span id="demo-note">Invented sources, replayed from a recording; nothing here is live.</span> '
+         '<button type="button" id="demo-next" hidden>Show the next frame</button></div>\n')
+SCRIPTS = ['<script src="demo-files.js"></script>\n', '<script src="demo-feed.js"></script>\n', '<script src="demo.js"></script>\n']
+
+
+def clear(out):
+    if not out.exists():
+        return
+    if not out.is_dir() or (any(out.iterdir()) and not all((out / n).is_file() for n in ("index.html", "demo-feed.js", "demo.js"))):
+        raise SystemExit(f"{out} is not empty and is not an earlier static demo build; not deleting it")
+    shutil.rmtree(out)
+
+
+def build(out, recording=None):
+    out = Path(out).resolve()
+    recording = Path(recording or ROOT / "examples" / "static-demo" / "recorded-feed.json")
+    clear(out)
+    shutil.copytree(ROOT / "web", out)
+    themes = {p.relative_to(out).as_posix(): json.loads(p.read_text()) for p in sorted((out / "themes").rglob("*.json")) if p.name != "theme.schema.json"}
+    (out / "demo-files.js").write_text("window.WEATHERDECK_DEMO_FILES = " + json.dumps(themes, separators=(",", ":")) + ";\n")
+    feed = json.loads(recording.read_text())
+    (out / "demo-feed.js").write_text("window.WEATHERDECK_DEMO_FEED = " + json.dumps(feed, separators=(",", ":")) + ";\n")
+    for name in ("demo.js", "demo.css"):
+        shutil.copy(ROOT / "scripts" / "static-demo" / name, out / name)
+    page = (out / "index.html").read_text()
+    for needle, add, before in (('<link rel="stylesheet" href="style.css">\n', HEAD, False), ('<a class="skip"', LABEL, True), ('<script src="theme.js">', "".join(SCRIPTS), True)):
+        if needle not in page:
+            raise SystemExit(f"web/index.html changed: {needle!r} not found")
+        page = page.replace(needle, add + needle if before else needle + add, 1)
+    page = page.replace("<title>Weatherdeck</title>", "<title>Weatherdeck (demo)</title>", 1)
+    (out / "index.html").write_text(page)
+    return out
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
+    ap.add_argument("--out", default=str(ROOT / "dist" / "static-demo"))
+    args = ap.parse_args()
+    out = build(args.out)
+    audit = subprocess.run([sys.executable, str(ROOT / "scripts" / "self-audit"), str(out)], capture_output=True, text=True)
+    if audit.returncode:
+        shutil.rmtree(out)
+        sys.stderr.write(audit.stdout + audit.stderr + "static demo not built: the audit found names that must not ship\n")
+        return 1
+    n = sum(1 for p in out.rglob("*") if p.is_file())
+    print(f"{out} ({n} files): open index.html, or serve the folder from any static host")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

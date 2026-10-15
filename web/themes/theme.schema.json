@@ -1,0 +1,126 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "theme.schema.json",
+  "title": "Weatherdeck theme tokens",
+  "description": "One theme folder = tokens.json plus the files it names. See docs/theme-spec.md. A theme that sets 'extends' is merged over that theme key by key (objects merge, arrays and scalars replace); color.status and color.ink are core and are never taken from a theme other than 'default'.",
+  "type": "object",
+  "required": ["format", "id", "name", "description", "extends", "grid", "type", "color", "zones", "motion"],
+  "properties": {
+    "$schema": {"type": "string"},
+    "format": {"const": 1},
+    "id": {"type": "string", "pattern": "^[a-z][a-z0-9-]{1,31}$", "description": "Equals the folder name under web/themes/."},
+    "name": {"type": "string"},
+    "description": {"type": "string"},
+    "extends": {"type": ["string", "null"]},
+    "spec": {"type": "string"},
+    "concept": {"type": "string"},
+    "licence": {"type": "object"},
+    "fonts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["family", "role", "file", "format", "weight", "version", "licence", "licence_file", "source", "integrity"],
+        "properties": {
+          "family": {"type": "string"},
+          "role": {"enum": ["pixel", "numeral", "data"]},
+          "file": {"type": "string", "pattern": "^fonts/[A-Za-z0-9._-]+\\.woff2$"},
+          "format": {"const": "woff2"},
+          "weight": {"type": "string"},
+          "style": {"type": "string"},
+          "version": {"type": "string"},
+          "licence": {"enum": ["OFL-1.1", "CC0-1.0", "Apache-2.0", "MIT"]},
+          "licence_file": {"type": "string", "pattern": "^fonts/"},
+          "author": {"type": "string"},
+          "source": {"type": "string", "format": "uri"},
+          "modified": {"type": ["boolean", "string"]},
+          "metrics": {"type": "object"},
+          "integrity": {"type": "string", "pattern": "^sha256-[A-Za-z0-9+/]{43}=$", "description": "Subresource-integrity form of the file's SHA-256."}
+        }
+      }
+    },
+    "faces": {
+      "type": "object",
+      "properties": {
+        "pixel": {"$ref": "#/$defs/stack"},
+        "numeral": {"$ref": "#/$defs/stack"},
+        "data": {"$ref": "#/$defs/stack"},
+        "load": {"type": "object"}
+      }
+    },
+    "grid": {
+      "type": "object",
+      "required": ["canvas_ap", "tile_ap", "tv_rule", "phone_rule", "pixelated"],
+      "properties": {
+        "canvas_ap": {"const": [640, 360]},
+        "tile_ap": {"const": 8},
+        "pixelated": {"type": "boolean"}
+      }
+    },
+    "space": {"type": "object"},
+    "type": {
+      "type": "object",
+      "required": ["roles"],
+      "properties": {
+        "roles": {
+          "type": "object",
+          "required": ["label", "numeral", "numeral_hero", "title", "title_log", "statement", "body"],
+          "additionalProperties": {
+            "type": "object",
+            "required": ["face", "size_ap", "line_ap", "weight"],
+            "properties": {
+              "face": {"enum": ["pixel", "numeral", "data"]},
+              "size_ap": {"type": "integer", "minimum": 11},
+              "line_ap": {"type": "integer"},
+              "weight": {"type": "integer"},
+              "case": {"enum": ["upper"]},
+              "font_px_per_art_px": {"type": "integer", "minimum": 1}
+            }
+          }
+        }
+      }
+    },
+    "color": {
+      "type": "object",
+      "properties": {
+        "status": {"$ref": "#/$defs/modes", "description": "Core only (theme 'default')."},
+        "ink": {"$ref": "#/$defs/modes", "description": "Core only (theme 'default')."},
+        "surface": {
+          "type": "object",
+          "required": ["day", "night", "sleep"],
+          "additionalProperties": {
+            "type": "object",
+            "required": ["glyph_ink", "ground", "panel", "panel_hi", "panel_lo", "rule", "track", "call", "call_edge", "call_ink", "call_ink2", "call_band", "call_band_ink"],
+            "additionalProperties": {"$ref": "#/$defs/hex"}
+          }
+        },
+        "scene": {"type": "object"}
+      }
+    },
+    "checks": {"type": "object"},
+    "glyphs": {"type": "object"},
+    "sprites": {"type": "object"},
+    "zones": {
+      "type": "object",
+      "required": ["tv", "phone"],
+      "properties": {
+        "tv": {"type": "object", "required": ["bar", "call", "log", "hail", "anchor"]},
+        "phone": {"type": "object", "required": ["order"]}
+      }
+    },
+    "motion": {"type": "object", "required": ["levels", "default", "durations_ms", "blink", "idle"]},
+    "burn_in": {"type": "object"},
+    "crt": {"type": "object"},
+    "dither": {"type": "object"},
+    "components": {"type": "object"},
+    "words": {"type": "object", "additionalProperties": {"type": "string"}}
+  },
+  "$defs": {
+    "hex": {"type": "string", "pattern": "^#[0-9A-Fa-f]{6}$"},
+    "stack": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "modes": {
+      "type": "object",
+      "required": ["day", "night", "sleep"],
+      "additionalProperties": {"type": "object", "additionalProperties": {"$ref": "#/$defs/hex"}}
+    }
+  }
+}

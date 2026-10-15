@@ -1,0 +1,137 @@
+{
+  "$comment": "Small sprite strings drawn for the ship-deck theme, CC0 1.0. One character = one art px; '.' is transparent. 'palette' maps each character to a color.scene token path. The ship, sky, sea, weather and crew are procedural (scene module), not listed here.",
+  "licence": "CC0-1.0",
+  "sprites": {
+    "crow_perch": {
+      "palette": {"k": "crow.body", "K": "crow.wing", "b": "crow.beak", "w": "crow.eye", "y": "crow.feet"},
+      "outline": "crow.outline_{mode}",
+      "rows": [
+        "......kkkk..........",
+        ".....kkkkkk.........",
+        "....kkwkkkkk........",
+        "..bbbkkkkkkk........",
+        "....bbkkkkkkk.......",
+        ".....kkkkkkkkk......",
+        ".....kkkKKKKkkkk....",
+        "......kkKKKKKKkkkk..",
+        "......kkkKKKKKKkkkkk",
+        ".......kkkkkkkkkk.kk",
+        "........kkkkkk......",
+        ".........y..y.......",
+        ".........y..y.......",
+        "........yy.yy......."
+      ]
+    },
+    "crow_fly1": {
+      "palette": {"k": "crow.body", "K": "crow.wing", "b": "crow.beak", "w": "crow.eye"},
+      "outline": "crow.outline_{mode}",
+      "rows": [
+        "..........kk........",
+        ".........kKk........",
+        "........kKKk........",
+        ".......kKKk.........",
+        "..kkk.kKKk..........",
+        ".kkwkkKKk...........",
+        "bbkkkkkkkkkk........",
+        "..bkkkkkkkkkkkk.....",
+        ".....kkkkkkkkkkkkk..",
+        "........kkkkk...kkk.",
+        "....................",
+        "....................",
+        "....................",
+        "...................."
+      ]
+    },
+    "crow_fly2": {
+      "palette": {"k": "crow.body", "K": "crow.wing", "b": "crow.beak", "w": "crow.eye"},
+      "outline": "crow.outline_{mode}",
+      "rows": [
+        "....................",
+        "....................",
+        "..kkk...............",
+        ".kkwkk..............",
+        "bbkkkkkkkkkk........",
+        "..bkkkkkkkkkkkk.....",
+        ".....kkKKKkkkkkkkk..",
+        "......kKKKk.....kkk.",
+        ".......kKKk.........",
+        "........kKk.........",
+        ".........kk.........",
+        "....................",
+        "....................",
+        "...................."
+      ]
+    },
+    "crow_asleep": {
+      "palette": {"k": "crow.body", "K": "crow.wing", "b": "crow.beak", "y": "crow.feet"},
+      "outline": "crow.outline_night",
+      "rows": [
+        "....................",
+        "....................",
+        "......kkkk..........",
+        ".....kkkkkk.........",
+        "....kkkkkkkk........",
+        "...bkkkkkkkkk.......",
+        ".....kkkkkkkkkk.....",
+        ".....kkkKKKKkkkkk...",
+        "......kkKKKKKKkkkkk.",
+        "......kkkKKKKKKkkkkk",
+        ".......kkkkkkkkkkkkk",
+        "........kkkkkkkk....",
+        ".........y..y.......",
+        "........yy.yy......."
+      ]
+    },
+    "bell": {
+      "palette": {"o": "bell.outline", "i": "bell.iron", "I": "bell.iron_dark", "r": "bell.rope"},
+      "rows": [
+        "....rrrr....",
+        ".....rr.....",
+        "....oooo....",
+        "...oiiIIo...",
+        "...oiiIIo...",
+        "..oiiiIIIo..",
+        "..oiiiIIIo..",
+        ".oiiiiIIIIo.",
+        ".oiiiiIIIIo.",
+        "oooooooooooo",
+        ".....oo.....",
+        ".....oo....."
+      ]
+    },
+    "lantern_lit": {
+      "palette": {"f": "lantern.frame", "L": "lantern.glass_lit", "l": "lantern.glass_core"},
+      "rows": ["..ff..", ".ffff.", "fLLLLf", "fLllLf", "fLllLf", "fLLLLf", ".ffff.", "..ff.."]
+    },
+    "lantern_dark": {
+      "palette": {"f": "lantern.frame", "L": "lantern.glass_dark"},
+      "rows": ["..ff..", ".ffff.", "fLLLLf", "fLLLLf", "fLLLLf", "fLLLLf", ".ffff.", "..ff.."]
+    },
+    "flag_halves": {
+      "palette": {"a": "flag.light", "d": "flag.dark"},
+      "rows": [
+        "aaaaaddddd",
+        "aaaaaddddd",
+        "aaaaaddddd",
+        "aaaaaddddd",
+        "aaaaaddddd",
+        "aaaaaddddd",
+        "aaaaaddddd",
+        "aaaaaddddd"
+      ]
+    },
+    "flag_checks": {
+      "palette": {"a": "flag.light", "d": "flag.dark"},
+      "rows": [
+        "aaaaaddddd",
+        "aaaaaddddd",
+        "aaaaaddddd",
+        "aaaaaddddd",
+        "dddddaaaaa",
+        "dddddaaaaa",
+        "dddddaaaaa",
+        "dddddaaaaa"
+      ]
+    }
+  }
+}

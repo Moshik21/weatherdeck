@@ -1,0 +1,962 @@
+#!/usr/bin/env python3
+"""weatherdeck-beat: a tiny per-machine health beat. Standard library only, Python 3.9 to 3.14 (3.8 is not supported).
+
+    weatherdeck-beat run  [--out FILE] [--every 15] [--push URL --token-file F --source ID] ...
+    weatherdeck-beat once [--platform P]          sample for a few seconds, print one beat, exit
+    weatherdeck-beat report [--history-dir DIR] [--hours 24]   percentiles and time in each state
+
+One long-lived process samples every 15 s without starting a program per sample (macOS: libc
+sysctl and host_statistics64 through ctypes; Linux and WSL: /proc and the pressure files;
+Windows: one long-lived typeperf stream plus GlobalMemoryStatusEx). Each sample is written
+atomically as a small JSON document (the "beat") that any source can copy into machines[], one
+compact line is appended to a daily history file, and, if asked, the beat is pushed to a Weatherdeck
+host as a feed of its own. The beat also reports its own CPU and memory cost.
+
+Load average is not used as a signal on Linux or Windows: it lags by about a minute, counts
+disk waits as load on Linux, counts nothing but runnable threads on macOS, and is not
+normalised by core count. The signals that decide the level are memory pressure, swap rate,
+run queue per core, and free disk. The thresholds below are a first cut to be tuned from the
+history this agent writes (see `report`); the level is advice for people and routers, never
+an action. Nothing here ever kills, pauses or moves work.
+"""
+import argparse
+import collections
+import json
+import math
+import os
+import re
+import shutil
+import signal
+import socket
+import struct
+import subprocess
+import sys
+import threading
+import time
+
+VERSION = "1.2"
+SCHEMA = "lookout.beat"
+INTERVAL_S = 15
+PUSH_REPEAT_S = 3600  # a push that stays down is said again this often; the first line of an outage is said at once
+BUDGET_CPU_PCT = 0.5  # of one core, measured over the last five minutes
+
+OS = "darwin" if sys.platform == "darwin" else "windows" if sys.platform.startswith(("win", "cygwin", "msys")) else "linux"
+
+# (warn, critical). A signal at or above warn makes the level warn; at or above critical, critical.
+TH = {
+    "mem_psi_some10": (5.0, 20.0),     # percent of the last 10 s some task stalled on memory (Linux)
+    "mem_avail_pct_low": (10.0, 5.0),  # percent of RAM available, at or below (Linux, Windows)
+    "commit_pct": (85.0, 95.0),        # percent of the commit limit in use (Windows)
+    "swap_pps": (200.0, 2000.0),       # pages per second swapped in plus out, 1-minute mean (Linux, macOS)
+    "paging_pps": (1000.0, 5000.0),    # Windows \Memory\Pages/sec, 1-minute mean (includes file reads)
+    "runq_per_core": (1.5, 3.0),       # runnable tasks per core, 1-minute mean (macOS: load1 per performance core)
+    "cpu_psi_some10": (40.0, 80.0),
+    "io_psi_some10": (40.0, 80.0),
+    "disk_free_gb": (40.0, 15.0),      # default per disk, at or below; --disk overrides
+}
+ENTER_SAMPLES, LEAVE_SAMPLES = 2, 20  # a level is entered after 30 s and left after 5 min at 15 s
+
+
+def now():
+    return time.time()
+
+
+def iso(t):
+    return time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(t))
+
+
+def read(path, default=None):
+    try:
+        with open(path, "r", encoding="utf-8", errors="replace") as fh:
+            return fh.read()
+    except OSError:
+        return default
+
+
+def write_atomic(path, text):
+    tmp = "%s.%d.tmp" % (path, os.getpid())
+    with open(tmp, "w", encoding="utf-8") as fh:
+        fh.write(text)
+    os.replace(tmp, path)
+
+
+def gb(n):
+    return None if n is None else round(n / 1e9, 2)
+
+
+def num(x, nd=1):
+    return None if x is None else round(float(x), nd)
+
+
+def default_machine_id():
+    host = re.sub(r"[^a-z0-9._-]", "-", socket.gethostname().split(".")[0].lower()).strip("-.") or "machine"
+    return (host + "-wsl")[:48] if is_wsl() else host[:48]
+
+
+def default_station():
+    """Which part of the machine this beat measures, so one machine's Windows host and its Linux guest read as two stations
+    of one ship on the board when both report under the same --machine."""
+    return "Linux (WSL)" if is_wsl() else {"windows": "Windows", "darwin": "macOS", "linux": "Linux"}.get(OS, OS)
+
+
+def is_wsl():
+    return OS == "linux" and "microsoft" in (read("/proc/version", "") or "").lower()
+
+
+def cache_dir():
+    if OS == "windows":
+        return os.path.join(os.environ.get("LOCALAPPDATA") or os.path.expanduser("~"), "weatherdeck-beat")
+    if OS == "darwin":
+        return os.path.expanduser("~/Library/Caches/weatherdeck-beat")
+    return os.path.join(os.environ.get("XDG_CACHE_HOME") or os.path.expanduser("~/.cache"), "weatherdeck-beat")
+
+
+class Rolling:
+    """Mean of a value over the last `span` seconds."""
+
+    def __init__(self, span=60):
+        self.span, self.q = span, collections.deque()
+
+    def add(self, t, v):
+        if v is not None:
+            self.q.append((t, v))
+        while self.q and t - self.q[0][0] > self.span:
+            self.q.popleft()
+
+    def mean(self):
+        return sum(v for _, v in self.q) / len(self.q) if self.q else None
+
+
+# ======================================================================== samplers ===========
+# read(t) -> {"cpu": {...}, "mem": {...}, "io": {...}, "uptime_s", "on_battery", "errors": [...]}
+# Rates need two reads, so the first read has them as None.
+
+class Linux:
+    name = "wsl" if is_wsl() else "linux"
+
+    def __init__(self, o):
+        self.o = o
+        self.vm = None
+        self.cores = os.cpu_count() or 1
+        self.batt = (0, None)
+        self.disk_cache = (0, [])
+
+    @staticmethod
+    def psi(res):
+        out = {}
+        for line in (read("/proc/pressure/" + res, "") or "").splitlines():
+            m = re.match(r"(some|full) avg10=([\d.]+)", line)
+            if m:
+                out[m.group(1)] = float(m.group(2))
+        return out
+
+    def read(self, t):
+        err, cpu, mem, io = [], {"logical": self.cores}, {}, {}
+        mi = {m.group(1): int(m.group(2)) for m in re.finditer(r"^(\w+):\s+(\d+)", read("/proc/meminfo", "") or "", re.M)}
+        total, avail = mi.get("MemTotal"), mi.get("MemAvailable")
+        if total and avail is not None:
+            mem.update(total_gb=gb(total * 1024), avail_gb=gb(avail * 1024), used_pct=num(100 * (total - avail) / total, 0),
+                       avail_pct=num(100 * avail / total))
+            st, sf = mi.get("SwapTotal", 0), mi.get("SwapFree", 0)
+            mem["swap_used_pct"] = num(100 * (st - sf) / st, 0) if st else 0
+        else:
+            err.append("memory: /proc/meminfo unreadable")
+        vm = {k: int(v) for k, v in re.findall(r"^(pswpin|pswpout) (\d+)", read("/proc/vmstat", "") or "", re.M)}
+        if "pswpin" in vm and "pswpout" in vm and self.vm and t > self.vm[0]:
+            mem["swap_rate_pps"] = num((vm["pswpin"] + vm["pswpout"] - self.vm[1] - self.vm[2]) / (t - self.vm[0]), 0)
+        if "pswpin" in vm:
+            self.vm = (t, vm["pswpin"], vm["pswpout"])
+        for res, dest, key in (("memory", mem, "psi_some10"), ("cpu", cpu, "psi_some10"), ("io", io, "psi_some10")):
+            p = self.psi(res)
+            if "some" in p:
+                dest[key] = p["some"]
+        pm = self.psi("memory")
+        if "full" in pm:
+            mem["psi_full10"] = pm["full"]
+        la = (read("/proc/loadavg", "") or "").split()
+        if len(la) >= 4:
+            cpu.update(load1=float(la[0]), load5=float(la[1]), runq=max(0, int(la[3].split("/")[0]) - 1), runq_basis="runnable tasks")
+        else:
+            err.append("cpu: /proc/loadavg unreadable")
+        up = (read("/proc/uptime", "") or "").split()
+        if t - self.batt[0] > 60:
+            self.batt = (t, self.battery())
+        return {"cpu": cpu, "mem": mem, "io": io, "uptime_s": int(float(up[0])) if up else None, "on_battery": self.batt[1], "errors": err}
+
+    @staticmethod
+    def battery():
+        base = "/sys/class/power_supply"
+        try:
+            for name in sorted(os.listdir(base)):
+                if name.startswith("BAT"):
+                    return (read(os.path.join(base, name, "status"), "") or "").strip().lower() == "discharging"
+        except OSError:
+            pass
+        return None
+
+    def default_disks(self):
+        out = [("disk", "/")]
+        if is_wsl():  # df inside WSL reports the virtual disk, so the Windows drive that holds it is shown too
+            out += [("host " + d.upper() + ":", "/mnt/" + d) for d in "cd" if os.path.isdir("/mnt/" + d)
+                    and os.path.ismount("/mnt/" + d)]
+        return out
+
+
+class Mac:
+    name = "macos"
+
+    def __init__(self, o):
+        import ctypes
+        import ctypes.util
+        self.ct = ctypes
+        self.o = o
+        self.libc = ctypes.CDLL(ctypes.util.find_library("c") or "/usr/lib/libSystem.B.dylib", use_errno=True)
+        self.libc.sysctlbyname.argtypes = [ctypes.c_char_p, ctypes.c_void_p, ctypes.POINTER(ctypes.c_size_t), ctypes.c_void_p, ctypes.c_size_t]
+        self.libc.sysctlbyname.restype = ctypes.c_int
+        self.libc.mach_host_self.restype = ctypes.c_uint32
+        self.libc.host_statistics64.argtypes = [ctypes.c_uint32, ctypes.c_int, ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32)]
+        self.libc.host_statistics64.restype = ctypes.c_int
+        c = ctypes
+        self.VM = type("vm_statistics64", (c.Structure,), {"_fields_": [
+            ("free_count", c.c_uint32), ("active_count", c.c_uint32), ("inactive_count", c.c_uint32), ("wire_count", c.c_uint32),
+            ("zero_fill_count", c.c_uint64), ("reactivations", c.c_uint64), ("pageins", c.c_uint64), ("pageouts", c.c_uint64),
+            ("faults", c.c_uint64), ("cow_faults", c.c_uint64), ("lookups", c.c_uint64), ("hits", c.c_uint64), ("purges", c.c_uint64),
+            ("purgeable_count", c.c_uint32), ("speculative_count", c.c_uint32),
+            ("decompressions", c.c_uint64), ("compressions", c.c_uint64), ("swapins", c.c_uint64), ("swapouts", c.c_uint64),
+            ("compressor_page_count", c.c_uint32), ("throttled_count", c.c_uint32),
+            ("external_page_count", c.c_uint32), ("internal_page_count", c.c_uint32),
+            ("total_uncompressed_pages_in_compressor", c.c_uint64)]})
+        self.vm_ok = c.sizeof(self.VM) == 152  # HOST_VM_INFO64_COUNT is 38 32-bit words; refuse a layout that differs
+        self.host = self.libc.mach_host_self()
+        self.prev = None
+        self.static = {k: self.sysctl_int(k) for k in ("hw.memsize", "hw.logicalcpu", "hw.perflevel0.logicalcpu", "hw.pagesize")}
+        self.batt = (0, None)
+
+    def sysctl_raw(self, name, size=32):
+        buf = self.ct.create_string_buffer(size)
+        n = self.ct.c_size_t(size)
+        if self.libc.sysctlbyname(name.encode(), buf, self.ct.byref(n), None, 0) != 0:
+            return None
+        return buf.raw[:n.value]
+
+    def sysctl_int(self, name):
+        raw = self.sysctl_raw(name, 8)
+        return int.from_bytes(raw, "little", signed=True) if raw and len(raw) in (4, 8) else None
+
+    def read(self, t):
+        err, st = [], self.static
+        logical = st["hw.logicalcpu"] or os.cpu_count() or 1
+        perf = st["hw.perflevel0.logicalcpu"] or logical
+        page = st["hw.pagesize"] or 16384
+        cpu, mem, io = {"logical": logical}, {}, {}
+        try:
+            l1, l5, _ = os.getloadavg()
+            cpu.update(load1=round(l1, 2), load5=round(l5, 2), runq=round(l1, 2), runq_basis="load1 per performance core", runq_cores=perf)
+        except OSError:
+            err.append("cpu: no load average")
+        total, level = st["hw.memsize"], self.sysctl_int("kern.memorystatus_level")
+        if total and level is not None:
+            mem.update(total_gb=gb(total), avail_gb=gb(total * level / 100), used_pct=100 - level, avail_pct=float(level))
+        else:
+            err.append("memory: kern.memorystatus_level unreadable")
+        pl = self.sysctl_int("kern.memorystatus_vm_pressure_level")
+        if pl is not None:
+            mem["native_pressure"] = {1: "normal", 2: "warn", 4: "critical"}.get(pl, "unknown")
+        sw = self.sysctl_raw("vm.swapusage", 32)
+        if sw and len(sw) >= 24:
+            tot, _avail, used = struct.unpack("<QQQ", sw[:24])
+            mem["swap_used_pct"] = round(100 * used / tot) if tot else 0
+        if self.vm_ok:
+            stats = self.VM()
+            count = self.ct.c_uint32(38)
+            if self.libc.host_statistics64(self.host, 4, self.ct.byref(stats), self.ct.byref(count)) == 0:
+                mem["compressor_gb"] = gb(stats.compressor_page_count * page)
+                cur = (t, stats.swapins + stats.swapouts, stats.pageouts)
+                if self.prev and t > self.prev[0]:
+                    mem["swap_rate_pps"] = num((cur[1] - self.prev[1]) / (t - self.prev[0]), 0)
+                    mem["pageout_pps"] = num((cur[2] - self.prev[2]) / (t - self.prev[0]), 0)
+                self.prev = cur
+            else:
+                err.append("memory: host_statistics64 failed")
+        else:
+            err.append("memory: vm_statistics64 layout mismatch, swap rate unavailable")
+        boot = self.sysctl_raw("kern.boottime", 16)
+        up = int(t - struct.unpack("<q", boot[:8])[0]) if boot and len(boot) >= 8 else None
+        if t - self.batt[0] > 120:  # the one program started here, and only every two minutes
+            self.batt = (t, self.battery())
+        return {"cpu": cpu, "mem": mem, "io": io, "uptime_s": up, "on_battery": self.batt[1], "errors": err}
+
+    @staticmethod
+    def battery():
+        try:
+            out = subprocess.run(["pmset", "-g", "batt"], capture_output=True, text=True, timeout=5).stdout
+        except (OSError, subprocess.SubprocessError):
+            return None
+        if "InternalBattery" not in out:
+            return None
+        return "Battery Power" in out.splitlines()[0]
+
+    def default_disks(self):
+        return [("data", "/System/Volumes/Data" if os.path.isdir("/System/Volumes/Data") else "/")]
+
+
+class Windows:
+    """Memory and disk in process (GlobalMemoryStatusEx); queue, paging, CPU and disk-busy from one
+    long-lived typeperf stream. The counters are asked for by their English names; if typeperf
+    rejects them (a non-English system), those fields stay empty and the error is reported."""
+    name = "windows"
+    COUNTERS = [("runq", r"\System\Processor Queue Length"), ("paging_pps", r"\Memory\Pages/sec"),
+                ("cpu_busy", r"\Processor(_Total)\% Processor Time"), ("io_idle", r"\PhysicalDisk(_Total)\% Idle Time"),
+                ("pagefile_pct", r"\Paging File(_Total)\% Usage"),
+                ("avail_mb", r"\Memory\Available MBytes"), ("commit_pct", r"\Memory\% Committed Bytes In Use")]  # the last two only back up ctypes
+
+    def __init__(self, o):
+        self.o = o
+        self.cores = os.cpu_count() or 1
+        self.vals, self.vals_at, self.last_err = {}, 0.0, None
+        self.proc, self.stop, self.restart_at, self.backoff = None, False, 0.0, 5
+        self.lock = threading.Lock()
+        self.reader = None
+        self.gpu = (0, None)
+        self.ct = None
+        try:
+            import ctypes
+            self.ct = ctypes
+            if hasattr(ctypes, "windll"):
+                self.mem_status = self._mem_struct(ctypes)
+        except Exception:
+            self.ct = None
+
+    @staticmethod
+    def _mem_struct(c):
+        class MEMORYSTATUSEX(c.Structure):
+            _fields_ = [("dwLength", c.c_uint32), ("dwMemoryLoad", c.c_uint32), ("ullTotalPhys", c.c_uint64), ("ullAvailPhys", c.c_uint64),
+                        ("ullTotalPageFile", c.c_uint64), ("ullAvailPageFile", c.c_uint64), ("ullTotalVirtual", c.c_uint64),
+                        ("ullAvailVirtual", c.c_uint64), ("ullAvailExtendedVirtual", c.c_uint64)]
+        return MEMORYSTATUSEX
+
+    def start(self):
+        self._spawn()
+
+    def _spawn(self):
+        cmd = [self.o.typeperf or "typeperf"] + [c for _, c in self.COUNTERS] + ["-si", str(max(1, int(self.o.every)))]
+        flags = getattr(subprocess, "CREATE_NO_WINDOW", 0)
+        try:
+            self.proc = subprocess.Popen(cmd, stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
+                                         text=True, errors="replace", creationflags=flags)
+        except OSError as exc:
+            self.proc, self.last_err = None, "typeperf did not start: %s" % exc
+            return
+        self.reader = threading.Thread(target=self._pump, args=(self.proc,), daemon=True)
+        self.reader.start()
+
+    def _pump(self, proc):
+        import csv
+        names = [k for k, _ in self.COUNTERS]
+        for line in proc.stdout:
+            line = line.strip()
+            if not line:
+                continue
+            if line.lower().startswith("error"):
+                self.last_err = "typeperf: " + line[:120]
+                continue
+            try:
+                row = next(csv.reader([line]))
+            except (csv.Error, StopIteration):
+                continue
+            if len(row) != len(names) + 1 or row[0].startswith("(PDH"):
+                continue
+            vals = {}
+            for k, raw in zip(names, row[1:]):
+                try:
+                    vals[k] = float(raw.strip().replace(",", ".")) if raw.strip() else None
+                except ValueError:
+                    vals[k] = None
+            with self.lock:
+                self.vals, self.vals_at, self.last_err = vals, time.time(), None
+
+    def close(self):
+        self.stop = True
+        if self.proc and self.proc.poll() is None:
+            self.proc.terminate()
+
+    def child_cpu_s(self):
+        if not (self.ct and hasattr(self.ct, "windll") and self.proc and self.proc.poll() is None):
+            return None
+        c = self.ct
+        a, b, k, u = (c.c_uint64() for _ in range(4))
+        try:
+            ok = c.windll.kernel32.GetProcessTimes(c.c_void_p(int(self.proc._handle)), c.byref(a), c.byref(b), c.byref(k), c.byref(u))
+        except Exception:
+            return None
+        return (k.value + u.value) / 1e7 if ok else None
+
+    def read(self, t):
+        err, cpu, mem, io = [], {"logical": self.cores}, {}, {}
+        if not self.stop and (self.proc is None or self.proc.poll() is not None) and t >= self.restart_at:
+            self.restart_at = t + self.backoff
+            self.backoff = min(60, self.backoff * 2)
+            self._spawn()
+        with self.lock:
+            vals, at, last_err = dict(self.vals), self.vals_at, self.last_err
+        fresh = at and t - at <= 3 * max(1, self.o.every) + 5
+        if fresh:
+            self.backoff = 5
+            if vals.get("runq") is not None:
+                cpu.update(runq=vals["runq"], runq_basis="processor queue length")
+            if vals.get("cpu_busy") is not None:
+                cpu["busy_pct"] = num(vals["cpu_busy"])
+            if vals.get("paging_pps") is not None:
+                mem["paging_pps"] = num(vals["paging_pps"], 0)
+            if vals.get("pagefile_pct") is not None:
+                mem["swap_used_pct"] = num(vals["pagefile_pct"], 0)
+            if vals.get("io_idle") is not None:
+                io["busy_pct"] = num(max(0.0, 100 - vals["io_idle"]), 0)
+        else:
+            err.append(last_err or "typeperf has not produced a sample")
+        if self.ct and hasattr(self.ct, "windll"):
+            s = self.mem_status()
+            s.dwLength = self.ct.sizeof(s)
+            if self.ct.windll.kernel32.GlobalMemoryStatusEx(self.ct.byref(s)):
+                mem.update(total_gb=gb(s.ullTotalPhys), avail_gb=gb(s.ullAvailPhys), used_pct=int(s.dwMemoryLoad),
+                           avail_pct=num(100 * s.ullAvailPhys / s.ullTotalPhys),
+                           commit_pct=num(100 * (s.ullTotalPageFile - s.ullAvailPageFile) / s.ullTotalPageFile) if s.ullTotalPageFile else None)
+            else:
+                err.append("memory: GlobalMemoryStatusEx failed")
+        elif vals.get("avail_mb") is None:
+            err.append("memory: GlobalMemoryStatusEx needs Windows")
+        if fresh and "avail_gb" not in mem and vals.get("avail_mb") is not None:   # no ctypes: the counters still give availability
+            mem["avail_gb"] = num(vals["avail_mb"] / 1024, 2)
+            mem["commit_pct"] = num(vals.get("commit_pct"))
+        up = None
+        if self.ct and hasattr(self.ct, "windll"):
+            self.ct.windll.kernel32.GetTickCount64.restype = self.ct.c_uint64
+            up = int(self.ct.windll.kernel32.GetTickCount64() / 1000)
+        extras = {}
+        if self.o.gpu and t - self.gpu[0] > 60:  # opt-in, one short program a minute
+            self.gpu = (t, self.nvidia())
+        if self.gpu[1] is not None:
+            extras["gpu"] = self.gpu[1]
+        return {"cpu": cpu, "mem": mem, "io": io, "uptime_s": up, "on_battery": self.battery(), "errors": err, "extras": extras}
+
+    def battery(self):
+        if not (self.ct and hasattr(self.ct, "windll")):
+            return None
+        c = self.ct
+
+        class SPS(c.Structure):
+            _fields_ = [("ACLineStatus", c.c_ubyte), ("BatteryFlag", c.c_ubyte), ("BatteryLifePercent", c.c_ubyte),
+                        ("SystemStatusFlag", c.c_ubyte), ("BatteryLifeTime", c.c_uint32), ("BatteryFullLifeTime", c.c_uint32)]
+        s = SPS()
+        if not c.windll.kernel32.GetSystemPowerStatus(c.byref(s)) or s.BatteryFlag in (128, 255):
+            return None  # no battery, or unknown
+        return s.ACLineStatus == 0
+
+    @staticmethod
+    def nvidia():
+        try:
+            out = subprocess.run(["nvidia-smi", "--query-gpu=utilization.gpu,memory.used,memory.total", "--format=csv,noheader,nounits"],
+                                 capture_output=True, text=True, timeout=10, creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0)).stdout
+            u, used, tot = (float(x) for x in out.splitlines()[0].split(","))
+            return {"util_pct": u, "mem_used_gb": round(used / 1024, 1), "mem_total_gb": round(tot / 1024, 1)}
+        except (OSError, subprocess.SubprocessError, ValueError, IndexError):
+            return None
+
+    def default_disks(self):
+        return [("C:", os.environ.get("SystemDrive", "C:") + "\\")]
+
+
+def make_sampler(o):
+    kind = o.platform or OS
+    return {"darwin": Mac, "windows": Windows}.get(kind, Linux)(o)
+
+
+# ======================================================================== judging ============
+def grade(v, warn, crit, low=False):
+    if v is None:
+        return None
+    return (2 if v <= crit else 1 if v <= warn else 0) if low else (2 if v >= crit else 1 if v >= warn else 0)
+
+
+class Judge:
+    """Turns one sample into a level (0 ok, 1 warn, 2 critical) with reasons, with hysteresis."""
+
+    def __init__(self, th):
+        self.th, self.state, self.recent = th, 0, collections.deque(maxlen=LEAVE_SAMPLES)
+        self.runq, self.swap, self.paging = Rolling(60), Rolling(60), Rolling(60)
+        self.last_why = []
+
+    def sample(self, t, raw, disks):
+        cpu, mem, io, th = raw["cpu"], raw["mem"], raw["io"], self.th
+        cores = cpu.get("runq_cores") or cpu.get("logical") or 1
+        self.runq.add(t, cpu["runq"] / cores if cpu.get("runq") is not None else None)
+        self.swap.add(t, mem.get("swap_rate_pps"))
+        self.paging.add(t, mem.get("paging_pps"))
+        sig = []
+
+        def add(level, text):
+            if level:
+                sig.append((level, text))
+
+        np = {"normal": 0, "warn": 1, "critical": 2}.get(mem.get("native_pressure"))
+        add(np, "macOS reports %s memory pressure" % mem.get("native_pressure"))
+        g = grade(mem.get("psi_some10"), *th["mem_psi_some10"])
+        add(g, "tasks stalled on memory %.0f%% of the last 10 s" % (mem.get("psi_some10") or 0))
+        if mem.get("native_pressure") is None:  # macOS says it better itself
+            add(grade(mem.get("avail_pct"), *th["mem_avail_pct_low"], low=True), "only %.0f%% of memory available" % (mem.get("avail_pct") or 0))
+        g = grade(mem.get("commit_pct"), *th["commit_pct"])
+        add(g, "%.0f%% of the commit limit in use" % (mem.get("commit_pct") or 0))
+        sw = self.swap.mean()
+        add(grade(sw, *th["swap_pps"]), "swapping %.0f pages/s" % (sw or 0))
+        pg = self.paging.mean()
+        add(grade(pg, *th["paging_pps"]), "paging %.0f pages/s" % (pg or 0))
+        rq = self.runq.mean()
+        add(grade(rq, *th["runq_per_core"]), "run queue %.1f per core" % (rq or 0))
+        add(grade(cpu.get("psi_some10"), *th["cpu_psi_some10"]), "tasks waited for a CPU %.0f%% of the last 10 s" % (cpu.get("psi_some10") or 0))
+        add(grade(io.get("psi_some10"), *th["io_psi_some10"]), "tasks stalled on disk %.0f%% of the last 10 s" % (io.get("psi_some10") or 0))
+        for d in disks:
+            if d.get("free_gb") is not None:
+                add(grade(d["free_gb"], d["warn_gb"], d["crit_gb"], low=True), "%s %.0f GB free" % (d["label"], d["free_gb"]))
+        level = max([lv for lv, _ in sig] or [0])
+        self.recent.append(level)
+        r = list(self.recent)
+        if len(r) >= ENTER_SAMPLES and min(r[-ENTER_SAMPLES:]) > self.state:
+            self.state = min(r[-ENTER_SAMPLES:])
+        elif len(r) >= LEAVE_SAMPLES and max(r) < self.state:
+            self.state = max(r)
+        why = [text for lv, text in sorted(sig, reverse=True)]
+        if why:
+            self.last_why = why[:1]
+        elif self.state:
+            why = ["clearing, last cause: " + (self.last_why[0] if self.last_why else "unknown")]
+        return self.state, why, {"runq_per_core": rq, "swap_pps": sw}
+
+
+# ======================================================================== the beat ===========
+class Cost:
+    """The agent's own CPU and memory, measured from inside."""
+
+    def __init__(self, sampler):
+        self.t0, self.cpu0, self.sampler = time.time(), time.process_time(), sampler
+        self.q = collections.deque()
+
+    def cpu_s(self):
+        return time.process_time() + (getattr(self.sampler, "child_cpu_s", lambda: None)() or 0.0)
+
+    @staticmethod
+    def rss_mb():
+        try:
+            if OS == "linux":
+                return round(int(read("/proc/self/statm").split()[1]) * os.sysconf("SC_PAGE_SIZE") / 1e6, 1)
+            if OS == "darwin":
+                import resource
+                return round(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1e6, 1)  # peak, in bytes on macOS
+            import ctypes
+            c = ctypes
+
+            class PMC(c.Structure):
+                _fields_ = [("cb", c.c_uint32), ("PageFaultCount", c.c_uint32), ("PeakWorkingSetSize", c.c_size_t),
+                            ("WorkingSetSize", c.c_size_t), ("QuotaPeakPagedPoolUsage", c.c_size_t), ("QuotaPagedPoolUsage", c.c_size_t),
+                            ("QuotaPeakNonPagedPoolUsage", c.c_size_t), ("QuotaNonPagedPoolUsage", c.c_size_t),
+                            ("PagefileUsage", c.c_size_t), ("PeakPagefileUsage", c.c_size_t)]
+            pmc = PMC()
+            pmc.cb = c.sizeof(pmc)
+            k32 = c.windll.kernel32
+            k32.GetCurrentProcess.restype = c.c_void_p
+            if c.windll.psapi.GetProcessMemoryInfo(c.c_void_p(k32.GetCurrentProcess()), c.byref(pmc), pmc.cb):
+                return round(pmc.WorkingSetSize / 1e6, 1)
+        except Exception:
+            pass
+        return None
+
+    def sample(self, t, collect_ms):
+        cpu = self.cpu_s()
+        self.q.append((t, cpu))
+        while self.q and t - self.q[0][0] > 300:
+            self.q.popleft()
+        up = t - self.t0
+        t1, c1 = self.q[0]
+        pct5 = 100 * (cpu - c1) / (t - t1) if t - t1 >= 30 else None
+        total = 100 * (cpu - self.cpu0) / up if up >= 30 else None
+        over = pct5 is not None and up >= 300 and pct5 > BUDGET_CPU_PCT
+        return {"cpu_pct": num(pct5, 3), "cpu_pct_total": num(total, 3), "cpu_s_per_h": num(3600 * (cpu - self.cpu0) / up, 1) if up >= 30 else None,
+                "rss_mb": self.rss_mb(), "collect_ms": round(collect_ms, 1), "uptime_s": int(up), "budget_cpu_pct": BUDGET_CPU_PCT,
+                "over_budget": over}
+
+
+class Beat:
+    def __init__(self, o):
+        self.o = o
+        self.sampler = make_sampler(o)
+        self.judge = Judge(o.thresholds)
+        self.cost = Cost(self.sampler)
+        self.seq, self.boot = 0, os.urandom(6).hex()
+        self.disks = o.disk or [(l, p) for l, p in self.sampler.default_disks()]
+        self.disk_at, self.disk_val = 0, []
+        self.last_warn = None
+
+    def disk_rows(self, t):
+        if t - self.disk_at < 60 and self.disk_val:
+            return self.disk_val
+        rows = []
+        for spec in self.disks:
+            label, path, warn, crit = (list(spec) + [None, None])[:4]
+            try:
+                u = shutil.disk_usage(path)
+                rows.append({"label": label, "free_gb": round(u.free / 1e9, 1), "free_pct": round(100 * u.free / u.total),
+                             "warn_gb": warn if warn is not None else self.o.thresholds["disk_free_gb"][0],
+                             "crit_gb": crit if crit is not None else self.o.thresholds["disk_free_gb"][1]})
+            except OSError:
+                rows.append({"label": label, "free_gb": None, "warn_gb": None, "crit_gb": None})
+        self.disk_at, self.disk_val = t, rows
+        return rows
+
+    def take(self):
+        t0 = time.perf_counter()
+        t = now()
+        try:
+            raw = self.sampler.read(t)
+        except Exception as exc:  # a failed read must not stop the beat
+            raw = {"cpu": {}, "mem": {}, "io": {}, "uptime_s": None, "on_battery": None, "errors": ["sample failed: %s: %s" % (type(exc).__name__, exc)]}
+        disks = self.disk_rows(t)
+        level, why, roll = self.judge.sample(t, raw, disks)
+        self.seq += 1
+        cpu, mem, io = raw["cpu"], raw["mem"], raw["io"]
+        collect_ms = (time.perf_counter() - t0) * 1000
+        cost = self.cost.sample(t, collect_ms)
+        row_cpu = {"l1": cpu.get("load1"), "l5": cpu.get("load5"), "cores": cpu.get("logical"),
+                   "runq_per_core": num(roll["runq_per_core"], 2), "runq_now": cpu.get("runq"), "runq_basis": cpu.get("runq_basis"),
+                   "psi_some10": cpu.get("psi_some10"), "busy_pct": cpu.get("busy_pct")}
+        row_mem = {k: mem.get(k) for k in ("used_pct", "swap_used_pct", "avail_gb", "total_gb", "swap_rate_pps", "paging_pps", "commit_pct",
+                                          "compressor_gb", "psi_some10", "psi_full10", "native_pressure")}
+        row_mem["swap_rate_pps_1m"] = num(roll["swap_pps"], 0)
+        extras = []
+        if raw.get("extras", {}).get("gpu"):
+            g = raw["extras"]["gpu"]
+            extras.append({"label": "gpu", "value": "%.0f%%, %.1f/%.1f GB" % (g["util_pct"], g["mem_used_gb"], g["mem_total_gb"]), "severity": "ok"})
+        row = {
+            "id": self.o.machine, "label": self.o.label, "role": self.o.role or self.sampler.name, "status": "ok" if level == 0 else "warn",
+            "as_of": iso(t), "load": row_cpu, "mem": row_mem, "io": {"busy_pct": io.get("busy_pct"), "psi_some10": io.get("psi_some10")},
+            "disks": disks, "uptime_s": raw["uptime_s"], "on_battery": raw["on_battery"],
+            "pressure": {"level": ("ok", "warn", "critical")[level], "why": why[:4]},
+            "beat": {"seq": self.seq, "interval_s": self.o.every, "age_s": 0, "version": VERSION, "cost": cost,
+                     "errors": raw["errors"][:4]},
+            "extras": extras,
+        }
+        beat = {"schema": SCHEMA, "schema_version": "1.0", "host": self.o.machine, "os": self.sampler.name, "boot_id": self.boot, "seq": self.seq,
+                "at": iso(t), "at_epoch": round(t, 1), "interval_s": self.o.every, "machine": row}
+        return beat, level, raw, roll
+
+    def history_line(self, beat, level, raw, roll):
+        m = beat["machine"]
+        rec = {"t": int(beat["at_epoch"]), "lv": level, "rq": m["load"]["runq_per_core"], "rn": m["load"]["runq_now"],
+               "sw": None if roll["swap_pps"] is None else round(roll["swap_pps"]), "swr": m["mem"]["swap_rate_pps"], "pg": m["mem"]["paging_pps"],
+               "mu": m["mem"]["used_pct"], "av": m["mem"]["avail_gb"], "ps": m["mem"]["psi_some10"], "pc": m["load"]["psi_some10"],
+               "pi": m["io"]["psi_some10"], "cm": m["mem"]["commit_pct"], "dk": [d["free_gb"] for d in m["disks"]],
+               "cp": m["beat"]["cost"]["cpu_pct"], "rs": m["beat"]["cost"]["rss_mb"], "ms": m["beat"]["cost"]["collect_ms"]}
+        return json.dumps({k: v for k, v in rec.items() if v is not None}, separators=(",", ":"))
+
+
+class History:
+    def __init__(self, directory, days):
+        self.dir, self.days, self.pruned = directory, days, 0
+        os.makedirs(directory, exist_ok=True)
+
+    def append(self, t, line):
+        name = os.path.join(self.dir, "beats-%s.jsonl" % time.strftime("%Y%m%d", time.gmtime(t)))
+        with open(name, "a", encoding="utf-8") as fh:
+            fh.write(line + "\n")
+        if t - self.pruned > 3600:
+            self.pruned = t
+            cutoff = "beats-%s.jsonl" % time.strftime("%Y%m%d", time.gmtime(t - self.days * 86400))
+            for f in os.listdir(self.dir):
+                if re.match(r"beats-\d{8}\.jsonl$", f) and f < cutoff:
+                    try:
+                        os.remove(os.path.join(self.dir, f))
+                    except OSError:
+                        pass
+
+
+class Pusher:
+    def __init__(self, o, clock=now):
+        import urllib.error
+        import urllib.request
+        self.ue, self.ur = urllib.error, urllib.request
+        self.o, self.seq, self.boot, self.down = o, 0, "beat-" + os.urandom(5).hex(), False
+        self.clock = clock
+        self.state, self.since, self.code, self.reason = None, None, None, None
+        self.said_at = None  # when the outage was last put in the log
+
+    def token(self):
+        if self.o.token_file:
+            return (read(os.path.expanduser(self.o.token_file), "") or "").strip()
+        return os.environ.get("WEATHERDECK_TOKEN", "")
+
+    def status(self):
+        """What the last push did, for the beat file: {state: ok|down|refused, since, code, reason}, or None before the first push.
+        `refused` is a host that answered 4xx; `down` is anything else that is not an accepted beat (no answer, a 5xx).
+        `since` is when the state last changed; `code` is the HTTP status or null; `reason` is plain text, null while ok."""
+        if self.state is None:
+            return None
+        return {"state": self.state, "since": iso(self.since), "code": self.code, "reason": self.reason}
+
+    def result(self, state, code, reason, say, line):
+        t = self.clock()
+        if state != self.state:
+            self.since = t
+        self.state, self.code, self.reason = state, code, reason
+        if state == "ok":
+            if self.down:
+                say("push: %s accepts beats again" % self.o.push)
+            self.down, self.said_at = False, None
+        elif not self.down:
+            say("push: %s %s" % (self.o.push, line))
+            self.down, self.said_at = True, t
+        elif t - self.said_at >= PUSH_REPEAT_S:  # still down: say so again, with what it is now
+            say("push: %s still %s (since %s)" % (self.o.push, line, iso(self.since)))
+            self.said_at = t
+
+    def push(self, beat, say):
+        self.seq += 1
+        m = beat["machine"]
+        errs = m["beat"]["errors"]
+        feed = {"schema": "lookout.feed", "schema_version": "1.0",
+                "source": {"id": self.o.source, "label": self.o.label, "machine": self.o.machine, "station": self.o.station, "kind": "standalone"},
+                "producer": {"name": "weatherdeck-beat", "version": VERSION, "boot_id": self.boot, "seq": self.seq, "mode": "live"},
+                "generated_at": beat["at"], "interval_s": self.o.every, "collect_ms": int(m["beat"]["cost"]["collect_ms"]),
+                "collectors": [{"id": "machines", "as_of": beat["at"], "status": "error" if errs else "ok", "error": errs[0][:200] if errs else None, "warnings": len(errs)}],
+                "machines": [m]}
+        req = self.ur.Request(self.o.push.rstrip("/") + "/api/ingest", data=json.dumps(feed).encode(), method="POST",
+                                     headers={"Content-Type": "application/json"})
+        tok = self.token()
+        if tok:
+            req.add_header("Authorization", "Bearer " + tok)
+        try:
+            with self.ur.urlopen(req, timeout=5) as resp:
+                resp.read()
+            self.result("ok", None, None, say, None)
+        except self.ue.HTTPError as exc:
+            why = "HTTP %s %s" % (exc.code, " ".join(exc.read().decode(errors="replace")[:120].split()))
+            exc.close()
+            self.result("refused" if 400 <= exc.code < 500 else "down", exc.code, why.strip(), say,
+                        "refused the beat: " + why.strip())
+        except (self.ue.URLError, OSError) as exc:
+            why = "unreachable: %s" % " ".join(str(exc).split())[:160]
+            self.result("down", None, why, say, why)
+
+
+def deliver(doc, pusher, say):
+    """Push the beat and record what happened in the beat file's `push` key, so the answer is where people look
+    within the same sample. No --push, no key. The push is the only step that can wait (5 s at most)."""
+    if pusher:
+        pusher.push(doc, say)
+        doc["push"] = pusher.status()
+
+
+# ======================================================================== commands ===========
+def log(msg):
+    line = "%s weatherdeck-beat: %s\n" % (time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()), msg)
+    try:
+        if sys.stderr is None:  # pythonw has no console
+            os.makedirs(cache_dir(), exist_ok=True)
+            with open(os.path.join(cache_dir(), "weatherdeck-beat.log"), "a", encoding="utf-8") as fh:
+                fh.write(line)
+        else:
+            sys.stderr.write(line)
+            sys.stderr.flush()
+    except OSError:
+        pass
+
+
+def lock(path):
+    fh = open(path + ".lock", "a+")
+    try:
+        if OS == "windows":
+            import msvcrt
+            fh.seek(0)
+            msvcrt.locking(fh.fileno(), msvcrt.LK_NBLCK, 1)
+        else:
+            import fcntl
+            fcntl.flock(fh.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except OSError:
+        return None
+    return fh
+
+
+def parse_disk(spec):
+    """LABEL=PATH[:WARN_GB[:CRIT_GB]] (a Windows path keeps its drive colon)."""
+    label, _, rest = spec.partition("=")
+    if not rest:
+        raise argparse.ArgumentTypeError("--disk wants LABEL=PATH[:WARN_GB[:CRIT_GB]]")
+    m = re.match(r"^(.*?)(?::(\d+(?:\.\d+)?))?(?::(\d+(?:\.\d+)?))?$", rest)
+    warn, crit = m.group(2), m.group(3)
+    return (label, m.group(1), float(warn) if warn else None, float(crit) if crit else None)
+
+
+def options(argv):
+    ap = argparse.ArgumentParser(prog="weatherdeck-beat", description=__doc__.split("\n")[0])
+    sub = ap.add_subparsers(dest="cmd", required=True)
+    common = argparse.ArgumentParser(add_help=False)
+    common.add_argument("--machine", help="machine id (default: this host's name, plus -wsl inside WSL)")
+    common.add_argument("--label", help="name shown on the board (default: the machine id)")
+    common.add_argument("--station", help="which part of the machine this reports, when another source reports the same --machine "
+                        "(default: the OS: Windows, macOS, Linux, or Linux (WSL))")
+    common.add_argument("--role", help="short role text next to the name (default: the OS)")
+    common.add_argument("--every", type=int, default=INTERVAL_S, help="seconds between samples (default 15)")
+    common.add_argument("--disk", action="append", type=parse_disk, metavar="LABEL=PATH[:WARN:CRIT]", help="a disk to report (repeatable; replaces the default)")
+    common.add_argument("--set", action="append", default=[], metavar="NAME=WARN[,CRIT]", help="override a threshold, e.g. runq_per_core=2,4")
+    common.add_argument("--gpu", action="store_true", help="Windows: also read nvidia-smi once a minute")
+    common.add_argument("--typeperf", help="Windows: path to typeperf (default: typeperf)")
+    common.add_argument("--platform", choices=["linux", "darwin", "windows"], help="sample as another OS (testing the Windows reader from WSL with --typeperf)")
+    r = sub.add_parser("run", parents=[common], help="sample until stopped")
+    r.add_argument("--out", help="beat file (default: <cache>/weatherdeck-beat/beat.json)")
+    r.add_argument("--history-dir", help="daily sample files (default: <cache>/weatherdeck-beat/history; 'none' turns them off)")
+    r.add_argument("--keep-days", type=int, default=30)
+    r.add_argument("--push", metavar="URL", help="also push each beat to this Weatherdeck host as a feed of its own (localhost or LAN)")
+    r.add_argument("--token-file", help="file holding the push token (or set WEATHERDECK_TOKEN)")
+    r.add_argument("--source", help="source id when pushing (default: beat-<machine>)")
+    sub.add_parser("once", parents=[common], help="print one beat after a short warm-up")
+    p = sub.add_parser("report", help="summarise the history files")
+    p.add_argument("--history-dir")
+    p.add_argument("--hours", type=float, default=24)
+    o = ap.parse_args(argv)
+    if o.cmd == "report":
+        o.history_dir = o.history_dir or os.path.join(cache_dir(), "history")
+        return o
+    o.machine = re.sub(r"[^a-z0-9._-]", "-", (o.machine or default_machine_id()).lower())[:48]
+    o.label = o.label or o.machine
+    o.station = (o.station or default_station())[:40]
+    o.thresholds = dict(TH)
+    for spec in o.set:
+        k, _, v = spec.partition("=")
+        if k not in TH or not v:
+            ap.error("--set: unknown threshold %r (known: %s)" % (k, ", ".join(TH)))
+        parts = [float(x) for x in v.split(",")]
+        o.thresholds[k] = (parts[0], parts[1] if len(parts) > 1 else TH[k][1])
+    if o.cmd == "run":
+        o.out = os.path.expanduser(o.out or os.path.join(cache_dir(), "beat.json"))
+        hd = o.history_dir or os.path.join(os.path.dirname(o.out), "history")
+        o.history_dir = None if hd == "none" else os.path.expanduser(hd)
+        o.source = o.source or ("beat-" + o.machine)[:48]
+    return o
+
+
+def cmd_run(o):
+    os.makedirs(os.path.dirname(o.out) or ".", exist_ok=True)
+    held = lock(o.out)
+    if held is None:
+        log("another weatherdeck-beat already writes %s" % o.out)
+        return 75
+    beat = Beat(o)
+    if hasattr(beat.sampler, "start"):
+        beat.sampler.start()
+    history = History(o.history_dir, o.keep_days) if o.history_dir else None
+    pusher = Pusher(o) if o.push else None
+    stop = threading.Event()
+    for sig in (signal.SIGINT, getattr(signal, "SIGTERM", None), getattr(signal, "SIGBREAK", None)):
+        if sig:
+            signal.signal(sig, lambda *_: stop.set())
+    log("started %s on %s, every %d s, writing %s%s" % (VERSION, beat.sampler.name, o.every, o.out, ", pushing to " + o.push if o.push else ""))
+    next_at, last_state, last_err = time.time(), None, None
+    while not stop.is_set():
+        doc, level, raw, roll = beat.take()
+        deliver(doc, pusher, log)
+        try:
+            write_atomic(o.out, json.dumps(doc, separators=(",", ":")))
+            if history:
+                history.append(doc["at_epoch"], beat.history_line(doc, level, raw, roll))
+        except OSError as exc:
+            if str(exc) != last_err:
+                log("cannot write: %s" % exc)
+            last_err = str(exc)
+        if level != last_state:
+            log("level %s%s" % (("ok", "warn", "critical")[level], ": " + "; ".join(doc["machine"]["pressure"]["why"]) if level else ""))
+            last_state = level
+        cost = doc["machine"]["beat"]["cost"]
+        if cost["over_budget"] and beat.last_warn is None:
+            beat.last_warn = True
+            log("own cost %.2f%% of one core is over the %.1f%% budget" % (cost["cpu_pct"], BUDGET_CPU_PCT))
+        next_at += o.every
+        if next_at < time.time():  # slept through (laptop lid, suspended VM): do not catch up
+            next_at = time.time() + o.every
+        stop.wait(max(0.0, next_at - time.time()))
+    if hasattr(beat.sampler, "close"):
+        beat.sampler.close()
+    log("stopped")
+    return 0
+
+
+def cmd_once(o):
+    beat = Beat(o)
+    if hasattr(beat.sampler, "start"):
+        beat.sampler.start()
+    deadline = time.time() + (o.every + 8 if isinstance(beat.sampler, Windows) else 3)
+    beat.take()
+    time.sleep(1.5 if not isinstance(beat.sampler, Windows) else min(o.every + 2, 8))
+    doc = beat.take()[0]
+    while isinstance(beat.sampler, Windows) and doc["machine"]["beat"]["errors"] and time.time() < deadline:
+        time.sleep(1)
+        doc = beat.take()[0]
+    print(json.dumps(doc, indent=1))
+    if hasattr(beat.sampler, "close"):
+        beat.sampler.close()
+    return 0
+
+
+def pct(sorted_vals, p):
+    if not sorted_vals:
+        return None
+    return sorted_vals[min(len(sorted_vals) - 1, int(math.ceil(p / 100 * len(sorted_vals))) - 1)]
+
+
+def cmd_report(o):
+    cutoff = now() - o.hours * 3600
+    rows = []
+    try:
+        names = sorted(f for f in os.listdir(o.history_dir) if re.match(r"beats-\d{8}\.jsonl$", f))
+    except OSError:
+        print("no history in %s" % o.history_dir)
+        return 1
+    for f in names:
+        for line in open(os.path.join(o.history_dir, f), encoding="utf-8"):
+            try:
+                r = json.loads(line)
+            except ValueError:
+                continue
+            if r["t"] >= cutoff:
+                rows.append(r)
+    if not rows:
+        print("no samples in the last %g h" % o.hours)
+        return 1
+    print("%d samples, %s to %s UTC" % (len(rows), iso(rows[0]["t"]), iso(rows[-1]["t"])))
+    span = rows[-1]["t"] - rows[0]["t"]
+    gaps = sum(1 for a, b in zip(rows, rows[1:]) if b["t"] - a["t"] > 60)
+    print("coverage: %.1f%% of the span, %d gaps longer than 60 s" % (100 * min(1.0, len(rows) * INTERVAL_S / span) if span else 100, gaps))
+    for lv, name in enumerate(("ok", "warn", "critical")):
+        n = sum(1 for r in rows if r.get("lv") == lv)
+        print("  %-8s %5.1f%% of samples" % (name, 100 * n / len(rows)))
+    print("%-34s %8s %8s %8s %8s" % ("metric", "p50", "p95", "p99", "max"))
+    for key, label in (("rq", "run queue per core (1 min)"), ("sw", "swap pages/s (1 min)"), ("pg", "paging pages/s"), ("mu", "memory used %"),
+                       ("av", "memory available GB"), ("ps", "memory stall % (PSI some, 10 s)"), ("pc", "cpu stall % (PSI some, 10 s)"),
+                       ("pi", "io stall % (PSI some, 10 s)"), ("cm", "commit %"), ("cp", "beat cpu % of one core"), ("rs", "beat RSS MB"), ("ms", "collect ms")):
+        vals = sorted(r[key] for r in rows if key in r)
+        if vals:
+            print("%-34s %8.2f %8.2f %8.2f %8.2f" % (label, pct(vals, 50), pct(vals, 95), pct(vals, 99), vals[-1]))
+    disks = [r["dk"] for r in rows if r.get("dk")]
+    for i in range(len(disks[0]) if disks else 0):
+        vals = sorted(d[i] for d in disks if len(d) > i and d[i] is not None)
+        if vals:
+            print("%-34s %8.1f %8.1f %8.1f %8.1f" % ("disk %d free GB (low end)" % (i + 1), pct(vals, 50), pct(vals, 5), pct(vals, 1), vals[0]))
+    return 0
+
+
+def main(argv=None):
+    o = options(argv)
+    return {"run": cmd_run, "once": cmd_once, "report": cmd_report}[o.cmd](o)
+
+
+if __name__ == "__main__":
+    try:
+        sys.exit(main())
+    except KeyboardInterrupt:
+        sys.exit(130)

@@ -1,0 +1,279 @@
+{
+ "schema": "lookout.feed",
+ "schema_version": "1.0",
+ "source": {
+  "id": "cinder-lanes",
+  "label": "Cinder, secondary",
+  "machine": "cinder",
+  "kind": "secondary",
+  "peers": [
+   "atlas-main"
+  ]
+ },
+ "producer": {
+  "name": "demo-replay",
+  "version": "0.1.0",
+  "boot_id": "demo-boot",
+  "seq": 1,
+  "mode": "sample"
+ },
+ "generated_at": "2026-10-08T19:31:40Z",
+ "interval_s": 10,
+ "collect_ms": 900,
+ "collectors": [
+  {
+   "id": "items",
+   "as_of": "2026-10-08T19:31:38Z",
+   "status": "ok",
+   "error": null,
+   "warnings": 0
+  },
+  {
+   "id": "machines",
+   "as_of": "2026-10-08T19:31:35Z",
+   "status": "ok",
+   "error": null,
+   "warnings": 0
+  },
+  {
+   "id": "queue",
+   "as_of": "2026-10-08T19:31:37Z",
+   "status": "ok",
+   "error": null,
+   "warnings": 0
+  },
+  {
+   "id": "attention",
+   "as_of": "2026-10-08T19:31:37Z",
+   "status": "ok",
+   "error": null,
+   "warnings": 0
+  },
+  {
+   "id": "meters",
+   "as_of": "2026-10-08T19:29:10Z",
+   "status": "ok",
+   "error": null,
+   "warnings": 0
+  }
+ ],
+ "machines": [
+  {
+   "id": "cinder",
+   "label": "Cinder",
+   "role": "lab server",
+   "status": "ok",
+   "as_of": "2026-10-08T19:31:35Z",
+   "reach": {
+    "probe_ok": true,
+    "rtt_ms": null,
+    "last_ok_at": "2026-10-08T19:31:35Z",
+    "error": null
+   },
+   "load": {
+    "l1": 1.2,
+    "l5": 1.4,
+    "cores": 16,
+    "runq_per_core": 0.1,
+    "runq_now": 2,
+    "runq_basis": "runnable tasks"
+   },
+   "mem": {
+    "used_pct": 39,
+    "swap_used_pct": 2,
+    "swap_rate_pps_1m": 0,
+    "avail_gb": 9.7,
+    "total_gb": 16
+   },
+   "disks": [
+    {
+     "label": "Disk",
+     "free_gb": 188,
+     "free_pct": 41,
+     "warn_gb": 50,
+     "crit_gb": 25
+    }
+   ],
+   "uptime_s": 734000,
+   "on_battery": false,
+   "extras": [
+    {
+     "label": "worker pool",
+     "value": "up",
+     "severity": null
+    }
+   ],
+   "pressure": {
+    "level": "ok",
+    "why": []
+   },
+   "beat": {
+    "seq": 902,
+    "interval_s": 15,
+    "age_s": 0,
+    "version": "1.0",
+    "cost": {
+     "cpu_pct": 0.08,
+     "rss_mb": 19.1,
+     "collect_ms": 0.8,
+     "budget_cpu_pct": 0.5,
+     "over_budget": false
+    }
+   }
+  }
+ ],
+ "items": [
+  {
+   "id": "ci-replay",
+   "owner": "cinder-lanes",
+   "relayed": false,
+   "group": "skyforge",
+   "machine": "cinder",
+   "kind": "task",
+   "title": "Replay files: delta compression",
+   "doing": "Encoding 1,200 sample replays, 38% done",
+   "state": "running",
+   "state_detail": null,
+   "started_at": "2026-10-08T15:31:40Z",
+   "last_event": {
+    "state": "running",
+    "text": "batch 3 of 8",
+    "at": "2026-10-08T19:28:40Z"
+   },
+   "progress": {
+    "basis": "coarse",
+    "history_n": 0,
+    "percent_floor": null,
+    "percent_ceiling": null,
+    "regressed": false,
+    "reason": "state only: no step data from this source",
+    "current": null,
+    "steps": [
+     {
+      "id": "started",
+      "label": "Started",
+      "status": "done",
+      "weight": null,
+      "elapsed_s": null,
+      "typical_s": null,
+      "p90_s": null,
+      "round": null
+     },
+     {
+      "id": "working",
+      "label": "Working",
+      "status": "current",
+      "weight": null,
+      "elapsed_s": null,
+      "typical_s": null,
+      "p90_s": null,
+      "round": null
+     },
+     {
+      "id": "ready",
+      "label": "Ready",
+      "status": "pending",
+      "weight": null,
+      "elapsed_s": null,
+      "typical_s": null,
+      "p90_s": null,
+      "round": null
+     }
+    ]
+   },
+   "handoff": {
+    "state": "none",
+    "since": null
+   },
+   "link": null,
+   "flags": [],
+   "needs_you": false,
+   "lane": {
+    "state": "Can't tell",
+    "cause": "state-unread",
+    "since": null,
+    "last_word": {
+     "verb": "paused",
+     "at": "2026-10-08T17:02:00Z"
+    },
+    "short_title": "Replay files: delta compression"
+   },
+   "say": [
+    {
+     "t": "unreadable"
+    },
+    {
+     "t": "last-word",
+     "verb": "paused",
+     "at": "2026-10-08T17:02:00Z"
+    }
+   ]
+  },
+  {
+   "id": "ci-index",
+   "owner": "cinder-lanes",
+   "relayed": false,
+   "group": "tidewatch",
+   "machine": "cinder",
+   "kind": "task",
+   "title": "Nightly index rebuild",
+   "doing": "Rebuilding the search index",
+   "state": "running",
+   "state_detail": null,
+   "started_at": "2026-10-08T18:41:40Z",
+   "last_event": {
+    "state": "running",
+    "text": "shard 2 of 6",
+    "at": "2026-10-08T19:29:40Z"
+   },
+   "progress": {
+    "basis": "coarse",
+    "history_n": 0,
+    "percent_floor": null,
+    "percent_ceiling": null,
+    "regressed": false,
+    "reason": "state only: no step data from this source",
+    "current": null,
+    "steps": [
+     {
+      "id": "started",
+      "label": "Started",
+      "status": "done",
+      "weight": null,
+      "elapsed_s": null,
+      "typical_s": null,
+      "p90_s": null,
+      "round": null
+     },
+     {
+      "id": "working",
+      "label": "Working",
+      "status": "current",
+      "weight": null,
+      "elapsed_s": null,
+      "typical_s": null,
+      "p90_s": null,
+      "round": null
+     },
+     {
+      "id": "ready",
+      "label": "Ready",
+      "status": "pending",
+      "weight": null,
+      "elapsed_s": null,
+      "typical_s": null,
+      "p90_s": null,
+      "round": null
+     }
+    ]
+   },
+   "handoff": {
+    "state": "none",
+    "since": null
+   },
+   "link": null,
+   "flags": [],
+   "needs_you": false
+  }
+ ]
+}

@@ -1,0 +1,17 @@
+{
+  "schema": "lookout.card",
+  "schema_version": "1.0",
+  "tool": "release-gate",
+  "title": "Release Gate",
+  "status": "bad",
+  "headline": "NO-GO at 3f9c2a1b: 2 required checks failing",
+  "numbers": [
+    { "label": "passing", "value": 14 },
+    { "label": "blocking", "value": 2 },
+    { "label": "warnings", "value": 1 },
+    { "label": "ran for", "value": 38, "unit": "s" }
+  ],
+  "link": "https://example.invalid/releases/runbook",
+  "updated_at": "2026-01-01T09:00:00Z",
+  "stale_after_s": 86400
+}
