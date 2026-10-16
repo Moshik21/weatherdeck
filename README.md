@@ -111,7 +111,7 @@ message saying so. Below, `weatherdeck` means `python3 bin/weatherdeck` on macOS
 | --- | --- | --- | --- |
 | Host (`weatherdeck run`, `on`, `ingest`) | supported | supported | supported |
 | Python | 3.9 to 3.14 (3.8 is not supported) | 3.9 to 3.14 (3.8 is not supported) | 3.9 to 3.14 (3.8 is not supported) |
-| Test suite on GitHub's hosted runners (first run, 2026-10-16; 433 tests, `.github/workflows/test.yml`, run by hand) | **10 to 13 tests fail on every Python version.** On the hosted Windows image nine tests that start Node fail because Windows rejects the command line as too long; one doctor check, one push-time check, one text-cutting check and one scratch-folder cleanup also fail there (the Python 3.9 and 3.10 legs fail 10, the others 13). The host itself runs natively on Windows 11, where the maintainer runs it, and this is not yet fixed | all pass | all pass |
+| Test suite on GitHub's hosted runners (2026-10-16; 453 tests, `.github/workflows/test.yml`, run by hand) | passes on Python 3.9 to 3.14. The first run the same morning failed 13 tests on every Windows leg (nine started Node with a command line Windows refuses as too long; the rest were tests assuming a Linux machine, a code-page decode, and a scratch clone Windows would not delete); they were fixed and the second run passed all 18 jobs | passes on Python 3.9 to 3.14 | passes on Python 3.9 to 3.14 |
 | Page: Chrome, Edge | supported | supported | supported |
 | Page: Safari (macOS), iPhone | headless WebKit (layout, overflow, console errors); the dashboard depth scene was checked and signed off on Safari, iPhone and a 4K TV on 2026-10-10 by the maintainer, and nothing else on those devices has been ([docs/device-checklist.md](docs/device-checklist.md)) | same | same |
 | Page: Firefox | expected to work, not checked each release | | |
@@ -123,7 +123,7 @@ message saying so. Below, `weatherdeck` means `python3 bin/weatherdeck` on macOS
 | Last seen and the replay key (0.4.1) | per browser tab (session storage); a tab that blocks it starts with "not yet on this screen" | same | same |
 | Slowed on purpose (0.7.0) | words only (trust line, Crow's nest); nothing to check beyond reading them | same | same |
 
-The hosted run is the first run of the test suite on macOS and Windows images: before it, the suite had been run on Linux and WSL2, and on one Windows 11 PC and one Mac by the maintainer. A Windows failure above is a finding about the tests or a check on that image, not a measured defect in the host, but it has not been investigated yet; if you run Weatherdeck on Windows, treat the Windows column as less proven than the other two.
+The hosted runs are the first runs of the test suite on macOS and Windows images; before them it had been run on Linux and WSL2 and on one Windows 11 PC and one Mac by the maintainer. The hosted Windows image is Windows Server, not Windows 11, and the suite runs the page-script tests with Node; the maintainer's own Windows 11 PC runs the host day to day, which the hosted run does not cover.
 
 What each release was actually run on is in [CHANGELOG.md](CHANGELOG.md), with the checks only a person can make
 (a real Safari, iPhone and TV; only the dashboard depth scene has been signed off so far, see
