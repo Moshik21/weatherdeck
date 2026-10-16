@@ -31,6 +31,7 @@ import os
 import re
 import shutil
 import signal
+import stat
 import subprocess
 import sys
 import tempfile
@@ -63,6 +64,22 @@ def run(cmd, cwd, timeout=STEP_TIMEOUT, extra=None):
 
 def git(cwd, *args, timeout=STEP_TIMEOUT):
     return run(["git", "-c", "core.quotepath=false", *args], cwd, timeout=timeout)
+
+
+def force_remove(func, path, _exc):
+    """rmtree's handler: git keeps its object files read-only, and Windows will not delete one until it is writable."""
+    try:
+        os.chmod(path, stat.S_IWRITE)
+        func(path)
+    except OSError:
+        pass
+
+
+def remove_tree(path):
+    if sys.version_info >= (3, 12):
+        shutil.rmtree(path, onexc=force_remove)
+    else:
+        shutil.rmtree(path, onerror=force_remove)
 
 
 def say(text):
@@ -193,7 +210,7 @@ def main():
         return fail.status
     finally:
         if scratch is not None:
-            shutil.rmtree(scratch, ignore_errors=True)
+            remove_tree(scratch)
 
 
 def on_signal(signum, _frame):

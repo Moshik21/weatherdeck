@@ -27,6 +27,9 @@ sys.path.insert(0, str(ROOT / "src"))
 from weatherdeck import VERSION, config, doctor, ingest, server  # noqa: E402
 
 SRC = "beat-lab"
+# Fake is a Linux machine, where an interpreter's path starts with "/"; a Windows interpreter's does not, so there the stand-in
+# path answers stat() with the real interpreter.
+PYTHON = sys.executable if os.name != "nt" else "/usr/bin/python3"
 
 
 def iso(t):
@@ -64,6 +67,12 @@ class Fake(doctor.Facts):
             if " ".join(argv[:n]) in self.answers:
                 return self.answers[" ".join(argv[:n])]
         return self.answers.get(key, (127, f"{argv[0]}: not found"))
+
+    def stat(self, path):
+        st = super().stat(sys.executable if path == PYTHON else path)
+        if st is not None and os.name == "nt":   # Windows reports every file as 0o666; the files of this Linux machine are private
+            st = os.stat_result((st.st_mode & ~0o777 | 0o600,) + tuple(st)[1:])
+        return st
 
     def user(self):
         return "synth"
@@ -202,7 +211,7 @@ class Service(Temp):
         self.assertEqual(c.reason, "SERVICE_NOT_RUNNING")
 
     def test_a_real_interpreter_is_ok(self):
-        facts = Fake(self.home, answers={"systemctl --user": unit(exe=sys.executable)})
+        facts = Fake(self.home, answers={"systemctl --user": unit(exe=PYTHON)})
         c, st = doctor.check_service(facts, self.target())
         self.assertEqual((c.verdict, doctor.check_interpreter(facts, st).verdict), (doctor.OK, doctor.OK))
 
@@ -390,7 +399,7 @@ class Received(Host):
     def test_live_after_an_accepted_push(self):
         self.assertEqual(ingest.ingest(feed(1), transport="http").code, ingest.OK)
         cfg = self.join_config(self.url)
-        checks = doctor.machine_checks(Fake(self.home, answers={"systemctl --user": unit(exe=sys.executable)}), join_config=str(cfg))
+        checks = doctor.machine_checks(Fake(self.home, answers={"systemctl --user": unit(exe=PYTHON)}), join_config=str(cfg))
         line, code = doctor.machine_overall(checks)
         self.assertEqual(by_name(checks)["host received"].verdict, doctor.OK, line)
         self.assertEqual(by_name(checks)["version"].verdict, doctor.OK)

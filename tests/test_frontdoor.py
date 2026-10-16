@@ -20,11 +20,12 @@ sys.path.insert(0, str(ROOT / "src"))
 from weatherdeck import lanes, schema  # noqa: E402
 
 NODE = shutil.which("node")
+# The data goes in on stdin, not argv (Windows refuses a command line over 32767 characters), and the answer is read as UTF-8 (not the code page).
 # A name that is no function is read as a value. "@len" stands for a measure that counts characters (the page measures with its loaded face).
 HARNESS = r"""
 const s = require(process.argv[1]);
 const out = {};
-for (const [k, f] of Object.entries(JSON.parse(process.argv[2])))
+for (const [k, f] of Object.entries(JSON.parse(require("fs").readFileSync(0, "utf8"))))
   out[k] = typeof s[f.fn] === "function" ? s[f.fn](...f.args.map(a => (a === "@len" ? (t => t.length) : a))) : s[f.fn];
 process.stdout.write(JSON.stringify(out));
 """
@@ -33,8 +34,8 @@ TV = {"phone": False, "tv": False, "screen": "board", "loading": False}
 
 class InNode:
     def run_js(self, calls):
-        out = subprocess.run([NODE, "-e", HARNESS, str(ROOT / "web" / "frontdoor.js"), json.dumps(calls)],
-                             capture_output=True, text=True, timeout=30)
+        out = subprocess.run([NODE, "-e", HARNESS, str(ROOT / "web" / "frontdoor.js")], input=json.dumps(calls),
+                             capture_output=True, text=True, encoding="utf-8", timeout=30)
         self.assertEqual(out.returncode, 0, out.stderr)
         return json.loads(out.stdout)
 
@@ -312,7 +313,7 @@ vm.runInContext(`globalThis.run = (view, labels) => {
   S.view = view; S.theme = { components: {}, zones: {} }; S.server = { config: { labels, theme: {}, display: {}, thresholds: {}, poll: {}, sound: {} } };
   return lanesOf(boardModel(null), { flagship: true }).map(laneRow).map(r => ({ key: r.key, word: r.word, sub: r.sub, title: r.title, sea: r.l.rowWord, kind: r.l.kind }));
 };`, ctx);
-process.stdout.write(JSON.stringify(ctx.run(JSON.parse(process.argv[2]), JSON.parse(process.argv[3]))));
+process.stdout.write(JSON.stringify(ctx.run(...JSON.parse(fs.readFileSync(0, "utf8")))));
 """
 
 
@@ -326,7 +327,7 @@ class LanesDeck(unittest.TestCase):
         view = {"now": 0, "sources": [{"id": "src-a", "label": "src-a", "machine": "m1", "received_at": 0, "generated_at": "1970-01-01T00:00:00Z",
                                        "freshness": []}], "machines": [{"id": "m1", "label": "Alpha"}], "attention": [], "items": [it, untitled]}
         labels = json.loads((ROOT / "src" / "weatherdeck" / "defaults.json").read_text())["labels"]
-        out = subprocess.run([NODE, "-e", DECK, str(ROOT), json.dumps(view), json.dumps(labels)], capture_output=True, text=True, timeout=30)
+        out = subprocess.run([NODE, "-e", DECK, str(ROOT)], input=json.dumps([view, labels]), capture_output=True, text=True, encoding="utf-8", timeout=30)
         self.assertEqual(out.returncode, 0, out.stderr)
         rows = {r["key"]: r for r in json.loads(out.stdout)}
         row = rows["cin-hud-move"]
@@ -369,7 +370,7 @@ const noteInk = row => {
   const all = n => [n, ...n.kids.flatMap(all)];
   return all(deckRowEl({ deck: "gun-deck", ship: "m1" }, row, { phone: false })).filter(n => n.text === row.note).map(n => n.cls);
 };`, ctx);
-process.stdout.write(JSON.stringify(ctx.run(JSON.parse(process.argv[2]), JSON.parse(process.argv[3]), Number(process.argv[4]))));
+process.stdout.write(JSON.stringify(ctx.run(...JSON.parse(fs.readFileSync(0, "utf8")))));
 """
 
 
@@ -411,7 +412,7 @@ class UnreadInstruction(unittest.TestCase):
         src = lambda sid: {"id": sid, "label": sid, "machine": "m1", "received_at": NOW, "generated_at": ago(0), "freshness": []}
         view = {"now": NOW, "sources": [src("atlas"), src("borealis")], "machines": [{"id": "m1", "label": "Cinder"}], "attention": [], "items": items}
         labels = json.loads((ROOT / "src" / "weatherdeck" / "defaults.json").read_text())["labels"]
-        out = subprocess.run([NODE, "-e", STEER, str(ROOT), json.dumps(view), json.dumps(labels), str(NOW)], capture_output=True, text=True, timeout=30)
+        out = subprocess.run([NODE, "-e", STEER, str(ROOT)], input=json.dumps([view, labels, NOW]), capture_output=True, text=True, encoding="utf-8", timeout=30)
         self.assertEqual(out.returncode, 0, out.stderr)
         r = json.loads(out.stdout)
         L = r["lanes"]
@@ -465,7 +466,7 @@ vm.runInContext(`globalThis.run = (view, labels, display, now, rowsMax) => {
     gunDeck: deckCount("gun-deck", B, { id: "m1", flagship: true }).text, gunLoud: !!deckCount("gun-deck", B, { id: "m1", flagship: true }).loud, gunRows: ids(lanesOf(B, { flagship: true })), words: Object.fromEntries(B.lanes.map(l => [l.id, [l.rowKey, l.rowWord, l.ageText]])),
     lists: plan.flatMap(p => p.kind === "cards" ? p.groups.flatMap(g => ids(g.rows)) : p.kind === "lines" ? [] : ids(p.rows)), plan: plan.map(p => p.kind + ":" + p.key) };
 };`, ctx);
-process.stdout.write(JSON.stringify(ctx.run(...JSON.parse(process.argv[2]))));
+process.stdout.write(JSON.stringify(ctx.run(...JSON.parse(fs.readFileSync(0, "utf8")))));
 """
 
 
@@ -507,14 +508,14 @@ class OneSort(InNode, unittest.TestCase):
         cls.labels, cls.display = defaults["labels"], defaults["display"]
         view = {"now": NOW, "sources": [{"id": "src-a", "label": "src-a", "machine": "m1", "received_at": NOW, "generated_at": iso(0), "freshness": []}],
                 "machines": [{"id": "m1", "label": "Alpha"}], "attention": [], "items": SORT_ITEMS}
-        out = subprocess.run([NODE, "-e", SORT, str(ROOT), json.dumps([view, cls.labels, cls.display, NOW])], capture_output=True, text=True, timeout=30)
+        out = subprocess.run([NODE, "-e", SORT, str(ROOT)], input=json.dumps([view, cls.labels, cls.display, NOW]), capture_output=True, text=True, encoding="utf-8", timeout=30)
         assert out.returncode == 0, out.stderr
         cls.got = json.loads(out.stdout)
-        out = subprocess.run([NODE, "-e", SORT, str(ROOT), json.dumps([view, cls.labels, cls.display, NOW, 4])], capture_output=True, text=True, timeout=30)
+        out = subprocess.run([NODE, "-e", SORT, str(ROOT)], input=json.dumps([view, cls.labels, cls.display, NOW, 4]), capture_output=True, text=True, encoding="utf-8", timeout=30)
         assert out.returncode == 0, out.stderr
         cls.short = json.loads(out.stdout)
         view = dict(view, items=[it for it in SORT_ITEMS if it["id"] == "atlas-old"])
-        out = subprocess.run([NODE, "-e", SORT, str(ROOT), json.dumps([view, cls.labels, cls.display, NOW])], capture_output=True, text=True, timeout=30)
+        out = subprocess.run([NODE, "-e", SORT, str(ROOT)], input=json.dumps([view, cls.labels, cls.display, NOW]), capture_output=True, text=True, encoding="utf-8", timeout=30)
         assert out.returncode == 0, out.stderr
         cls.only_old = json.loads(out.stdout)
 

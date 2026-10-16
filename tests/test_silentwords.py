@@ -34,6 +34,7 @@ INGEST = ("import json, sys; from weatherdeck import ingest\n"
           "json.dump(view.build(now=float(sys.argv[1])), sys.stdout)")
 
 # The page's own scripts in one context (as tests/test_housekeeping.py does), asked for what the silent source and its machine say.
+# The data goes in on stdin, not argv (Windows refuses a command line over 32767 characters), and the answer is read as UTF-8 (not the code page).
 PAGE = r"""
 const vm = require("vm"), fs = require("fs");
 const stub = new Proxy(function () {}, { get: () => stub, apply: () => stub });
@@ -48,7 +49,7 @@ vm.runInContext(`globalThis.run = (view, labels, display, thresholds, now) => {
     vitals: Object.fromEntries(B.machines.map(m => [m.id, m.vitals.map(v => v.text)])), words: Object.fromEntries(B.machines.map(m => [m.id, m.word])),
     problems: trust.problems };
 };`, ctx);
-process.stdout.write(JSON.stringify(ctx.run(...JSON.parse(process.argv[2]))));
+process.stdout.write(JSON.stringify(ctx.run(...JSON.parse(fs.readFileSync(0, "utf8")))));
 """
 
 
@@ -74,8 +75,8 @@ def build(pushes):
 
 
 def page(view):
-    out = subprocess.run([NODE, "-e", PAGE, str(ROOT), json.dumps([view, WORDS, DEFAULTS["display"], DEFAULTS["thresholds"], NOW])],
-                         capture_output=True, text=True, timeout=30)
+    out = subprocess.run([NODE, "-e", PAGE, str(ROOT)], input=json.dumps([view, WORDS, DEFAULTS["display"], DEFAULTS["thresholds"], NOW]),
+                         capture_output=True, text=True, encoding="utf-8", timeout=30)
     assert out.returncode == 0, out.stderr
     return json.loads(out.stdout)
 

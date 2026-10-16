@@ -27,10 +27,11 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 NODE = shutil.which("node")
+# The data goes in on stdin, not argv (Windows refuses a command line over 32767 characters), and the answer is read as UTF-8 (not the code page).
 HARNESS = r"""
 const s = require(process.argv[1]);
 const out = {};
-for (const [k, f] of Object.entries(JSON.parse(process.argv[2]))) out[k] = s[f.fn](...f.args);
+for (const [k, f] of Object.entries(JSON.parse(require("fs").readFileSync(0, "utf8")))) out[k] = s[f.fn](...f.args);
 process.stdout.write(JSON.stringify(out));
 """
 AT = "2027-01-15T08:00:00Z"
@@ -94,7 +95,7 @@ def build_view(feeds):
 
 
 def run_js(calls):
-    out = subprocess.run([NODE, "-e", HARNESS, str(ROOT / "web" / "frontdoor.js"), json.dumps(calls)], capture_output=True, text=True, timeout=30)
+    out = subprocess.run([NODE, "-e", HARNESS, str(ROOT / "web" / "frontdoor.js")], input=json.dumps(calls), capture_output=True, text=True, encoding="utf-8", timeout=30)
     assert out.returncode == 0, out.stderr
     return json.loads(out.stdout)
 

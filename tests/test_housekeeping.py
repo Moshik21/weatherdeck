@@ -32,6 +32,7 @@ DEFAULTS = json.loads((ROOT / "src" / "weatherdeck" / "defaults.json").read_text
 WORDS = DEFAULTS["labels"]
 
 # The page's own scripts in one context (as tests/test_frontdoor.py does for the one sort), over the host's view.
+# The data goes in on stdin, not argv (Windows refuses a command line over 32767 characters), and the answer is read as UTF-8 (not the code page).
 PAGE = r"""
 const vm = require("vm"), fs = require("fs");
 const stub = new Proxy(function () {}, { get: () => stub, apply: () => stub });
@@ -51,7 +52,7 @@ vm.runInContext(`globalThis.run = (view, labels, display, now, rowsMax, seen) =>
     rows: Object.fromEntries(B.lanes.map(l => [l.id, { key: l.rowKey, word: l.rowWord, old: l.rowOld, sentence: l.sentence, stage: l.stage }])),
     housekeeping: hk ? ids(hk.rows) : [], plan: plan.map(p => p.kind + ":" + p.key), problems: attentionLines(B, views).map(x => x.key + " " + (x.who || "") + " " + x.text), since: B.since };
 };`, ctx);
-process.stdout.write(JSON.stringify(ctx.run(...JSON.parse(process.argv[2]))));
+process.stdout.write(JSON.stringify(ctx.run(...JSON.parse(fs.readFileSync(0, "utf8")))));
 """
 
 
@@ -115,8 +116,8 @@ def build_view(feeds):
 
 
 def run_page(view, rows_max=14, seen=None):
-    out = subprocess.run([NODE, "-e", PAGE, str(ROOT), json.dumps([view, WORDS, DEFAULTS["display"], NOW, rows_max, seen])],
-                         capture_output=True, text=True, timeout=30)
+    out = subprocess.run([NODE, "-e", PAGE, str(ROOT)], input=json.dumps([view, WORDS, DEFAULTS["display"], NOW, rows_max, seen]),
+                         capture_output=True, text=True, encoding="utf-8", timeout=30)
     assert out.returncode == 0, out.stderr
     return json.loads(out.stdout)
 
