@@ -2,6 +2,23 @@
 
 Weatherdeck is a status board for machines and the work running on them (a TV or phone page fed by small pushers), not a weather app and not a monitoring or alerting system.
 
+![The Weatherdeck board on a TV-sized screen, in demo mode with the ship-deck theme. On the left an amber plate lists three calls waiting on you, each with how long it has waited. On the right a pixel-art ship and two smaller ships stand for three machines, each with a name plate. Along the bottom is the log: two waiting rows with their progress, a line counting the other lanes, and the tools status.](docs/img/hero-tv.png)
+
+**What you see.** Every picture here is the demo (`weatherdeck run --demo`, with `#theme=ship-deck` on the page address). Its sources are invented and nothing in it is real.
+
+- **Waiting on you.** The amber plate counts the calls that need a person and says how long each has waited.
+- **Honest progress.** Progress shows as a percent range where the source gives one (for example 38-42%). A lane the board cannot read is counted as "can't tell" (the "+7 more" line says 1), not shown as fine.
+- **A quiet source is named.** The lamp by the clock counts live sources. When one stops reporting it reads "2/3 live", and that machine's ship is drawn in fog and labelled silent.
+- **One board for TV and phone.** The same page is the open sea on a wide screen and one column on a phone.
+
+![Eight frames of the demo board, one every 1.25 seconds, taken over about a minute and a half. The lamp by the clock changes from 3/3 live to 2/3 live, the ship for the machine named Cinder is drawn in fog and labelled silent, and the under-way count in the log drops from 6 to 4.](docs/img/tour.gif)
+
+In the clip, Cinder (one of the invented sources) stops reporting. [Still frame](docs/img/tour-still.png).
+
+<img src="docs/img/phone.png" width="390" alt="The top of the board on a phone, 390 pixels wide: a header reading 2 of 3 feeds report, an amber plate of three calls that need you, a list of four problems that includes one lane that cannot be read right now, and an ALL FINE tile left dark because calls and problems are open.">
+
+The phone page from a few minutes into the demo, cropped after the ALL FINE tile: the calls, then the problems, then that tile, which is lit only when no call or problem is open and every feed reports.
+
 It is an at-a-glance board for work reported by many sources, meant to be left on a TV or a
 phone: what is waiting on you, what is moving and how far along it honestly is, what got done, what
 is next, and whether you can trust what you are looking at.
