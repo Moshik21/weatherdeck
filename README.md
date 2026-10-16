@@ -94,6 +94,7 @@ message saying so. Below, `weatherdeck` means `python3 bin/weatherdeck` on macOS
 | --- | --- | --- | --- |
 | Host (`weatherdeck run`, `on`, `ingest`) | supported | supported | supported |
 | Python | 3.9 to 3.14 (3.8 is not supported) | 3.9 to 3.14 (3.8 is not supported) | 3.9 to 3.14 (3.8 is not supported) |
+| Test suite on GitHub's hosted runners (first run, 2026-10-16; 433 tests, `.github/workflows/test.yml`, run by hand) | **10 to 13 tests fail on every Python version.** On the hosted Windows image nine tests that start Node fail because Windows rejects the command line as too long; one doctor check, one push-time check, one text-cutting check and one scratch-folder cleanup also fail there (the Python 3.9 and 3.10 legs fail 10, the others 13). The host itself runs natively on Windows 11, where the maintainer runs it, and this is not yet fixed | all pass | all pass |
 | Page: Chrome, Edge | supported | supported | supported |
 | Page: Safari (macOS), iPhone | headless WebKit (layout, overflow, console errors); the dashboard depth scene was checked and signed off on Safari, iPhone and a 4K TV on 2026-10-10 by the maintainer, and nothing else on those devices has been ([docs/device-checklist.md](docs/device-checklist.md)) | same | same |
 | Page: Firefox | expected to work, not checked each release | | |
@@ -104,6 +105,8 @@ message saying so. Below, `weatherdeck` means `python3 bin/weatherdeck` on macOS
 | Versions per machine (0.5.0) | reporter rows, the watch strip, the trust line and the phone's SOFTWARE section say each source's adapter, or "version unknown"; only a gap that changes meaning is flagged | same | same |
 | Last seen and the replay key (0.4.1) | per browser tab (session storage); a tab that blocks it starts with "not yet on this screen" | same | same |
 | Slowed on purpose (0.7.0) | words only (trust line, Crow's nest); nothing to check beyond reading them | same | same |
+
+The hosted run is the first run of the test suite on macOS and Windows images: before it, the suite had been run on Linux and WSL2, and on one Windows 11 PC and one Mac by the maintainer. A Windows failure above is a finding about the tests or a check on that image, not a measured defect in the host, but it has not been investigated yet; if you run Weatherdeck on Windows, treat the Windows column as less proven than the other two.
 
 What each release was actually run on is in [CHANGELOG.md](CHANGELOG.md), with the checks only a person can make
 (a real Safari, iPhone and TV; only the dashboard depth scene has been signed off so far, see
