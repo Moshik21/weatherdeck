@@ -4,6 +4,36 @@ All notable changes to Weatherdeck (called Lookout until this rename; entries fr
 version follows [semantic versioning](https://semver.org/). The feed schema has its own version (`lookout.feed`, see
 [docs/feed-spec.md](docs/feed-spec.md)); a feed of any 1.x version is accepted.
 
+## [0.10.1] - 2026-10-16
+
+### Fixed: a theme changed by the page address while the crow flies
+
+On the TV's sea, changing `#theme=` at the moment a call's crow was flying to the call plate (the first seconds after a load
+with calls waiting) threw "Cannot read properties of null" ten times a second until the flight's time ran out, in every
+browser: the new theme has no crow, and the flight kept drawing one. The flight now ends when its sprite is gone.
+
+### Changed: Firefox and WebKit are checked headless, and the README says what was seen
+
+The Support table's Firefox row said "expected to work"; it now says what a headless check found, and the Safari row says
+which WebKit was run. A new Known issue: headless WebKit does not draw the page board's sea panel at 1440 px and wider.
+[docs/device-checklist.md](docs/device-checklist.md) has the commands ("Firefox and WebKit headless check").
+
+### Checked on
+- Headless Chromium 156, Firefox 157 and WebKit 27.2 (Playwright 1.64.1, on Linux under WSL2, software rendered), one at a
+  time, at 1920 x 1080 and 390 x 844 (DPR 3; Firefox without phone emulation), on `weatherdeck run --demo`: the front door
+  (the sea on the TV, the page board on the phone), the Lists door, the Deferred and someone-else's-turn fold, Read all,
+  worker notes, Copy (the button says "Copied" in all three), the key and Esc, `#theme=ship-deck` and `default`,
+  `#preview=lost`, `late`, `host` and `empty`, `#night=1`, `#controls=1` and a button in it, the `tv` view, and the static
+  demo. No sideways scroll anywhere, every self-hosted face loaded, no failed request and, after the fix above, no page
+  error in any engine. The only console lines are WebKit's refusal of Playwright's own screenshot style by the content
+  security policy (none without a screenshot).
+- Differences from Chromium: WebKit leaves the page board's sea panel empty at 1920 and 1440 px (the lists' columns; 390 px
+  draws it), and Firefox's system face on Linux is a few pixels wider, so one call line on the `default` theme's sea ends in
+  an ellipsis where Chromium's fits. Everything else matched, step by step, in the screenshots.
+- Not checked: a real Safari, iPhone, TV, or a desktop Firefox on a real screen.
+
+Also in the source repository, not in the release zip: the hosted test workflow's job now times out after 11 minutes.
+
 ## [0.10.0] - 2026-10-16
 
 ### Added: what is deferred or someone else's turn, beside "Needs you" (feed 1.12)

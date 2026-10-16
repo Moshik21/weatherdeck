@@ -118,8 +118,8 @@ message saying so. Below, `weatherdeck` means `python3 bin/weatherdeck` on macOS
 | Python | 3.9 to 3.14 (3.8 is not supported) | 3.9 to 3.14 (3.8 is not supported) | 3.9 to 3.14 (3.8 is not supported) |
 | Test suite on GitHub's hosted runners (2026-10-16; 453 tests, `.github/workflows/test.yml`, run by hand) | passes on Python 3.9 to 3.14. The first run the same morning failed 13 tests on every Windows leg (nine started Node with a command line Windows refuses as too long; the rest were tests assuming a Linux machine, a code-page decode, and a scratch clone Windows would not delete); they were fixed and the second run passed all 18 jobs | passes on Python 3.9 to 3.14 | passes on Python 3.9 to 3.14 |
 | Page: Chrome, Edge | supported | supported | supported |
-| Page: Safari (macOS), iPhone | headless WebKit (layout, overflow, console errors); the dashboard depth scene was checked and signed off on Safari, iPhone and a 4K TV on 2026-10-10 by the maintainer, and nothing else on those devices has been ([docs/device-checklist.md](docs/device-checklist.md)) | same | same |
-| Page: Firefox | expected to work, not checked each release | | |
+| Page: Safari (macOS), iPhone | headless WebKit (Playwright) checked on 2026-10-16; not a real Safari on a Mac or iPhone. At 1920 x 1080 and 390 x 844 it matched Chromium except that the page board's sea panel is not drawn at 1440 px and wider (Known issues). The dashboard depth scene was checked and signed off on Safari, iPhone and a 4K TV on 2026-10-10 by the maintainer, and nothing else on those devices has been ([docs/device-checklist.md](docs/device-checklist.md)) | same | same |
+| Page: Firefox | headless Firefox (Playwright, on Linux) checked on 2026-10-16 at 1920 x 1080 and 390 x 844 (a narrow window, no phone emulation): the sea, the page board and its folds, Copy, the key, the preview and theme hashes, the `tv` view and the static demo matched Chromium; not a desktop Firefox on a real screen, and not run each release ([docs/device-checklist.md](docs/device-checklist.md)) | same | same |
 | Since you last looked (browser storage) | per browser; a browser that blocks site data shows no since plate | same | same |
 | Feed schema read | 1.0 to 1.12 | 1.0 to 1.12 | 1.0 to 1.12 |
 | One ship per machine (0.4.0) | TV: up to six ships, then a convoy; phone: the convoy strip scrolls inside itself | same | same |
@@ -137,7 +137,8 @@ What each release was actually run on is in [CHANGELOG.md](CHANGELOG.md), with t
 ## Known issues
 
 - Safari, iPhone and the TV: only the dashboard depth scene was signed off (2026-10-10); nothing else has been checked on those devices (the Support table above, [docs/device-checklist.md](docs/device-checklist.md)).
-- Firefox is expected to work but is not checked each release.
+- Firefox has been checked headless only (2026-10-16), not on a real screen, and that check is run by hand, not each release.
+- Headless WebKit does not draw the page board's sea panel (its picture and captions) at 1440 px and wider, where the lists are in two or three columns: it takes its space but stays empty. At 390 px (one column) it is drawn, and the open sea is not affected. Chromium and Firefox draw it. Whether Safari on a Mac does the same is not known ([docs/device-checklist.md](docs/device-checklist.md)).
 - A source that cuts a name before it sends it (with its own ellipsis) stays cut on the board: lane rows show the title as sent, and the TV log's single line cuts it at a whole word ([docs/theme-spec.md](docs/theme-spec.md), section 24).
 - A machine's lane count adds up only the homes that send one; a home that sends nothing for that machine is not in it, so the row can show fewer lanes than the machine runs, and its "N homes" counts only those that sent one ([docs/feed-spec.md](docs/feed-spec.md), "Whose turn, dated holds and lanes per machine").
 - The hosted Windows test runs use Windows Server, not Windows 11 (see the note under the Support table).

@@ -1,9 +1,10 @@
 # Real-device checklist
 
 Headless Chrome and WebKit check layout, overflow and console errors before every release (see CHANGELOG.md, "Checked
-on"). They cannot check what a person sees on real glass. Before calling a release done, open the board on each device
-below and tick what only a person can judge. Use the demo (`weatherdeck run --demo --scenario honest-board`, and for 0.3.0
-and 0.3.1 `--scenario gaps`), so nothing real is shown, and note the device, browser version and result in the changelog.
+on"); Firefox and WebKit can be run the same way ("Firefox and WebKit headless check" below). They cannot check what a
+person sees on real glass. Before calling a release done, open the board on each device below and tick what only a person
+can judge. Use the demo (`weatherdeck run --demo --scenario honest-board`, and for 0.3.0 and 0.3.1 `--scenario gaps`), so
+nothing real is shown, and note the device, browser version and result in the changelog.
 
 ## Signed off: the dashboard depth scene (2026-10-10)
 Signed off by the maintainer on 2026-10-10, on Safari, iPhone and the 4K television, for the dashboard depth scene: the ship
@@ -135,9 +136,72 @@ needs to check it on glass, and note device, browser and result in the changelog
   call's title is readable without the reason; the state word is never the only thing that says what the colour says.
 - TV: the page does not shift or flicker over a few minutes (it drifts by 2 px a step for burn-in, nothing else moves).
 - Safari on a Mac and a laptop at 1440 px: two columns, a sticky header, the Key opens over the page and closes with its button or Esc.
+- Safari on a Mac at 1440 px and wider: the sea panel at the end of the lists is drawn, its picture and its captions (headless WebKit
+  leaves an empty space there; see the README's Known issues). Say which you see.
 - iPhone: one column, no sideways scroll in portrait or landscape; the Key button is reachable at the top; "worker notes" and the
   "+N waiting on a check" fold open and close with a tap; Copy on a call puts its line on the clipboard.
 - All: the sea panel is crisp (no blur on the ship), and a caption sits under every picture drawn.
 - Goals (`--scenario goals`; the grouping is checked headless only): a goal header's name and count line ("N lanes ... N next, N done, or more") read
   as the heading of the lanes under it, a project group tagged "no goal set: shown by project" is told apart from a goal, and with the default demo
   (no goals) the board is as before and says no goals are set.
+
+## Firefox and WebKit headless check
+This is not a device check: it runs the page in headless Chromium, Firefox and WebKit (Playwright's builds) and compares them. It
+needs Node 18 or newer and downloads the three browsers (about 1.3 GB on disk), so it is run by hand, not by the test suite.
+WebKit here is Playwright's Linux build, not Safari; Playwright's Firefox has no phone emulation, so its 390 px run is a narrow
+desktop window.
+Last run 2026-10-16 (Playwright 1.64.1: Chromium 156, Firefox 157, WebKit 27.2, on Linux); the result is in CHANGELOG.md.
+
+In a scratch folder outside the repository, with everything installed inside it:
+
+```
+npm init -y && npm i playwright
+export PLAYWRIGHT_BROWSERS_PATH="$PWD/browsers"
+npx playwright install chromium firefox webkit
+```
+
+On Linux the browsers also need system libraries (`npx playwright install-deps` installs them with root). Without root,
+fetch the packages Playwright names with `apt-get download`, unpack each with `dpkg -x <deb> "$PWD/sysroot"`, and put
+`$PWD/sysroot/usr/lib/x86_64-linux-gnu` on `LD_LIBRARY_PATH`; set `PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS=1`. WebKit's
+own launcher resets `LD_LIBRARY_PATH`, so for WebKit write a small launcher that sets it and runs
+`browsers/webkit-*/minibrowser-wpe/bin/MiniBrowser` (with `WEBKIT_EXEC_PATH`, `WEBKIT_INJECTED_BUNDLE_PATH` and
+`WEBKIT_INSPECTOR_RESOURCES_PATH` pointing at that folder's `bin`, `lib` and `share`), and give its path as `WK_RUN`.
+
+Start the demo from the repository (`python3 bin/weatherdeck --data <scratch>/data run --demo --port 8799`, a scratch data
+directory so nothing of yours is touched), save this as `check.mjs` in the scratch folder and run `node check.mjs http://127.0.0.1:8799`:
+
+```js
+import { chromium, firefox, webkit } from "playwright";
+const base = process.argv[2], wk = process.env.WK_RUN ? { executablePath: process.env.WK_RUN } : {};
+const SIZES = { tv: [1920, 1080, 1], phone: [390, 844, 3] };
+const STEPS = ["", "#theme=ship-deck", "#/board?theme=ship-deck", "#/board?theme=default", "#preview=lost&theme=ship-deck",
+  "#preview=late&theme=ship-deck", "#preview=host&theme=ship-deck", "#preview=empty", "#night=1&theme=ship-deck", "#controls=1"];
+const CLICKS = ["details.pg-aside > summary", "details.pg-reason > summary", "details.pg-notes > summary", "button.copy", "button.pg-keybtn"];
+for (const [name, type] of Object.entries({ chromium, firefox, webkit })) for (const [size, [w, h, dpr]] of Object.entries(SIZES)) {
+  const browser = await type.launch(name === "webkit" ? wk : {});
+  const page = await (await browser.newContext({ viewport: { width: w, height: h }, deviceScaleFactor: dpr })).newPage();
+  const bad = [];
+  page.on("pageerror", e => bad.push("page error: " + e.message));
+  page.on("console", m => m.type() === "error" && bad.push("console: " + m.text()));
+  page.on("response", r => r.status() >= 400 && bad.push(r.status() + " " + r.url()));
+  const look = async label => {
+    await page.waitForFunction(() => !document.querySelector(".boot-note"));
+    await page.evaluate(() => document.fonts.ready.then(() => 0)); await page.waitForTimeout(2500);
+    const m = await page.evaluate(() => ({ wide: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+      fonts: [...document.fonts].filter(f => f.status !== "loaded").map(f => f.family) }));
+    console.log(name, size, label, "sideways px:", m.wide, "fonts not loaded:", m.fonts.join(",") || "none");
+    await page.screenshot({ path: `${name}-${size}-${label.replace(/\W+/g, "_") || "front"}.png` });
+  };
+  for (const s of STEPS) { await page.goto("about:blank"); await page.goto(base + "/" + s); await look(s); }
+  await page.goto("about:blank"); await page.goto(base + "/#/board?theme=ship-deck");
+  for (const sel of CLICKS) { const el = page.locator(sel).first(); if (await el.count()) await el.click(); await look("after " + sel); }
+  console.log(name, size, bad.length ? bad.join("\n  ") : "no page errors, console errors or failed requests");
+  await browser.close();
+}
+```
+
+Then compare each engine's screenshots with Chromium's, step by step. Expected and harmless: in WebKit one console line per
+screenshot, "Refused to apply a stylesheet ... style-src", which is Playwright's own style for the screenshot refused by the
+page's content security policy (a page that is never screenshotted logs none). Known differences on 2026-10-16: on the
+page board at 1920 and 1440 px WebKit does not draw the sea panel (the README's Known issues), and the `default` theme's
+system face is a few pixels wider in Firefox on Linux, so one call line on the sea ends in an ellipsis where Chromium fits it.

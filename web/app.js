@@ -122,14 +122,14 @@ function startCrow() {
   const t0 = performance.now();
   flyTimer = setInterval(() => {
     const k = Math.min(6, Math.floor((performance.now() - t0) / 100));
-    const perch = document.getElementById("band-mark"), anchors = S.anchors || {};
-    if (k >= 6 || !perch) {
+    // A theme changed mid-flight (#theme=) may have no such sprite: the flight ends there.
+    const perch = document.getElementById("band-mark"), anchors = S.anchors || {}, c = perch && spriteCanvas(S.theme, frames[k % frames.length], S.mode, 1);
+    if (k >= 6 || !c) {
       clearInterval(flyTimer); S.anim.flying = false; flyCv.hidden = true; render(); return;
     }
     const g = S.geom, from = anchors.start || { x: 500, y: 40 };
     const pr = perch.getBoundingClientRect(), to = { x: (pr.right - g.left) / g.ap - 20, y: (pr.top - g.top) / g.ap - 4 };
     const f = (k + 1) / 6, x = Math.round(from.x + (to.x - from.x) * f), y = Math.round(from.y + (to.y - from.y) * f - Math.sin(f * Math.PI) * 14);
-    const c = spriteCanvas(S.theme, frames[k % frames.length], S.mode, 1);
     flyCv.width = c.width; flyCv.height = c.height;
     flyCv.getContext("2d").drawImage(c, 0, 0);
     flyCv.style.setProperty("--x", String(x)); flyCv.style.setProperty("--y", String(y));
