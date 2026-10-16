@@ -608,6 +608,19 @@ button.key-replay:not([disabled]):focus-visible, button.key-replay:not([disabled
 .pg-notes summary::before { content: "+ "; }
 .pg-notes[open] summary::before { content: "- "; }
 .pg-notes pre { white-space: pre-wrap; overflow-wrap: anywhere; font-family: var(--f-pixel); font-size: 0.9em; color: var(--c-ink2); background: var(--c-panel-lo); padding: 0.4em; margin: 0.25em 0 0; }
+/* Beside "Needs you" (page.js renderAside): the viewer's dated holds and someone else's turn, folded, calm, never counted. */
+.pg-youcol { display: flex; flex-direction: column; gap: 0.5em; min-width: 0; }
+.pg-aside summary { list-style: none; cursor: pointer; flex-wrap: wrap; background: var(--c-panel-lo); color: var(--c-ink2); }
+.pg-aside summary::-webkit-details-marker { display: none; }
+.pg-aside summary:focus-visible { outline: 2px solid var(--c-call-band); outline-offset: 2px; }
+.pg-aside .pg-tap { color: var(--c-fog); font-size: 0.85em; }
+.pg-aside h4 { margin: 0.45em 0 0.15em; font-size: 0.85em; font-family: var(--f-pixel); text-transform: uppercase; color: var(--c-ink2); }
+.pg-anote { margin: 0; font-size: 0.85em; color: var(--c-fog); }
+.pg-alist { list-style: none; margin: 0; padding: 0; }
+.pg-arow { padding: 0.25em 0; border-top: 1px solid var(--c-rule); }
+.pg-arow:first-child { border-top: 0; }
+.pg-atitle { overflow-wrap: anywhere; }
+.pg-ameta { font-size: 0.85em; color: var(--c-ink2); overflow-wrap: anywhere; }
 .pg-fold { border-top: 1px solid var(--c-rule); padding: 0.35em 0 0.1em; color: var(--c-ink2); font-size: 0.9em; }
 .pg-fold summary { list-style: none; }
 .pg-fold .pg-label { font-size: 0.85em; color: var(--c-ink); }

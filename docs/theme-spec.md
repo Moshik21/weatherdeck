@@ -461,7 +461,10 @@ default theme provides the same components without art (`default/tokens.json`, `
 - **Other calls.** A dashed 1-ap rule in `call_edge`, then up to 3 rows: glyph, title on 1 line
   (`body`) and age (`label`).
 - **Also line.** `body`, only when 3 or fewer calls wait: a waiting number that could not be verified ("Also:"), each difference
-  between the calls and the lanes ("Sources disagree"), then each `info` card as an FYI ("FYI:"). None is counted in the band's number.
+  between the calls and the lanes ("Sources disagree", each line saying both sides: what the one source says and what the other says or
+  does not say), then each `info` card as an FYI ("FYI:"), in words: what kind of notice it is, its title, and whose it is ("A sign-in
+  notice: ... (yours to know; not counted as waiting on you)", or "whose it is: not reported" when the feed has no 1.12 `actor`). A card
+  set aside (feed 1.12: deferred, or someone else's turn) is not an FYI and is not on the band (24.1). None is counted in the band's number.
 - **Continue mark.** A 7 x 4 ap mark in `call_ink`, bottom right.
 - **Arrival.** The crow flies from the mainmast (`crow_flight`, 6 frames of 100 ms). The plate
   unrolls (`open`, 400 ms, 4 steps). The band blinks 3 times at 2 Hz. The count bounces twice. Then
@@ -510,7 +513,9 @@ default theme provides the same components without art (`default/tokens.json`, `
 - **Header.** `label`, ink2: "UNDER WAY  n OFF COURSE" (0.1.7: the plate was "SHIP'S LOG" until the push log became the
   Logbook, section 16). On the right, the counts "n UNDER WAY" (scouts included), "n WAITING" and "n LANDED", each
   with its glyph (0.2.0: waiting is counted apart, calmly; it was "n SCOUTING"). Off course is needs action plus
-  running long, and nothing else (section 18).
+  running long, and nothing else (section 18). "n LANDED" is the bar's landed score (section 18.4), the same number;
+  the phone, which has no score in its bar, adds the window ("6 LANDED IN 24 H"). (0.10.0; it counted only the
+  listed lanes that had finished, so it could read 0 under a bar that said 6.)
 - **Row columns.**
   - glyph
   - the project chip (`label`, ink2, a 1 ap rule outline) and the title (`title_log`): the source's `lane.short_title`, else
@@ -988,7 +993,7 @@ filtered to that machine, so one ship per device needs no new view. An unknown s
 
 | Place | Holds (from the view) | Door on the sea | One item |
 | --- | --- | --- | --- |
-| Bridge | the calls (`attention`, `action`), then the lanes that wait for the viewer's OK under LANES WAITING FOR YOUR OK, with critical alarms first under PROBLEMS, the differences between calls and lanes under SOURCES DISAGREE (never counted) and `info` last under FYI; its door counts the asks only (the calls and those lanes, never an alarm, a difference or an FYI), the same number as the call band, the Lists header and the ship plates | the call plate; the alarm | why it needs you, the recommendation, age, the exact line to say and a Copy button, the PR, the linked lane's history, evidence |
+| Bridge | the calls (`attention`, `action`), then the lanes that wait for the viewer's OK under LANES WAITING FOR YOUR OK, with critical alarms first under PROBLEMS, the differences between calls and lanes under SOURCES DISAGREE (never counted), `info` under FYI, and last what the host set aside (feed 1.12) under DEFERRED and SOMEONE ELSE'S TURN (never counted); its door counts the asks only (the calls and those lanes, never an alarm, a difference or an FYI), the same number as the call band, the Lists header and the ship plates | the call plate; the alarm | why it needs you, the recommendation, age, the exact line to say and a Copy button, the PR, the linked lane's history, evidence |
 | Gun deck | every lane not landed: off course first, then waiting, under way, scouting | the lane plate ("Under way") | its steps with times, its range, what it is doing, its history, PR, evidence; "nothing to say" unless a call names it |
 | Chart room | `next` (queued, gate, held) and release checkpoints | "n ahead" in the bar | kind, why, what it waits on, until, filed; a gate's tiers, failing tests, commit |
 | Cargo hold | `done`, today's first | the landed score | when, group, how, owner, PR, history |
@@ -1592,19 +1597,35 @@ in the one order (24.2), the working ones grouped by the goal they serve (else b
   A tool's own incident cards join it as add-in cards when a tool sends them.
 - **All fine** is lit only when both lists are empty and every expected feed reports. Otherwise it is dim and says how much is open.
   A silent feed is itself a line of Problems, so quiet never hides a silent source. The number on Needs you is the one
-  waiting-on-you number (the call band's, the Bridge door's and the ship plates'); nothing on Problems is counted in it.
+  waiting-on-you number (the call band's, the Bridge door's and the ship plates'); nothing on Problems is counted in it. A copy whose
+  maker stopped remaking it (feed 1.12 `made_at`, past its limit) is a line of Problems and leads the header's trust line: "its queue copy
+  was made 40 min ago and is remade every 5 min: STALE". Its age is the made age, never the age of the file or of the read.
+- **Deferred · someone else's turn** (0.10.0, feed 1.12) sits under Needs you, in its column, folded until tapped; it is drawn only when
+  the host set something aside (the view's `aside`). Its head says how many in each group ("Deferred 2 · skipper's turn 3") and the open
+  fold says "Not counted in Needs you." **Deferred** lists the viewer's dated holds that still hold, cards and queued rows alike, soonest
+  first, each as its whole title and "until Thu 22 Oct · <the hold's reason>". The second group is headed "<name>'s turn" when every row
+  names one actor, else "Someone else's turn", and lists each as its whole title and "<actor> owns it · since 3 h ago · waits on the fleet
+  verdict: pending". A missing date, reason, owner or age says "not reported". Nothing here is a call, counted, amber or on a ship plate.
 
 ### 24.2 A lane row
 
 One state icon and word, the same six row words as the sea's log (9.5: Waiting on you, Stuck, Can't tell, Working, Waiting on
 someone else, Finished, each with a fixed icon shape and the board's status colour; colour is never the only signal; "Stuck" keeps
 the source's cause beside it), how long the lane has been so (or its last word and age for Can't tell, or "since: not recorded"),
-the job in plain words (`lane.short_title`, cut at a whole word with no bracket left open; "short name only" when the source says
-the only title is the task's name; "title not reported" when there is none, never the task id), its project and machine ("machine
+the job in plain words (the item's whole title, wrapped, never cut on the page; `lane.short_title` only when there is no title (0.10.0);
+"short name only" when the source says the only title is the task's name; "title not reported" when there is none, never the task id), its project and machine ("machine
 not reported" for a second-hand lane), the one sentence worded from `say[]`, and the worker's own notes (`doing`, `state_detail`,
 the last event, the agent's reason) behind a tap. A part of `say[]` this page has no words for is left out; the source's own nine
 words (the feed spec's "Lane state") still order, count and fold a group's rows. A lane whose feed sends no lane word says "No lane
-word sent", and its word and sentence come from its structured fields only (9.5); nothing is read from its prose. The household view
+word sent", and its word and sentence come from its structured fields only (9.5); nothing is read from its prose. A lane whose word is
+Can't tell but whose last word was done or paused says what its record holds instead (0.10.0): Waiting on someone else, "Finished;
+waiting on upstream review of PR #12" (its PR open), Finished, "PR #12 has merged" (merged), "Held; no worker is moving it" (a hold on
+record), or, after a paused last word, "Paused; its PR #12 is waiting on upstream review" / "Paused; its PR #12 has merged" (never
+"Finished"), or with no PR and its worker's session ended "Branch only, no worker running" (feed 1.12 `branch: true`) or "No PR is recorded and
+no worker is running", each followed by "The last thing it said was that it was done, 6 d ago". A Can't tell row with a recorded last word
+leads with it ("The last thing it said was ..., 6 d ago; nothing newer is recorded"); "Its state can't be read now" is said only when
+nothing it said is recorded. A machine's row says its lanes across every home on it (feed 1.12: "lanes 3 running of 5 · 2 homes"), early in
+its vitals. The household view
 hides worker notes and keeps titles; a guest or public view's replaced titles carry no "short name only". An instruction waiting
 unread in the lane's steering inbox is one amber line under the title, the same line as on the sea's log (9.5); a lane that carries
 one is never folded, and an escalated one sorts with the group's Stuck rows and brings its group forward like one (Unreleased).

@@ -49,11 +49,16 @@ function pageBoardOn(r, o) {
    is a Problem and an info card an FYI, each shown on its own line and never counted; any other card is a call. A lane that says
    it waits for the viewer's OK with its PR open, and that no call names (the host's `lane.asks_you`), is an ask of its own: tier
    "lane", one line with its own reason (laneAskCard). ASK_TIERS lists the tiers that count, one row per ask. askRows is the one
-   list of those rows (the board model's B.asks), the calls first, that every place counts and the Bridge lists. */
+   list of those rows (the board model's B.asks), the calls first, that every place counts and the Bridge lists.
+   A card the host set aside (feed 1.12, the view's `aside`: src/weatherdeck/view.py) is tier "deferred" (the viewer's own dated hold
+   still holds) or "theirs" (its source says it is someone else's turn): listed apart, never counted. A critical card stays a Problem. */
 const ASK_TIERS = ["call", "lane"];
+const ASIDE_TIERS = ["deferred", "theirs"];
 function cardTier(a) {
   const s = a && a.severity;
-  return s === "critical" ? "alarm" : s === "info" ? "fyi" : "call";
+  if (s === "critical") return "alarm";
+  if (a && ASIDE_TIERS.includes(a.aside)) return a.aside;
+  return s === "info" ? "fyi" : "call";
 }
 function askRows(d) {
   const row = tier => c => ({ tier, key: c.id, machine: c.machine || null, source: c.source || null, c });
@@ -92,11 +97,13 @@ function asksAge(rows, sources, counts, now) {
    one line of the badge's detail. `names` maps a source id to its name; titles come from the view's items and attention. */
 function asksDisagree(list, items, attention, words, names) {
   const name = id => (names && names[id]) || id || "?";
+  // Each line says both sides: what the one source says, and what the other says (or does not say) about the same ask.
   const lines = (list || []).map(d => {
     const it = (items || []).find(i => i && i.id === d.item && i.source === d.item_source);
     if (d.kind === "call") {
       const c = (attention || []).find(a => a && a.id === d.call);
-      return fillWords(words, "disagree_call", { source: name(d.call_source), call: c ? c.title || c.id : d.call, lane_source: name(d.item_source) });
+      return fillWords(words, "disagree_call", { source: name(d.call_source), call: c ? c.title || c.id : d.call, lane_source: name(d.item_source),
+        title: it ? askLaneTitle(it) : d.item });
     }
     return fillWords(words, "disagree_lane", { source: name(d.item_source), title: it ? askLaneTitle(it) : d.item });
   });
@@ -234,8 +241,11 @@ const ROW_HELD = ["paused", "waiting"];
 const ROW_ENDED = ["ended", "gone"];
 const ROW_MATE = { gate: "mate_gate", human: "mate_human", capacity: "mate_capacity", quiet_hours: "mate_quiet" };
 const ROW_WORK = { moving: "work", regressed: "regressed", long: "long", scout: "scout" };
+/* The last words after which a lane's record still says where its work is, when its state cannot be read now. */
+const ROW_RECORDED = ["done", "paused"];
 /* f: {kind, laneWord (source_lane.state, or null), pr (link.state of the lane's PR: open|merged|closed, or null when there is no PR),
    state (the item's state), lastState (last_event.state), waitingOn (lane.waiting_on, else the item's), agent (agent.state),
+   lastWord (source_lane.last_word.verb, or null), branch (feed 1.12 source_lane.branch: true, false, or null when not reported),
    texts (the item's own lines: doing, state_detail, summary)} */
 function rowState(f) {
   const kind = f.kind, pr = f.pr || null, said = !!f.laneWord, lane = said ? ROW_OF_LANE[laneKeyOf(f.laneWord)] || null : null;
@@ -248,10 +258,19 @@ function rowState(f) {
   // A PR that merged while its worker's session ended, on a lane whose record never said it finished: nothing is live on it. An old
   // record (Housekeeping), whatever the record or the lane word says, never trouble.
   if (pr === "merged" && ROW_ENDED.includes(f.agent) && kind !== "done" && f.state !== "done" && lane !== "done") return { key: "done", why: "gone_merged" };
-  if (lane) return { key: lane, why: "key_" + lane };
   // A run that failed, or a worker that went, while the lane's own records say it was waiting (paused or held, as its state, its
   // waits-on word or its last event says) is a wait that went quiet, not a failure: Waiting on someone else.
   const waited = ROW_HELD.includes(f.state) || ROW_HELD.includes(f.lastState) || !!f.waitingOn;
+  // A lane whose state cannot be read now, but whose last word was done or paused with a PR, a hold or an ended worker on record, says
+  // what is recorded instead of Can't tell: finished and waiting on upstream review, merged, held, or a branch with no worker running.
+  if (lane === "unk" && ROW_RECORDED.includes(f.lastWord)) {
+    const paused = f.lastWord === "paused" ? "paused_" : "";
+    if (pr === "merged") return { key: "done", why: "rec_" + paused + "merged" };
+    if (pr === "open") return { key: "other", why: "rec_" + paused + "pr_open" };
+    if (waited) return { key: "other", why: "rec_held" };
+    if (!pr && ROW_ENDED.includes(f.agent)) return { key: "other", why: f.branch === true ? "rec_branch" : "rec_no_worker" };
+  }
+  if (lane) return { key: lane, why: "key_" + lane };
   if (!said && waited && (kind === "failed" || kind === "agent_gone") && pr !== "merged") return { key: "other", why: kind === "failed" ? "died_waiting" : "gone_waiting" };
   const unread = !said && ROW_UNREAD_KINDS.includes(kind) && (f.texts || []).some(t => typeof t === "string" && ROW_UNREAD.some(re => re.test(t)));
   if (unread) return { key: "unk", why: "unread" };
@@ -391,4 +410,4 @@ function steerNote(sl, ref, who, words) {
   return { row, detail: parts.join(" ") };
 }
 
-if (typeof module !== "undefined") module.exports = { DECKS, parseRoute, routePath, parentRoute, pageBoardOn, ASK_TIERS, cardTier, askRows, waitingOnYou, laneAskCard, asksAge, asksDisagree, askLabels: () => ASK_LABELS, badgeCounts, trustCounts, sourceSaying, beatSaying, sourceSayingLabels: () => SOURCE_SAYING_LABELS, dur, supervisionLabels: () => SUPERVISION_LABELS, supervisionAlarm, ROW_KEYS, ROW_HOUSEKEEPING, OLD_RECORDS, isOldRecord, rowSortOrder, sortRows, laneKeyOf, rowState, fitTitle, steerLabels: () => STEER_LABELS, steerNote };
+if (typeof module !== "undefined") module.exports = { DECKS, parseRoute, routePath, parentRoute, pageBoardOn, ASK_TIERS, ASIDE_TIERS, cardTier, askRows, waitingOnYou, laneAskCard, asksAge, asksDisagree, askLabels: () => ASK_LABELS, badgeCounts, trustCounts, sourceSaying, beatSaying, sourceSayingLabels: () => SOURCE_SAYING_LABELS, dur, supervisionLabels: () => SUPERVISION_LABELS, supervisionAlarm, ROW_KEYS, ROW_HOUSEKEEPING, OLD_RECORDS, isOldRecord, rowSortOrder, sortRows, laneKeyOf, rowState, fitTitle, steerLabels: () => STEER_LABELS, steerNote };

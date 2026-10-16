@@ -37,9 +37,9 @@ def marks(items, attention, landed_at):
 
     items: the view's items (with their host `lane`); attention: the view's attention cards; landed_at: epoch times of
     the work that landed in the board's landed window. -> {calls: [key], stuck: [key], landed: [epoch]}, each sorted.
-    calls are the cards that wait on the viewer (severity action); stuck are lanes off course that are not a call
+    calls are the cards that wait on the viewer (severity action, not set aside: feed 1.12); stuck are lanes off course that are not a call
     (failed, blocked, no agent at the work, running long)."""
-    calls = sorted({key("call", a.get("source"), a.get("id")) for a in attention or [] if a.get("severity") == "action" and a.get("id") is not None})
+    calls = sorted({key("call", a.get("source"), a.get("id")) for a in attention or [] if a.get("severity") == "action" and not a.get("aside") and a.get("id") is not None})
     stuck = sorted({key("lane", it.get("owner") or it.get("source"), it.get("id")) for it in items or [] if _stuck(it)})
     landed = sorted(float(t) for t in landed_at or [] if isinstance(t, (int, float)) and not isinstance(t, bool))
     return {"calls": calls, "stuck": stuck, "landed": landed}

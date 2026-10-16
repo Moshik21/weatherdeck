@@ -1,6 +1,6 @@
 {
  "schema": "lookout.feed",
- "schema_version": "1.1",
+ "schema_version": "1.12",
  "source": {
   "id": "atlas-main",
   "label": "Atlas, primary",
@@ -48,7 +48,9 @@
    "as_of": "2026-10-08T19:31:37Z",
    "status": "ok",
    "error": null,
-   "warnings": 0
+   "warnings": 0,
+   "made_at": "2026-10-08T19:29:40Z",
+   "refresh_s": 300
   },
   {
    "id": "meters",
@@ -128,6 +130,10 @@
      "budget_cpu_pct": 0.5,
      "over_budget": false
     }
+   },
+   "lanes": {
+    "running": 2,
+    "total": 4
    }
   }
  ],
@@ -1030,7 +1036,89 @@
    "item": null,
    "group": null,
    "link": null,
-   "how": "Sign in once"
+   "how": "Sign in once",
+   "actor": {
+    "role": "viewer",
+    "name": null
+   }
+  },
+  {
+   "id": "decision:tide-reading",
+   "kind": "decision",
+   "severity": "action",
+   "title": "Take the second tide-gauge reading",
+   "detail": "Compare it with the first before the harbor schedule changes.",
+   "since": "2026-10-07T09:12:00Z",
+   "machine": "atlas",
+   "item": null,
+   "group": null,
+   "link": null,
+   "how": "answer in the home's chat",
+   "hold": {
+    "bucket": "dated",
+    "until": "2026-10-14",
+    "reason": "you put it off until the new gauge is fitted",
+    "since": "2026-10-07T09:12:00Z"
+   }
+  },
+  {
+   "id": "gate:sf-lobby",
+   "kind": "decision",
+   "severity": "info",
+   "title": "2 blocked notices for the lobby countdown",
+   "detail": "The supervisor answers these; they are not yours.",
+   "since": "2026-10-08T18:40:00Z",
+   "machine": "atlas",
+   "item": null,
+   "group": "skyforge",
+   "link": null,
+   "how": null,
+   "actor": {
+    "role": "supervisor",
+    "name": "skipper"
+   }
+  },
+  {
+   "id": "train:sf-netcode",
+   "kind": "approval",
+   "severity": "action",
+   "title": "Netcode PR held for the release train",
+   "detail": "Merges with the next train once the fleet verdict is in.",
+   "since": "2026-10-08T16:05:00Z",
+   "machine": "atlas",
+   "item": null,
+   "group": "skyforge",
+   "link": {
+    "url": "https://example.com/changes/431",
+    "label": "#431"
+   },
+   "how": null,
+   "actor": {
+    "role": "supervisor",
+    "name": "skipper"
+   },
+   "verdict": {
+    "name": "fleet verdict",
+    "state": "pending",
+    "as_of": "2026-10-08T19:20:00Z"
+   }
+  },
+  {
+   "id": "summary:borealis-old",
+   "kind": "service",
+   "severity": "info",
+   "title": "Borealis summary 40 min old (remade every 5 min)",
+   "detail": "Its home's refresh did not remake it.",
+   "since": "2026-10-08T18:51:40Z",
+   "machine": "borealis",
+   "item": null,
+   "group": null,
+   "link": null,
+   "how": null,
+   "actor": {
+    "role": "supervisor",
+    "name": "skipper"
+   }
   }
  ],
  "next": [
@@ -1086,7 +1174,13 @@
    "blocked_by": [],
    "reason": "you deferred it",
    "until": "2026-10-12",
-   "filed": "2026-10-03"
+   "filed": "2026-10-03",
+   "hold": {
+    "bucket": "dated",
+    "until": "2026-10-12",
+    "reason": "you deferred it until the 1.9 notes are reviewed",
+    "since": "2026-10-03T10:00:00Z"
+   }
   }
  ],
  "done": [

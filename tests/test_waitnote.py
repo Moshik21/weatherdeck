@@ -20,13 +20,14 @@ const vm = require("vm"), fs = require("fs");
 const stub = new Proxy(function () {}, { get: () => stub, apply: () => stub });   // any DOM call at load answers with itself
 const ctx = vm.createContext({ performance: { now: () => 0 }, document: stub, window: stub, navigator: stub, addEventListener: stub, location: stub, console, Date, Math, JSON });
 for (const f of ["theme.js", "frontdoor.js", "model.js", "board.js", "decks.js"]) vm.runInContext(fs.readFileSync(process.argv[1] + "/web/" + f, "utf8"), ctx, { filename: f });
-vm.runInContext(`globalThis.run = (view, ship) => {
+vm.runInContext(`globalThis.run = (view, ship, labels) => {
+  LABELS = labels;   // the shipped words (defaults.json), so an FYI line reads as the board says it
   S.view = view; S.theme = { components: {}, zones: {} }; S.server = { config: { labels: {}, theme: {}, display: {}, thresholds: {}, poll: {}, sound: {} } };
   const B = boardModel(null);
   return { unverified: B.unverified, also: B.also.map(a => a.id), lines: alsoLines(B, B.unverified).map(l => l[1]),
            rows: bridgeRows(B, ship).map(r => r.key) };
 };`, ctx);
-process.stdout.write(JSON.stringify(ctx.run(JSON.parse(process.argv[2]), { flagship: true })));
+process.stdout.write(JSON.stringify(ctx.run(JSON.parse(process.argv[2]), { flagship: true }, JSON.parse(fs.readFileSync(process.argv[1] + "/src/weatherdeck/defaults.json", "utf8")).labels)));
 """
 NOTE_ID = "note:src-a"
 CARD = {"id": NOTE_ID, "source": "src-a", "kind": "info", "severity": "info", "title": "Waiting on you is unverified here", "machine": "m1"}
@@ -51,12 +52,16 @@ class WaitNote(unittest.TestCase):
         self.assertEqual(out.returncode, 0, out.stderr)
         return json.loads(out.stdout)
 
+    def assertSaid(self, title, lines):
+        """An FYI line says what kind of notice it is and whose it is around the card's title (feed 1.12 wording)."""
+        self.assertTrue(any(title in line for line in lines), (title, lines))
+
     def test_the_named_card_is_dropped_from_the_board_and_the_decks(self):
         r = self.run_js(view(dict(UNVERIFIED, note=NOTE_ID), [CARD, OTHER]))
         self.assertEqual(r["unverified"][0]["note"], NOTE_ID)
         self.assertEqual(r["also"], [NOTE_ID, "disk:m1"])   # the model still carries it; the two views leave it out
         self.assertEqual([l for l in r["lines"] if "unverified here" in l], [])
-        self.assertIn("Disk is filling", r["lines"])
+        self.assertSaid("Disk is filling", r["lines"])
         self.assertEqual([k for k in r["rows"] if k.startswith("unverified:")], ["unverified:src-a"])
         self.assertNotIn(NOTE_ID, r["rows"])
         self.assertIn("disk:m1", r["rows"])
@@ -64,12 +69,12 @@ class WaitNote(unittest.TestCase):
     def test_without_a_note_the_card_shows(self):
         r = self.run_js(view(UNVERIFIED, [CARD, OTHER]))
         self.assertIsNone(r["unverified"][0]["note"])
-        self.assertIn("Waiting on you is unverified here", r["lines"])
+        self.assertSaid("Waiting on you is unverified here", r["lines"])
         self.assertIn(NOTE_ID, r["rows"])
 
     def test_only_the_named_card_of_the_same_source_goes(self):
         r = self.run_js(view(dict(UNVERIFIED, note=NOTE_ID), [FOREIGN]))
-        self.assertIn("Another source's card", r["lines"])   # same id, another source: it stays
+        self.assertSaid("Another source's card", r["lines"])   # same id, another source: it stays
         self.assertIn(NOTE_ID, r["rows"])
 
     def test_a_guest_and_the_public_still_lose_the_named_card(self):
@@ -90,7 +95,7 @@ class WaitNote(unittest.TestCase):
     def test_a_verified_number_drops_nothing(self):
         r = self.run_js(view({"basis": "source", "verified": True, "note": NOTE_ID}, [CARD]))
         self.assertEqual(r["unverified"], [])
-        self.assertIn("Waiting on you is unverified here", r["lines"])
+        self.assertSaid("Waiting on you is unverified here", r["lines"])
 
     def test_the_schema_accepts_waiting_note(self):
         doc = {"schema": "lookout.feed", "schema_version": "1.11", "source": {"id": "src-a"},

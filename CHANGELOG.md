@@ -4,6 +4,56 @@ All notable changes to Weatherdeck (called Lookout until this rename; entries fr
 version follows [semantic versioning](https://semver.org/). The feed schema has its own version (`lookout.feed`, see
 [docs/feed-spec.md](docs/feed-spec.md)); a feed of any 1.x version is accepted.
 
+## [0.10.0] - 2026-10-16
+
+### Added: what is deferred or someone else's turn, beside "Needs you" (feed 1.12)
+
+- **A folded section under "Needs you"** on the page board (and on the Bridge, under DEFERRED and SOMEONE ELSE'S TURN): the viewer's dated
+  holds that still hold, each with its date and reason, and the cards that are someone else's turn (the supervisor's blocked notices, a
+  change held for the release train waiting on a verdict, a stale-summary notice), each with whose it is, since when and the verdict it waits
+  on. Neither group is ever counted in the waiting-on-you number, and a hold comes back as a call the moment its date passes.
+- **Feed 1.12, optional fields only**: an attention card's `actor` `{role, name}`, `hold` `{bucket, until, reason, since}` and `verdict`
+  `{name, state, as_of}`; a `next[]` row's `hold`; a machine row's `lanes` `{running, total}`; a lane's `branch`; a collector's `made_at` and
+  `refresh_s`. A feed without them reads exactly as before. The host sets `aside` (`deferred` or `theirs`) on cards and queued rows and leaves
+  them out of `counts.waiting_on_you`, `counts.calls`, the "since you last looked" call marks and a lane's `needs_you`.
+- **Lanes per machine across every home**: the host adds every source's own `lanes` count for a machine (`machines[].lanes` `{running, total,
+  homes, unreported, or_more}`), so two homes on one machine are one count; the machine row says "lanes 3 running of 5 · 2 homes". A home silent past `lost_after_s` is
+  not added: it is unreported and the count says "or more".
+- **A copy's made age**: a collector with `made_at` is aged from its maker's own stamp, not from when it was read, so a summary that is
+  re-touched without being remade still grows old; past its limit it is a Problem and leads the trust line ("made 40 min ago and is
+  remade every 5 min: STALE"), and the Crow's nest says the made age while it is fine.
+
+### Changed: rows say what is recorded, in whole titles
+
+- **Whole titles**: a lane row shows the item's whole title, wrapped, instead of the source's short title; a place that must fit one line
+  (the TV log) still cuts it at a whole word.
+- **Can't tell only when nothing is recorded**: a lane whose state cannot be read but whose last word was done or paused says what its record
+  holds (its PR open: "Finished; waiting on upstream review", or "Paused; its PR is waiting on upstream review" after a paused last word;
+  merged; a hold; or "Branch only, no worker running"); a Can't tell row with a
+  recorded last word leads with that word and its age, and "can't be read" is said only when nothing it said is recorded.
+- **FYI in plain words**: each FYI says what kind of notice it is and whose it is ("whose it is: not reported" without a 1.12 `actor`).
+- **Sources disagree, both sides**: each line says what the one source says and what the other says or does not say about the same ask.
+- **The demo** carries synthetic 1.12 data: a deferred call and queued row, the supervisor's cards (one waiting on a verdict), an FYI with its
+  owner, a second home's lane on the primary machine, two Can't tell lanes whose record says more, and a fresh and a stale made copy.
+
+### Fixed: the log header's landed count is the bar's landed score
+
+- The sea view's log header could say "0 LANDED" under a bar that said "6 LANDED, LAST 24 H": the header counted only the listed lanes that had
+  finished, while the bar counts the work that landed in its window. The header now shows the bar's number, as the calm line already did; the phone,
+  whose bar has no score, adds the window ("6 LANDED IN 24 H").
+
+### Changed: README pictures, and the hosted test suite passes on Windows, macOS and Linux
+
+- **README pictures**: a TV-sized hero, a short list of what you see, a tour clip (with a still frame beside it) and a phone shot, all taken from the
+  demo, whose sources are invented. The README's test table says what the hosted runs were and were not (the hosted Windows image is Windows Server,
+  not Windows 11).
+- **The hosted test run**: all 453 tests pass on GitHub's hosted Ubuntu, macOS and Windows runners on Python 3.9 to 3.14 (run by hand on 2026-10-16;
+  the first run failed 13 tests on every Windows leg). The fixes are in the tests and in `scripts/merged-check`, not in the board: the page-script
+  tests send the Node harness its data on stdin instead of the command line (Windows refuses a command line over 32,767 characters) and decode its
+  answer as UTF-8 (a cut title's ellipsis came back as three other characters under the Windows code page); the doctor tests' simulated Linux
+  machine answers an interpreter path and file modes the way a Linux machine does; and `scripts/merged-check` removes its scratch clone even where
+  git's object files are read-only (Windows).
+
 ## [0.9.0] - 2026-10-16
 
 ### Changed: a silent feed reads as silent, with the machine's liveness from its beat

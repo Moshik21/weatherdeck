@@ -2,22 +2,27 @@
 
 Weatherdeck is a status board for machines and the work running on them (a TV or phone page fed by small pushers), not a weather app and not a monitoring or alerting system.
 
-![The Weatherdeck board on a TV-sized screen, in demo mode with the ship-deck theme. On the left an amber plate lists three calls waiting on you, each with how long it has waited. On the right a pixel-art ship and two smaller ships stand for three machines, each with a name plate. Along the bottom is the log: two waiting rows with their progress, a line counting the other lanes, and the tools status.](docs/img/hero-tv.png)
+![The Weatherdeck board on a TV-sized screen, in demo mode with the ship-deck theme. Along the top, a bar reads 6 landed in the last 24 hours and 2/3 live. On the left an amber plate lists three calls waiting on you, each with how long it has waited. On the right a pixel-art ship and two smaller ships stand for three machines, each with a name plate; the one named Cinder is drawn in fog and labelled silent. Along the bottom is the log: its header also counts 6 landed, two waiting rows with their progress, a line counting the other lanes, and the tools status.](docs/img/hero-tv.png)
 
 **What you see.** Every picture here is the demo (`weatherdeck run --demo`, with `#theme=ship-deck` on the page address). Its sources are invented and nothing in it is real.
 
 - **Waiting on you.** The amber plate counts the calls that need a person and says how long each has waited.
-- **Honest progress.** Progress shows as a percent range where the source gives one (for example 38-42%). A lane the board cannot read is counted as "can't tell" (the "+7 more" line says 1), not shown as fine.
+- **Set aside, not counted.** A hold with a date on it, and a row that someone else owns, are not counted as waiting on you. On the phone page they sit under the calls in a folded line ("Deferred 2 · skipper's turn 3"); tapping it lists each with its date or its owner, and why.
+- **Honest progress.** Progress shows as a percent range where the source gives one (for example 38-42%). A lane the board cannot read is counted as "can't tell" (the "+10 more" line says 1), not shown as fine.
 - **A quiet source is named.** The lamp by the clock counts live sources. When one stops reporting it reads "2/3 live", and that machine's ship is drawn in fog and labelled silent.
 - **One board for TV and phone.** The same page is the open sea on a wide screen and one column on a phone.
 
-![Eight frames of the demo board, one every 1.25 seconds, taken over about a minute and a half. The lamp by the clock changes from 3/3 live to 2/3 live, the ship for the machine named Cinder is drawn in fog and labelled silent, and the under-way count in the log drops from 6 to 4.](docs/img/tour.gif)
+![Ten frames of the demo board, one every 1.1 seconds, taken about every 11 seconds over about two minutes. The lamp by the clock changes from 3/3 live to 2/3 live, the ship for the machine named Cinder is then drawn in fog and labelled silent, and the under-way count in the log drops from 7 to 5.](docs/img/tour.gif)
 
 In the clip, Cinder (one of the invented sources) stops reporting. [Still frame](docs/img/tour-still.png).
 
-<img src="docs/img/phone.png" width="390" alt="The top of the board on a phone, 390 pixels wide: a header reading 2 of 3 feeds report, an amber plate of three calls that need you, a list of four problems that includes one lane that cannot be read right now, and an ALL FINE tile left dark because calls and problems are open.">
+<img src="docs/img/phone.png" width="390" alt="The top of the board on a phone, 390 pixels wide: a header reading 2 of 3 feeds report, an amber plate of three calls that need you, a folded line reading Deferred 2 · skipper's turn 3 with Tap to list, a list of five problems that includes one lane that cannot be read right now, and an ALL FINE tile left dark because calls and problems are open.">
 
-The phone page from a few minutes into the demo, cropped after the ALL FINE tile: the calls, then the problems, then that tile, which is lit only when no call or problem is open and every feed reports.
+The phone page from a few minutes into the demo, cropped after the ALL FINE tile: the calls, a folded line for what is set aside, then the problems, then that tile, which is lit only when no call or problem is open and every feed reports.
+
+<img src="docs/img/sections.png" width="390" alt="The same phone page with the folded line under the three calls tapped open. It says Not counted in Needs you, then lists two deferred rows: Inkwell 1.9 release notes, until Tue 20 Oct, and Take the second tide-gauge reading, until Thu 22 Oct, each with the reason it was put off. Under it, three rows in skipper's turn: Netcode PR held for the release train, 2 blocked notices for the lobby countdown, and Borealis summary 40 min old, each marked as owned by skipper with how long ago it was set aside.">
+
+The folded line opened. Deferred rows show the date they come back and the reason; the other rows show who owns them and since when. None of them is counted in "Needs you" above.
 
 It is an at-a-glance board for work reported by many sources, meant to be left on a TV or a
 phone: what is waiting on you, what is moving and how far along it honestly is, what got done, what
@@ -116,7 +121,7 @@ message saying so. Below, `weatherdeck` means `python3 bin/weatherdeck` on macOS
 | Page: Safari (macOS), iPhone | headless WebKit (layout, overflow, console errors); the dashboard depth scene was checked and signed off on Safari, iPhone and a 4K TV on 2026-10-10 by the maintainer, and nothing else on those devices has been ([docs/device-checklist.md](docs/device-checklist.md)) | same | same |
 | Page: Firefox | expected to work, not checked each release | | |
 | Since you last looked (browser storage) | per browser; a browser that blocks site data shows no since plate | same | same |
-| Feed schema read | 1.0 to 1.11 | 1.0 to 1.11 | 1.0 to 1.11 |
+| Feed schema read | 1.0 to 1.12 | 1.0 to 1.12 | 1.0 to 1.12 |
 | One ship per machine (0.4.0) | TV: up to six ships, then a convoy; phone: the convoy strip scrolls inside itself | same | same |
 | The open sea (0.4.1) | TV (ship deck): with nothing waiting, one banner line and the sea across the whole upper area; checked at 1920 x 1080 and 3840 x 2160 | same | same |
 | Versions per machine (0.5.0) | reporter rows, the watch strip, the trust line and the phone's SOFTWARE section say each source's adapter, or "version unknown"; only a gap that changes meaning is flagged | same | same |
@@ -129,11 +134,19 @@ What each release was actually run on is in [CHANGELOG.md](CHANGELOG.md), with t
 (a real Safari, iPhone and TV; only the dashboard depth scene has been signed off so far, see
 [docs/device-checklist.md](docs/device-checklist.md)) listed as such. Tests: `python3 -m unittest discover -s tests` (see CONTRIBUTING.md).
 
+## Known issues
+
+- Safari, iPhone and the TV: only the dashboard depth scene was signed off (2026-10-10); nothing else has been checked on those devices (the Support table above, [docs/device-checklist.md](docs/device-checklist.md)).
+- Firefox is expected to work but is not checked each release.
+- A source that cuts a name before it sends it (with its own ellipsis) stays cut on the board: lane rows show the title as sent, and the TV log's single line cuts it at a whole word ([docs/theme-spec.md](docs/theme-spec.md), section 24).
+- A machine's lane count adds up only the homes that send one; a home that sends nothing for that machine is not in it, so the row can show fewer lanes than the machine runs, and its "N homes" counts only those that sent one ([docs/feed-spec.md](docs/feed-spec.md), "Whose turn, dated holds and lanes per machine").
+- The hosted Windows test runs use Windows Server, not Windows 11 (see the note under the Support table).
+
 ## Documents
 
 - [docs/honesty.md](docs/honesty.md): the honesty contract on one page: what the board never does (green when silent, zero for unknown, a made-up event), where every number, creature and light comes from in the feed, the machine-alert debounce (two feeds to raise, two to clear, one keepalive of latency), and why no value number is shown until it is measured.
 - [docs/ledger-spec.md](docs/ledger-spec.md): the tool value ledger: one append-only file per tool, unknown written as unknown with its reason, the honest verbs (surfaced, refused, placed, landed, not dispatched), and the reading rule that turns fourteen days of lines into KEEP, QUIET, CUT-CANDIDATE or UNMEASURED. No value number is shown until it is measured.
-- [docs/feed-spec.md](docs/feed-spec.md): the feed schema (1.11), how sources merge, the five lane classes, machine rest and strain, lane state (one word and one sentence per lane), goals (the goal each lane serves, with a count under it), allowance chips, black holes (no agent at the work, outside waits, queues, coming up, the shipping gap, freshness, burn rate), the library (one honest age and word per mirrored folder), the view at a glance (since you last looked, grouping by project), and what silence looks like.
+- [docs/feed-spec.md](docs/feed-spec.md): the feed schema (1.12), how sources merge, the five lane classes, machine rest and strain, lane state (one word and one sentence per lane), goals (the goal each lane serves, with a count under it), allowance chips, black holes (no agent at the work, outside waits, queues, coming up, the shipping gap, freshness, burn rate), the library (one honest age and word per mirrored folder), the view at a glance (since you last looked, grouping by project), and what silence looks like.
 - [CHANGELOG.md](CHANGELOG.md): what changed in each release, and what it was checked on; [docs/device-checklist.md](docs/device-checklist.md): what only a person can check on a real Mac, iPhone and TV.
 - [docs/ADDINS.md](docs/ADDINS.md): the card contract: one small JSON file per tool in a drop directory, shown as a tile with a stale mark. Nothing is run or imported.
 - [docs/adapters.md](docs/adapters.md): write a pusher for your tool: what to send, the sinks file, the honesty rules for adapters, and how to test one by recording and replaying the files it reads.

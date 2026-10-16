@@ -1,6 +1,6 @@
 {
  "schema": "lookout.feed",
- "schema_version": "1.1",
+ "schema_version": "1.12",
  "source": {
   "id": "borealis-lanes",
   "label": "Borealis, secondary",
@@ -40,7 +40,9 @@
    "as_of": "2026-10-08T19:31:37Z",
    "status": "ok",
    "error": null,
-   "warnings": 0
+   "warnings": 0,
+   "made_at": "2026-10-08T18:51:40Z",
+   "refresh_s": 300
   },
   {
    "id": "attention",
@@ -126,6 +128,17 @@
      "budget_cpu_pct": 0.5,
      "over_budget": false
     }
+   },
+   "lanes": {
+    "running": 2,
+    "total": 3
+   }
+  },
+  {
+   "id": "atlas",
+   "lanes": {
+    "running": 1,
+    "total": 1
    }
   }
  ],
@@ -342,6 +355,176 @@
    "link": null,
    "flags": [],
    "needs_you": false
+  },
+  {
+   "id": "bo-asset-bake",
+   "owner": "borealis-lanes",
+   "relayed": false,
+   "group": "skyforge",
+   "machine": "atlas",
+   "kind": "task",
+   "title": "Bake the lighting assets for the harbor map on the primary box, where the big GPU is free tonight",
+   "doing": null,
+   "state": "running",
+   "state_detail": null,
+   "started_at": "2026-10-08T13:40:00Z",
+   "last_event": null,
+   "progress": {
+    "basis": "none",
+    "history_n": 0,
+    "percent_floor": null,
+    "percent_ceiling": null,
+    "regressed": false,
+    "reason": "state only: no step data from this source",
+    "current": null,
+    "steps": []
+   },
+   "handoff": {
+    "state": "none",
+    "since": null
+   },
+   "link": null,
+   "flags": [],
+   "needs_you": false,
+   "project": "Skyforge",
+   "agent": {
+    "state": "alive",
+    "since": "2026-10-08T19:05:00Z",
+    "as_of": "2026-10-08T19:31:30Z",
+    "reason": null
+   },
+   "lane": {
+    "state": "Working",
+    "cause": "worker-busy",
+    "since": "2026-10-08T19:05:00Z",
+    "last_word": {
+     "verb": "working",
+     "at": "2026-10-08T19:05:00Z"
+    },
+    "short_title": "Bake the lighting assets"
+   },
+   "say": [
+    {
+     "t": "working"
+    }
+   ]
+  },
+  {
+   "id": "bo-crash-dump",
+   "owner": "borealis-lanes",
+   "relayed": false,
+   "group": "inkwell",
+   "machine": "borealis",
+   "kind": "task",
+   "title": "Crash dumps: upload them from the installer's first run so a failed install can be read later",
+   "doing": null,
+   "state": "unknown",
+   "state_detail": null,
+   "started_at": "2026-10-08T13:40:00Z",
+   "last_event": null,
+   "progress": {
+    "basis": "none",
+    "history_n": 0,
+    "percent_floor": null,
+    "percent_ceiling": null,
+    "regressed": false,
+    "reason": "state only: no step data from this source",
+    "current": null,
+    "steps": []
+   },
+   "handoff": {
+    "state": "none",
+    "since": null
+   },
+   "link": {
+    "url": "https://example.com/harbor/inkwell/pull/429",
+    "label": "#429",
+    "state": "open",
+    "state_as_of": "2026-10-08T19:28:00Z"
+   },
+   "flags": [],
+   "needs_you": false,
+   "project": "Inkwell",
+   "agent": null,
+   "lane": {
+    "state": "Can't tell",
+    "cause": "state-unreadable",
+    "since": null,
+    "last_word": {
+     "verb": "done",
+     "at": "2026-10-06T11:20:00Z"
+    },
+    "short_title": "Crash dumps"
+   },
+   "say": [
+    {
+     "t": "unreadable"
+    },
+    {
+     "t": "last-word",
+     "verb": "done",
+     "at": "2026-10-06T11:20:00Z"
+    }
+   ]
+  },
+  {
+   "id": "bo-shader-cache",
+   "owner": "borealis-lanes",
+   "relayed": false,
+   "group": "inkwell",
+   "machine": "borealis",
+   "kind": "task",
+   "title": "Shader cache: keep the compiled variants between runs, so that a cold start does not stall the first match of the evening",
+   "doing": null,
+   "state": "unknown",
+   "state_detail": null,
+   "started_at": "2026-10-08T13:40:00Z",
+   "last_event": null,
+   "progress": {
+    "basis": "none",
+    "history_n": 0,
+    "percent_floor": null,
+    "percent_ceiling": null,
+    "regressed": false,
+    "reason": "state only: no step data from this source",
+    "current": null,
+    "steps": []
+   },
+   "handoff": {
+    "state": "none",
+    "since": null
+   },
+   "link": null,
+   "flags": [],
+   "needs_you": false,
+   "project": "Inkwell",
+   "agent": {
+    "state": "ended",
+    "since": "2026-10-08T19:29:40Z",
+    "as_of": "2026-10-08T19:31:30Z",
+    "reason": null
+   },
+   "lane": {
+    "state": "Can't tell",
+    "cause": "state-unreadable",
+    "since": null,
+    "last_word": {
+     "verb": "done",
+     "at": "2026-10-08T15:02:00Z"
+    },
+    "short_title": "Shader cache",
+    "branch": true
+   },
+   "say": [
+    {
+     "t": "unreadable"
+    },
+    {
+     "t": "last-word",
+     "verb": "done",
+     "at": "2026-10-08T15:02:00Z"
+    }
+   ]
   }
  ],
  "done": [

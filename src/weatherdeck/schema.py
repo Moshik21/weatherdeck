@@ -46,7 +46,9 @@ PRODUCER = {"name": "str?", "version": "str?", "boot_id": "str?", "seq": "int?",
             "host": "str?", "pusher": {"name": "str?", "version": "str?"},
             "meaning": ("list", {"since": "str?", "effect": "str?"}, 12)}
 COLLECTOR = {"id": "str", "as_of": "time?", "status": "str?", "error": "str?", "warnings": "int?",
-             "label": "str?", "stale_after_s": "int?"}   # 1.2: a name for the board and how old it may get
+             "label": "str?", "stale_after_s": "int?",   # 1.2: a name for the board and how old it may get
+             # 1.12: when the copy it read was made by its maker (never the file's modification time), and how often that maker remakes it
+             "made_at": "time?", "refresh_s": "int?"}
 MACHINE = {
     "id": "str", "label": "str?", "role": "str?", "status": "str?", "as_of": "time?",
     "reach": {"probe_ok": "bool?", "rtt_ms": "num?", "last_ok_at": "time?", "error": "str?"},
@@ -64,6 +66,8 @@ MACHINE = {
     "disks": ("list", {"label": "str?", "free_gb": "num?", "free_pct": "num?", "warn_gb": "num?", "crit_gb": "num?"}, 8),
     "uptime_s": "num?", "on_battery": "bool?",
     "extras": ("list", {"label": "str?", "value": "any?", "severity": "str?"}, 12),
+    # 1.12: the lanes this source runs on this machine (its own only); the host adds every source's for the machine
+    "lanes": {"running": "int?", "total": "int?"},
 }
 STEP = {"id": "str", "label": "str?", "status": "str?", "weight": "num?", "elapsed_s": "num?",
         "typical_s": "num?", "p90_s": "num?", "round": "int?"}
@@ -75,12 +79,17 @@ PROGRESS = {
     "steps": ("list", STEP, 30),
 }
 # 1.5: a lane's state word, why, since when and its last word; and the sentence as parts the board words itself
-LANE = {"state": "str?", "cause": "str?", "since": "time?", "last_word": {"verb": "str?", "at": "time?"}, "short_title": "str?"}
+LANE = {"state": "str?", "cause": "str?", "since": "time?", "last_word": {"verb": "str?", "at": "time?"}, "short_title": "str?",
+        "branch": "bool?"}   # 1.12: the work is on a pushed branch with no pull request (false: the source looked and found none)
 SAY = {"t": "str", "step": "int?", "of": "int?", "at": "time?", "until": "when?", "how": "str?", "gate": "str?", "decides": "str?",
        "findings": "int?", "n": "int?", "more": "int?", "title": "str?", "verb": "str?"}
 LINK = {"url": "url?", "label": "str?", "state": "str?", "state_as_of": "time?"}
 # 1.6: where a call that waits on the viewer can be answered (the source's review board), when it was last checked, or why there is no link
 ANSWER_LINK = {"url": "url?", "label": "str?", "state": "str?", "state_as_of": "time?", "why": "str?"}
+# 1.12: whose turn a card is, a hold the viewer put on it until a date, and a verdict it waits on (docs/feed-spec.md, "Whose turn")
+ACTOR = {"role": "str?", "name": "str?"}
+HOLD = {"bucket": "str?", "until": "when?", "reason": "str?", "since": "time?"}
+VERDICT = {"name": "str?", "state": "str?", "as_of": "time?"}
 ITEM = {
     "id": "str", "owner": "str?", "relayed": "bool?", "group": "str?", "machine": "str?", "kind": "str?",
     "title": "str?", "doing": "str?", "state": "str?", "state_detail": "str?", "started_at": "time?",
@@ -104,9 +113,11 @@ ATTENTION = {"id": "str", "kind": "str?", "severity": "str?", "title": "str?", "
              # 1.8: when the answer behind this call was made (the source's own copy time); absent when the source does not know
              "as_of": "time?",
              # 1.9: the choices a call offers, plain words from the source's structured record (at most 4, each at most 60 characters)
-             "options": ("list", "str", 4)}
+             "options": ("list", "str", 4),
+             # 1.12: whose turn it is, a dated hold, and a verdict it waits on
+             "actor": ACTOR, "hold": HOLD, "verdict": VERDICT}
 NEXT = {"id": "str", "group": "str?", "title": "str?", "kind": "str?", "blocked_by": "strs?", "reason": "str?",
-        "until": "date?", "filed": "date?", "goal": "str?"}
+        "until": "date?", "filed": "date?", "goal": "str?", "hold": HOLD}   # hold: 1.12
 DONE = {"id": "str", "owner": "str?", "group": "str?", "title": "str?", "via": "str?", "link": LINK, "at": "time", "goal": "str?"}
 # 1.7: one header per goal that has rows: how many lanes, queued rows and landed rows the feed carries for it, and which of those
 # counts may be low because rows were left out (`or_more`: any of "lanes", "next", "done")

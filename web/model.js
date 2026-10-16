@@ -420,6 +420,13 @@ function machineVitals(m, lv) {
   else if (bl && bl !== "live") add(L("beat") + " " + L("old", { t: age(ba) }), bl === "late" ? "warn" : "bad");
   if (hs === "lost" && m.health.reason) add(m.health.reason, "bad");
   if (RESTING.includes(hs) && m.health.reason) add(m.health.reason);
+  // Feed 1.12 (said early, so a short list keeps it): the lanes on this machine, every home's own count added up by the host; "or more" when a home with lanes here sent none.
+  const ln = m.lanes;
+  if (ln && typeof ln.running === "number") {
+    const homes = (ln.homes || []).length, more = ln.or_more ? " " + L("lanes_or_more") : "";
+    add(L(ln.total != null ? "lanes_running_of" : "lanes_running", { n: ln.running, total: ln.total }) + more + " · " + L(homes === 1 ? "lanes_homes_one" : "lanes_homes", { n: homes })
+      + ((ln.unreported || []).length ? " · " + L("lanes_unreported", { n: ln.unreported.length }) : ""));
+  }
   const sn = m.strain || {};
   if (sn.state === "struggling") add(L("strain_line", { v: sn.value, b: sn.baseline ?? "?", thr: sn.threshold, t: age(sn.sustained_s) }), "warn");
   else if (sn.state === "ok" && sn.value != null && sn.baseline != null) add(L("strain_ok", { v: sn.value, b: sn.baseline }));
@@ -569,17 +576,21 @@ function blackHoles(B) {
   // What is merged but not deployed, per deploy the sources report.
   const deploys = (gp.deploys || []).map(d => Object.assign({}, d, { oldS: d.oldest_unshipped_at ? liveSince(epoch(d.oldest_unshipped_at), d.source) : null }));
   // How old each reporting source's answers are: the waiting number's own answer, and every collector past its limit.
-  const answers = [], old = [], slowed = [];
+  const answers = [], old = [], slowed = [], made = [];
   for (const s of reporting()) {
     if (quiet(srcLevel(s))) continue;   // a silent source is said by the source rules already
     if (s.pace && s.pace.slowed) slowed.push({ source: s.id, name: srcName(s), pace: s.pace, everyS: s.interval_s });
     const a = answerAge(s);
     if (a != null) answers.push({ id: s.id, name: srcName(s), s: a, basis: (s.waiting || {}).basis || null });
     const since = Math.max(0, nowS() - S.srv0);
-    for (const f of s.freshness || []) if (f.state !== "ok") old.push({ source: s.id, name: srcName(s), id: f.id, label: f.label, state: f.state, s: f.age_s != null ? f.age_s + since : null, error: f.error });
+    for (const f of s.freshness || []) {
+      const row = { source: s.id, name: srcName(s), id: f.id, label: f.label, state: f.state, s: f.age_s != null ? f.age_s + since : null, error: f.error, made: !!f.made, refreshS: f.refresh_s || null };
+      if (f.state !== "ok") old.push(row);
+      if (f.made) made.push(row);   // feed 1.12: the age of the copy since its maker made it, said whether or not it is old
+    }
   }
   answers.sort((a, b) => b.s - a.s);
-  return { outside, queues, coming, deploys, answers, staleCollectors: old, slowed, queueing: queues.filter(q => q.length) };
+  return { outside, queues, coming, deploys, answers, staleCollectors: old, madeAges: made, slowed, queueing: queues.filter(q => q.length) };
 }
 
 /* When a coming-up time falls: "14:00" today, "tomorrow", "Tue 14:00" within the week, else "12 Oct". A date with no
@@ -809,10 +820,52 @@ function attention() {
     disagree: asksDisagree(v.waiting_disagree, v.items, rows, words, names),
     // true while any call card is unconfirmed: the number is then "at least N", never a plain N
     callsAtLeast: rows.some(a => a.lastKnown && cardTier(a) === "call"),
-    also: rows.filter(a => cardTier(a) === "fyi"),
+    // An FYI says what it is and whose it is, in words (fyiLine); an FYI is never counted.
+    also: rows.filter(a => cardTier(a) === "fyi").map(a => Object.assign(a, { fyi: fyiLine(a, names) })),
+    // Feed 1.12, set aside by the host (view.py `aside`), never counted: what the viewer deferred to a date, and what is someone else's turn.
+    deferred: rows.filter(a => cardTier(a) === "deferred"),
+    theirs: rows.filter(a => cardTier(a) === "theirs"),
     // Machine alerts said in one feed and not yet confirmed by a second (src/weatherdeck/debounce.py): never counted, never hidden.
     pending: (v.attention_pending || []).map(a => Object.assign({}, a, { frozen: hd || (srcById(a.source) ? quiet(srcLevel(srcById(a.source))) : false), glyph: "needs" })),
   };
+}
+/* Whose turn a card is (feed 1.12 `actor`), in words: its name as the source gives it, else a word for its role; null when the source
+   does not say (never a guess). */
+function actorWord(a) {
+  const ac = a && a.actor && typeof a.actor === "object" ? a.actor : null;
+  if (!ac) return null;
+  if (typeof ac.name === "string" && ac.name.trim()) return ac.name.trim();
+  return LABELS["actor_" + ac.role] != null ? L("actor_" + ac.role) : ac.role ? String(ac.role) : null;
+}
+/* An FYI in plain words: what kind of notice it is, its title, and whose it is: the actor the source names (feed 1.12), "you" when it
+   names the viewer, else the source it came from with its owner "not reported". */
+function fyiLine(a, names) {
+  const what = LABELS["fyi_kind_" + a.kind] != null ? L("fyi_kind_" + a.kind) : L("fyi_kind_other");
+  const role = a.actor && a.actor.role, who = actorWord(a);
+  const owner = role === "viewer" ? L("fyi_owner_you") : who ? L("fyi_owner", { name: who }) : L("fyi_owner_unreported", { source: names[a.source] || a.source || "?" });
+  return L("fyi_line", { what, title: [a.title || a.id, a.note].filter(Boolean).join(" · "), owner });
+}
+/* The section beside "Needs you" (feed 1.12): the viewer's dated holds that still hold (cards and queued rows the host set aside as
+   deferred, soonest first, each with its date and reason) and what is someone else's turn (each with whose, since when, and the
+   verdict it waits on). Every word is a field; a missing one says "not reported". Neither group is ever counted. */
+function asideModel(B) {
+  const holdOf = x => (x.hold && typeof x.hold === "object" ? x.hold : {});
+  const untilAt = u => epoch(String(u).length === 10 ? u + "T00:00:00Z" : u);
+  // The hold's own date in full ("Thu 22 Oct"; a time adds its hour): a date is that calendar day, never moved by a time zone.
+  const untilDate = u => {
+    const d = String(u).length === 10, at = untilAt(u);
+    if (at == null || !isFinite(at)) return null;
+    const o = { weekday: "short", day: "numeric", month: "short" };
+    return d ? new Intl.DateTimeFormat("en-GB", Object.assign({ timeZone: "UTC" }, o)).format(new Date((at + 43200) * 1000)) : fmt(o).format(new Date(at * 1000)) + " " + hm(at);
+  };
+  const deferred = [...(B.deferred || []).map(c => ({ key: "c:" + c.id, title: c.title || c.id, hold: holdOf(c), source: c.source, card: c })),
+    ...((S.view.next || []).filter(n => n.aside === "deferred").map(n => ({ key: "n:" + n.id, title: n.title || n.id, hold: holdOf(n), source: n.source, row: n })))]
+    .map(r => Object.assign(r, { untilWord: r.hold.until ? untilDate(r.hold.until) : null, at: r.hold.until ? untilAt(r.hold.until) : Infinity }))
+    .sort((a, b) => a.at - b.at || String(a.title).localeCompare(String(b.title)));
+  const theirs = (B.theirs || []).map(c => ({ key: "c:" + c.id, title: c.title || c.id, owner: actorWord(c), ageS: c.ageS, frozen: c.frozen, verdict: c.verdict && typeof c.verdict === "object" ? c.verdict : null, card: c }))
+    .sort((a, b) => (b.ageS ?? -1) - (a.ageS ?? -1));
+  const owners = [...new Set(theirs.map(r => r.owner))];
+  return { deferred, theirs, theirsHead: owners.length === 1 && owners[0] ? L("aside_theirs_named", { name: owners[0] }) : L("aside_theirs"), n: deferred.length + theirs.length };
 }
 /* Why a source slowed itself, in words: its own reasons ("load", "battery", ...), each in the board's words; a reason the
    board has no words for is shown as the source said it, and none at all is said as such. */
@@ -849,7 +902,11 @@ function trustLine(B) {
   // A collector whose answer is too old (or failed) is said here, not only in the Crow's nest (feed 1.2: collectors).
   // They do not make "nothing was waiting" a past fact unless the answer behind the number is the old one.
   const oldNotes = [...skewNotes];
-  for (const f of B.staleCollectors || []) oldNotes.push(f.state === "error" ? L("collector_failed", { name: f.name, what: f.label }) : L("collector_old", { name: f.name, what: f.label, t: f.s != null ? age(f.s) : "?" }));
+  // A copy whose maker stopped remaking it (feed 1.12 `made_at`) is a problem, said loudly: it can look fresh while it is re-read.
+  for (const f of B.staleCollectors || []) {
+    if (f.made && f.state === "old") problems.push(L(f.refreshS ? "collector_made_stale" : "collector_made_stale_n", { name: f.name, what: f.label, t: f.s != null ? age(f.s) : "?", every: dur(f.refreshS || 0) }));
+    else oldNotes.push(f.state === "error" ? L("collector_failed", { name: f.name, what: f.label }) : L("collector_old", { name: f.name, what: f.label, t: f.s != null ? age(f.s) : "?" }));
+  }
   // A source that stretched its own intervals says why, and how often it now reports: slower on purpose, not silent and not
   // as fresh as before (feed 1.4: pace). It comes before the old answers it explains.
   const slowNotes = (B.slowed || []).map(x => L("trust_slowed", { name: x.name, why: paceWhy(x.pace), t: dur(x.everyS || TH().default_interval_s) }));
@@ -943,7 +1000,6 @@ function boardModel(g) {
   const live = B.lanes.filter(l => !l.rowOld);
   B.underway = live.filter(l => l.cls === "ok" && (l.kind === "moving" || l.kind === "regressed")).sort((a, b) => byProject(a, b) || a.started - b.started);
   B.scouts = live.filter(l => l.cls === "ok" && l.kind === "scout").sort((a, b) => byProject(a, b) || a.started - b.started);
-  B.landed = live.filter(l => l.cls === "ok" && l.kind === "done").sort((a, b) => byProject(a, b) || a.started - b.started);
   B.waiting = live.filter(l => l.cls === "waiting").sort((a, b) => byProject(a, b) || a.started - b.started);
   B.quietLanes = live.filter(l => l.cls === "quiet").sort((a, b) => byProject(a, b) || a.started - b.started);
   // The oldest wait: the lane longest in a held class (waiting, or needs action), counted on the page's clock.
@@ -951,6 +1007,7 @@ function boardModel(g) {
   B.waitingLanes = live.filter(l => l.kind === "call" || l.kind === "approval");
   B.prLanes = B.lanes.filter(l => l.kind === "pr_open" || l.kind === "pr_unread");
   Object.assign(B, blackHoles(B));
+  B.aside = asideModel(B);
   B.software = reporting().map(softwareOf);
   B.strip = stripChips(B);
   B.library = libraryRows();

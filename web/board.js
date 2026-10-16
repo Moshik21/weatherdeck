@@ -94,8 +94,9 @@ const RANGE_SLOT = { failed: "trouble", done: "done", approval: "done", call: "m
 const lampPip = tr => G(tr.lamp === "stale" ? "silent" : "lamp", tr.lamp === "live" ? "ink" : tr.lamp === "late" ? "ink2" : "fog", { cls: "lamp" });
 
 /* Where to act, led by the source's recommendation when it sent one (one line, so the band keeps its shape). */
-/* An FYI card in one line: its title, and its note when the page added one (a supervision alarm's "not reported"). */
-const alsoText = a => [a.title, a.note].filter(Boolean).join(" · ");
+/* An FYI card in one line: what it is, its title (and its note when the page added one, a supervision alarm's "not reported"), and
+   whose it is (model.js fyiLine). */
+const alsoText = a => a.fyi || [a.title, a.note].filter(Boolean).join(" · ");
 const howLine = c => (c.recommend ? [L("recommend", { text: c.recommend }), c.how].filter(Boolean).join(" · ") : c.how) || null;
 
 /* ---------- the bar ---------- */
@@ -442,7 +443,8 @@ function renderLog(B, g) {
   head.append(h("span", { class: "spacer" }),
     h("span", { class: "count" }, G("moving", "moving"), lbl(L("under_way", { n: B.underway.length + B.scouts.length }), "ink2")),
     h("span", { class: "count" }, G("mate", "ink2"), lbl(L("waiting_n", { n: B.waiting.length }) + (B.oldest ? ", " + L("oldest_t", { t: ageShort(B.oldest.inState) }) : ""), "ink2")),
-    h("span", { class: "count" }, G("done", "done"), lbl(L("landed", { n: B.landed.length }), "ink2")));
+    // The board's one landed number (done[] over its window), as in the bar and the calm line; the phone has no bar to say the window.
+    h("span", { class: "count" }, G("done", "done"), lbl(L("landed", { n: B.score.n }) + (g.phone ? " " + landedWhen(B) : ""), "ink2")));
   const list = h("div", { class: g.phone ? "lanes" : "ledger" + (S.logTight ? " tight" : "") + (S.logTight > 1 ? " tighter" : "") });
   // One list in the one order (frontdoor.js sortRows): a row that is off course keeps its full ink, the rest are calm.
   for (const l of g.phone ? B.off : B.shown) list.append(logRow(l, g, !g.phone && !offCourse(l)));

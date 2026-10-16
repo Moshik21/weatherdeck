@@ -69,13 +69,13 @@ const untilWord = u => {
 
 /* ---------- one lane: its word, title, sentence and notes ---------- */
 const titlesReal = () => { const p = (S.view && S.view.profile) || {}; return !p.redaction || p.redaction === "none" || p.redaction === "household"; };
-/* The job in plain words: the source's own short title; else the title it sent, marked "short name only" because the source
-   says that is only the task's name in words; cut at a whole word with no bracket left open (frontdoor.js fitTitle), and
-   "title not reported" when there is none (never the task id as a title). */
+/* The job in plain words: the whole title the source sent, wrapped where the row is narrow (a place that must fit one line cuts it
+   at a whole word, frontdoor.js fitTitle); else the source's own short title; marked "short name only" when the source says the
+   title is only the task's name in words, and "title not reported" when there is none (never the task id as a title). */
 const rowTitleOf = (it, sl) => {
-  if (sl && sl.short_title) return sl.short_title;
   const raw = (it.row && it.row.title) || it.title || "";
-  return raw && raw !== it.id ? raw : null;
+  if (raw && raw !== it.id) return raw;
+  return sl && sl.short_title ? sl.short_title : null;
 };
 function laneTitle(l, sl) {
   const text = fitTitle(l.rowTitle, 0, 0, null).text;
@@ -111,8 +111,9 @@ function laneSentence(l, key, sl) {
       case "holds-others": if (p.n > 0) out.push(p.n === 1 ? L("ls_holds_one") : L("ls_holds_many", { n: p.n })); break;
       case "no-news": { const t = agoOf(p.at, ref); if (t) out.push(L("ls_no_news", { t })); break; }
       case "unreadable": {
+        // What is recorded leads; "can't be read" is said only when nothing the lane said is recorded.
         const lw = P("last-word"), nlw = P("no-last-word"), t = lw ? agoOf(lw.at, ref) : null, what = lw && lw.verb && LABELS["ls_verb_" + lw.verb] != null ? L("ls_verb_" + lw.verb) : null;
-        out.push(L("ls_unreadable") + (what ? (t ? L("ls_last_word", { what, t }) : L("ls_last_word_now", { what })) : nlw || !lw ? L("ls_no_last_word") : "."));
+        out.push(what ? (t ? L("ls_recorded", { what, t }) : L("ls_recorded_now", { what })) : L("ls_unreadable") + (nlw || !lw ? L("ls_no_last_word") : "."));
         break;
       }
       case "gate-owner-unknown": out.push(L("ls_gate_owner_unknown")); break;
@@ -166,7 +167,11 @@ function rowSentence(l, r, pr) {
   if (((r.why === "unread" || r.why === "unknown") && !ago) || (r.why === "gone_merged" && !agoOf(ag.since, ref))) k += "_never";
   if (r.key === "work") { detail = laneDetail(it, l.kind, l.lv, true); if (detail) k += "_d"; }
   const was = L(LABELS["rs_was_" + it.state] != null ? "rs_was_" + it.state : "rs_was_other");
-  let s = L(k, { pr: pr ? "#" + pr.name.split("#").pop() : "?", who, gone: agoOf(ag.since, ref) || "?", ago, was, detail });
+  // The lane's own last word (feed 1.5 last_word) and how long ago, for a row worded from what its record says.
+  const lw = (slOf(it) || {}).last_word || {}, lwAgo = lw.at ? agoOf(lw.at, ref) : null;
+  const said = lw.verb && LABELS["ls_verb_" + lw.verb] != null ? (lwAgo ? L("rs_said", { what: L("ls_verb_" + lw.verb), t: lwAgo }) : L("rs_said_now", { what: L("ls_verb_" + lw.verb) })) : "";
+  if (k === "rs_key_unk" && said) k = "rs_key_unk_said";   // "can't be read" only when nothing it said is recorded
+  let s = L(k, { pr: pr ? "#" + pr.name.split("#").pop() : "?", who, gone: agoOf(ag.since, ref) || "?", ago, was, detail, said });
   const until = it.lane && it.lane.until ? epoch(String(it.lane.until).length === 10 ? it.lane.until + "T00:00:00Z" : it.lane.until) : null;
   if (l.cls === "waiting" && until && until > nowS() && !isOldRecord(r.why)) s += L("rs_until", { t: untilWord(it.lane.until) });
   return s;
@@ -177,6 +182,7 @@ function rowPlain(l) {
   const it = l.it, sl = slOf(it), key = sl ? laneKeyOf(sl.state) : null, pr = lanePR(it);
   const r = rowState({ kind: l.kind, laneWord: sl ? sl.state : null, pr: pr ? pr.state : null, state: it.state || null, lastState: (it.last_event || {}).state || null,
     waitingOn: (it.lane && it.lane.waiting_on) || it.waiting_on || null, agent: (it.agent || {}).state || null,
+    lastWord: sl && sl.last_word ? sl.last_word.verb || null : null, branch: sl && typeof sl.branch === "boolean" ? sl.branch : null,
     texts: [it.doing, it.state_detail, it.summary, (it.row || {}).summary] });
   const said = r.why.startsWith("key_") && sl ? laneSentence(l, key, sl) : null;
   return { rowKey: r.key, rowOld: isOldRecord(r.why), rowWord: L("row_" + r.key), sentence: said || rowSentence(l, r, pr), rowTitle: rowTitleOf(it, sl), steer: steerOf(l) };
@@ -337,6 +343,7 @@ function renderStrip(B, views) {
   const att = h("div", { class: "pg-tile plate pg-att" + (a ? "" : " pg-empty") },
     h("div", { class: "pg-band" }, h("span", { class: "pg-n" }, String(a)), h("span", { class: "pg-bandword" }, L(a === 1 ? "strip_att_one" : "strip_att"))),
     h("div", { class: "pg-body" }, a ? h("ul", null, lines.map(x => h("li", { "data-k": x.key }, icon(x.icon, x.slot), h("span", null, x.who ? [h("span", { class: "pg-who" }, x.who), ": "] : null, x.text)))) : L("strip_att_none")));
+  const aside = renderAside(B);
   const fineOn = !c && !a && B.trust.live === B.trust.total && B.trust.total > 0;
   const open = [c ? L(c === 1 ? "strip_n_call" : "strip_n_calls", { n: c }) : null, a ? L(a === 1 ? "strip_n_problem" : "strip_n_problems", { n: a }) : null].filter(Boolean);
   const nlive = B.trust;
@@ -344,7 +351,29 @@ function renderStrip(B, views) {
     h("div", { class: "pg-band" }, fineOn ? icon("done", "done") : null, h("span", { class: "pg-bandword" }, L("strip_fine"))),
     h("div", { class: "pg-body" }, fineOn ? L("strip_fine_yes", { live: nlive.live, total: nlive.total, t: age(nlive.newest) })
       : open.length ? L("strip_fine_not", { parts: open.join(" and ") }) : L("strip_fine_not", { parts: L("hdr_feeds", { live: nlive.live, total: nlive.total }) })));
-  return h("section", { class: "pg-strip", "aria-label": L("strip_label") }, you, att, fine);
+  // The set-aside fold sits under "Needs you", in its column, so the strip keeps its three columns.
+  return h("section", { class: "pg-strip", "aria-label": L("strip_label") }, aside ? h("div", { class: "pg-youcol" }, you, aside) : you, att, fine);
+}
+/* Beside "Needs you", folded until tapped (feed 1.12, model.js asideModel): what the viewer deferred to a date (each with its date and
+   reason) and what is someone else's turn (each with whose, since when, and the verdict it waits on). Not counted in "Needs you"; the
+   fold's head says so. Nothing to list draws nothing. */
+function renderAside(B) {
+  const A = B.aside;
+  if (!A || !A.n) return null;
+  const key = "f:aside", open = S.pg.open.has(key);
+  const row = (k, title, parts) => h("li", { class: "pg-arow", "data-k": k }, h("div", { class: "pg-atitle" }, title), h("div", { class: "pg-ameta" }, parts.filter(Boolean).join(" · ")));
+  const deferred = A.deferred.map(r => row(r.key, r.title, [r.untilWord ? L("aside_until", { d: r.untilWord }) : L("aside_until_unreported"), r.hold.reason || L("aside_reason_unreported")]));
+  const theirs = A.theirs.map(r => {
+    const vd = r.verdict && r.verdict.name ? L("aside_verdict", { name: r.verdict.name, state: r.verdict.state ? (LABELS["verdict_" + r.verdict.state] != null ? L("verdict_" + r.verdict.state) : r.verdict.state) : L("aside_not_reported") }) : null;
+    return row(r.key, r.title, [r.owner ? L("aside_owner", { name: r.owner }) : L("aside_owner_unreported"),
+      r.frozen && r.card.asOf ? L("as_of", { t: hm(r.card.asOf) }) : r.ageS != null ? L("aside_since", { t: age(r.ageS) }) : L("aside_since_unreported"), vd]);
+  });
+  const head = [A.deferred.length ? L("aside_deferred_n", { n: A.deferred.length }) : null, A.theirs.length ? A.theirsHead + " " + A.theirs.length : null].filter(Boolean).join(" · ");
+  return h("details", { class: "pg-tile plate pg-aside", "data-k": key, open: open || null },
+    h("summary", { class: "pg-band" }, h("span", { class: "pg-bandword" }, head), h("span", { class: "pg-tap" }, open ? L("fold_hide") : L("fold_tap"))),
+    h("div", { class: "pg-body" }, h("p", { class: "pg-anote" }, L("aside_not_counted")),
+      A.deferred.length ? [h("h4", null, L("aside_deferred")), h("ul", { class: "pg-alist" }, deferred)] : null,
+      A.theirs.length ? [h("h4", null, A.theirsHead), h("ul", { class: "pg-alist" }, theirs)] : null));
 }
 
 /* ---------- lanes ---------- */

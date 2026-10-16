@@ -3,7 +3,7 @@
  "frames": [
   {
    "after_s": 5.0,
-   "served_at": 1792103558.0,
+   "served_at": 1792173130.0,
    "view": {
     "sources": [
      {
@@ -16,46 +16,48 @@
        "borealis-lanes",
        "cinder-lanes"
       ],
-      "received_at": 1792103554.996018,
+      "received_at": 1792173125.814273,
       "interval_s": 10,
       "interval_declared": true,
       "mode": "sample",
-      "boot_id": "demo-1792103554",
+      "boot_id": "demo-1792173125",
       "seq": 1,
-      "skew_s": 1.0,
-      "generated_at": "2026-10-15T22:32:34Z",
+      "skew_s": 0.8,
+      "generated_at": "2026-10-16T17:52:05Z",
       "collectors": [
        {
         "id": "items",
-        "as_of": "2026-10-15T22:32:32Z",
+        "as_of": "2026-10-16T17:52:03Z",
         "status": "ok",
         "error": null,
         "warnings": 0
        },
        {
         "id": "machines",
-        "as_of": "2026-10-15T22:32:29Z",
+        "as_of": "2026-10-16T17:52:00Z",
         "status": "ok",
         "error": null,
         "warnings": 0
        },
        {
         "id": "queue",
-        "as_of": "2026-10-15T22:32:31Z",
+        "as_of": "2026-10-16T17:52:02Z",
         "status": "ok",
         "error": null,
         "warnings": 0
        },
        {
         "id": "attention",
-        "as_of": "2026-10-15T22:32:31Z",
+        "as_of": "2026-10-16T17:52:02Z",
         "status": "ok",
         "error": null,
-        "warnings": 0
+        "warnings": 0,
+        "made_at": "2026-10-16T17:50:05Z",
+        "refresh_s": 300
        },
        {
         "id": "meters",
-        "as_of": "2026-10-15T22:30:04Z",
+        "as_of": "2026-10-16T17:49:35Z",
         "status": "ok",
         "error": null,
         "warnings": 0
@@ -78,42 +80,52 @@
        {
         "id": "items",
         "label": "items",
-        "age_s": 5,
+        "age_s": 6,
         "limit_s": null,
         "state": "ok",
-        "error": null
+        "error": null,
+        "made": false,
+        "refresh_s": null
        },
        {
         "id": "machines",
         "label": "machines",
-        "age_s": 8,
+        "age_s": 9,
         "limit_s": null,
         "state": "ok",
-        "error": null
+        "error": null,
+        "made": false,
+        "refresh_s": null
        },
        {
         "id": "queue",
         "label": "queue",
-        "age_s": 6,
+        "age_s": 7,
         "limit_s": null,
         "state": "ok",
-        "error": null
+        "error": null,
+        "made": false,
+        "refresh_s": null
        },
        {
         "id": "attention",
         "label": "attention",
-        "age_s": 6,
-        "limit_s": null,
+        "age_s": 124,
+        "limit_s": 600,
         "state": "ok",
-        "error": null
+        "error": null,
+        "made": true,
+        "refresh_s": 300
        },
        {
         "id": "meters",
         "label": "meters",
-        "age_s": 153,
+        "age_s": 154,
         "limit_s": 900,
         "state": "ok",
-        "error": null
+        "error": null,
+        "made": false,
+        "refresh_s": null
        }
       ]
      },
@@ -126,46 +138,48 @@
       "peers": [
        "atlas-main"
       ],
-      "received_at": 1792103555.0332422,
+      "received_at": 1792173125.8222651,
       "interval_s": 10,
       "interval_declared": true,
       "mode": "sample",
-      "boot_id": "demo-1792103554",
+      "boot_id": "demo-1792173125",
       "seq": 1,
-      "skew_s": 1.0,
-      "generated_at": "2026-10-15T22:32:34Z",
+      "skew_s": 0.8,
+      "generated_at": "2026-10-16T17:52:05Z",
       "collectors": [
        {
         "id": "items",
-        "as_of": "2026-10-15T22:32:32Z",
+        "as_of": "2026-10-16T17:52:03Z",
         "status": "ok",
         "error": null,
         "warnings": 0
        },
        {
         "id": "machines",
-        "as_of": "2026-10-15T22:32:29Z",
+        "as_of": "2026-10-16T17:52:00Z",
         "status": "ok",
         "error": null,
         "warnings": 0
        },
        {
         "id": "queue",
-        "as_of": "2026-10-15T22:32:31Z",
+        "as_of": "2026-10-16T17:52:02Z",
         "status": "ok",
         "error": null,
-        "warnings": 0
+        "warnings": 0,
+        "made_at": "2026-10-16T17:12:05Z",
+        "refresh_s": 300
        },
        {
         "id": "attention",
-        "as_of": "2026-10-15T22:32:31Z",
+        "as_of": "2026-10-16T17:52:02Z",
         "status": "ok",
         "error": null,
         "warnings": 0
        },
        {
         "id": "meters",
-        "as_of": "2026-10-15T22:30:04Z",
+        "as_of": "2026-10-16T17:49:35Z",
         "status": "ok",
         "error": null,
         "warnings": 0
@@ -188,42 +202,52 @@
        {
         "id": "items",
         "label": "items",
-        "age_s": 5,
+        "age_s": 6,
         "limit_s": null,
         "state": "ok",
-        "error": null
+        "error": null,
+        "made": false,
+        "refresh_s": null
        },
        {
         "id": "machines",
         "label": "machines",
-        "age_s": 8,
+        "age_s": 9,
         "limit_s": null,
         "state": "ok",
-        "error": null
+        "error": null,
+        "made": false,
+        "refresh_s": null
        },
        {
         "id": "queue",
         "label": "queue",
-        "age_s": 6,
-        "limit_s": null,
-        "state": "ok",
-        "error": null
+        "age_s": 2404,
+        "limit_s": 600,
+        "state": "old",
+        "error": null,
+        "made": true,
+        "refresh_s": 300
        },
        {
         "id": "attention",
         "label": "attention",
-        "age_s": 6,
+        "age_s": 7,
         "limit_s": null,
         "state": "ok",
-        "error": null
+        "error": null,
+        "made": false,
+        "refresh_s": null
        },
        {
         "id": "meters",
         "label": "meters",
-        "age_s": 153,
+        "age_s": 154,
         "limit_s": 900,
         "state": "ok",
-        "error": null
+        "error": null,
+        "made": false,
+        "refresh_s": null
        }
       ]
      },
@@ -236,46 +260,46 @@
       "peers": [
        "atlas-main"
       ],
-      "received_at": 1792103555.0467,
+      "received_at": 1792173125.8253582,
       "interval_s": 10,
       "interval_declared": true,
       "mode": "sample",
-      "boot_id": "demo-1792103554",
+      "boot_id": "demo-1792173125",
       "seq": 1,
-      "skew_s": 1.0,
-      "generated_at": "2026-10-15T22:32:34Z",
+      "skew_s": 0.8,
+      "generated_at": "2026-10-16T17:52:05Z",
       "collectors": [
        {
         "id": "items",
-        "as_of": "2026-10-15T22:32:32Z",
+        "as_of": "2026-10-16T17:52:03Z",
         "status": "ok",
         "error": null,
         "warnings": 0
        },
        {
         "id": "machines",
-        "as_of": "2026-10-15T22:32:29Z",
+        "as_of": "2026-10-16T17:52:00Z",
         "status": "ok",
         "error": null,
         "warnings": 0
        },
        {
         "id": "queue",
-        "as_of": "2026-10-15T22:32:31Z",
+        "as_of": "2026-10-16T17:52:02Z",
         "status": "ok",
         "error": null,
         "warnings": 0
        },
        {
         "id": "attention",
-        "as_of": "2026-10-15T22:32:31Z",
+        "as_of": "2026-10-16T17:52:02Z",
         "status": "ok",
         "error": null,
         "warnings": 0
        },
        {
         "id": "meters",
-        "as_of": "2026-10-15T22:30:04Z",
+        "as_of": "2026-10-16T17:49:35Z",
         "status": "ok",
         "error": null,
         "warnings": 0
@@ -298,42 +322,52 @@
        {
         "id": "items",
         "label": "items",
-        "age_s": 5,
+        "age_s": 6,
         "limit_s": null,
         "state": "ok",
-        "error": null
+        "error": null,
+        "made": false,
+        "refresh_s": null
        },
        {
         "id": "machines",
         "label": "machines",
-        "age_s": 8,
+        "age_s": 9,
         "limit_s": null,
         "state": "ok",
-        "error": null
+        "error": null,
+        "made": false,
+        "refresh_s": null
        },
        {
         "id": "queue",
         "label": "queue",
-        "age_s": 6,
+        "age_s": 7,
         "limit_s": null,
         "state": "ok",
-        "error": null
+        "error": null,
+        "made": false,
+        "refresh_s": null
        },
        {
         "id": "attention",
         "label": "attention",
-        "age_s": 6,
+        "age_s": 7,
         "limit_s": null,
         "state": "ok",
-        "error": null
+        "error": null,
+        "made": false,
+        "refresh_s": null
        },
        {
         "id": "meters",
         "label": "meters",
-        "age_s": 153,
+        "age_s": 154,
         "limit_s": 900,
         "state": "ok",
-        "error": null
+        "error": null,
+        "made": false,
+        "refresh_s": null
        }
       ]
      }
@@ -344,11 +378,11 @@
       "label": "Atlas",
       "role": "primary workstation",
       "status": "warn",
-      "as_of": "2026-10-15T22:32:29Z",
+      "as_of": "2026-10-16T17:52:00Z",
       "reach": {
        "probe_ok": true,
        "rtt_ms": null,
-       "last_ok_at": "2026-10-15T22:32:29Z",
+       "last_ok_at": "2026-10-16T17:52:00Z",
        "error": null
       },
       "load": {
@@ -375,7 +409,7 @@
         "crit_gb": 25
        }
       ],
-      "uptime_s": 1206000.0087640285,
+      "uptime_s": 1206000.0029642582,
       "on_battery": false,
       "extras": [
        {
@@ -409,12 +443,22 @@
         "over_budget": false
        }
       },
+      "lanes": {
+       "running": 3,
+       "total": 5,
+       "homes": [
+        "atlas-main",
+        "borealis-lanes"
+       ],
+       "unreported": [],
+       "or_more": false
+      },
       "observed_by": "atlas-main",
       "sources": [
        "atlas-main"
       ],
       "beat_seen": {
-       "at": "2026-10-15T22:32:34Z",
+       "at": "2026-10-16T17:52:05Z",
        "interval_s": 15
       },
       "strain": {
@@ -423,7 +467,7 @@
        "warm": false,
        "baseline": 2.1,
        "threshold": 1.0,
-       "since": 1792103554.996018,
+       "since": 1792173125.814273,
        "sustained_s": 0
       }
      },
@@ -432,11 +476,11 @@
       "label": "Borealis",
       "role": "render box",
       "status": "ok",
-      "as_of": "2026-10-15T22:32:29Z",
+      "as_of": "2026-10-16T17:52:00Z",
       "reach": {
        "probe_ok": true,
        "rtt_ms": null,
-       "last_ok_at": "2026-10-15T22:32:29Z",
+       "last_ok_at": "2026-10-16T17:52:00Z",
        "error": null
       },
       "load": {
@@ -470,7 +514,7 @@
         "crit_gb": 60
        }
       ],
-      "uptime_s": 3400.008764028549,
+      "uptime_s": 3400.002964258194,
       "on_battery": false,
       "extras": [
        {
@@ -496,12 +540,21 @@
         "over_budget": false
        }
       },
+      "lanes": {
+       "running": 2,
+       "total": 3,
+       "homes": [
+        "borealis-lanes"
+       ],
+       "unreported": [],
+       "or_more": false
+      },
       "observed_by": "borealis-lanes",
       "sources": [
        "borealis-lanes"
       ],
       "beat_seen": {
-       "at": "2026-10-15T22:32:35Z",
+       "at": "2026-10-16T17:52:05Z",
        "interval_s": 15
       },
       "strain": {
@@ -519,11 +572,11 @@
       "label": "Cinder",
       "role": "lab server",
       "status": "ok",
-      "as_of": "2026-10-15T22:32:29Z",
+      "as_of": "2026-10-16T17:52:00Z",
       "reach": {
        "probe_ok": true,
        "rtt_ms": null,
-       "last_ok_at": "2026-10-15T22:32:29Z",
+       "last_ok_at": "2026-10-16T17:52:00Z",
        "error": null
       },
       "load": {
@@ -550,7 +603,7 @@
         "crit_gb": 25
        }
       ],
-      "uptime_s": 734000.0087640285,
+      "uptime_s": 734000.0029642582,
       "on_battery": false,
       "extras": [
        {
@@ -580,8 +633,9 @@
       "sources": [
        "cinder-lanes"
       ],
+      "lanes": null,
       "beat_seen": {
-       "at": "2026-10-15T22:32:35Z",
+       "at": "2026-10-16T17:52:05Z",
        "interval_s": 15
       },
       "strain": {
@@ -607,11 +661,11 @@
       "doing": "Review fixed 2 findings; tests running",
       "state": "running",
       "state_detail": "validating (running)",
-      "started_at": "2026-10-15T20:52:34Z",
+      "started_at": "2026-10-16T16:12:05Z",
       "last_event": {
        "state": "running",
        "text": "review round 2 clean",
-       "at": "2026-10-15T22:01:34Z"
+       "at": "2026-10-16T17:21:05Z"
       },
       "progress": {
        "basis": "history",
@@ -622,7 +676,7 @@
        "reason": null,
        "current": {
         "step": "test",
-        "elapsed_s": 1860.0087640285492,
+        "elapsed_s": 1860.002964258194,
         "typical_s": 2640,
         "p90_s": 4200,
         "round": 2,
@@ -686,7 +740,7 @@
          "label": "Test",
          "status": "current",
          "weight": 0.327,
-         "elapsed_s": 1860.0087640285492,
+         "elapsed_s": 1860.002964258194,
          "typical_s": 2640,
          "p90_s": 4200,
          "round": null
@@ -772,10 +826,10 @@
       "source_lane": {
        "state": "Working",
        "cause": "worker-busy",
-       "since": "2026-10-15T22:12:54Z",
+       "since": "2026-10-16T17:32:25Z",
        "last_word": {
         "verb": "working",
-        "at": "2026-10-15T22:12:54Z"
+        "at": "2026-10-16T17:32:25Z"
        },
        "short_title": "Fog of war: hide units outside sight radius"
       },
@@ -790,8 +844,8 @@
        "mark": "bfcf10dd2e67"
       },
       "age": {
-       "s": 1864,
-       "since": "2026-10-15T22:01:34Z",
+       "s": 1865,
+       "since": "2026-10-16T17:21:05Z",
        "basis": "last_event"
       }
      },
@@ -806,11 +860,11 @@
       "doing": "Change request open, waiting on checks",
       "state": "running",
       "state_detail": "checks running",
-      "started_at": "2026-10-15T19:02:34Z",
+      "started_at": "2026-10-16T14:22:05Z",
       "last_event": {
        "state": "running",
        "text": "waiting on checks",
-       "at": "2026-10-15T22:19:34Z"
+       "at": "2026-10-16T17:39:05Z"
       },
       "progress": {
        "basis": "history",
@@ -821,7 +875,7 @@
        "reason": null,
        "current": {
         "step": "ci",
-        "elapsed_s": 760.0087640285492,
+        "elapsed_s": 760.002964258194,
         "typical_s": 1860,
         "p90_s": 3000,
         "round": 1,
@@ -935,7 +989,7 @@
          "label": "Checks",
          "status": "current",
          "weight": 0.229,
-         "elapsed_s": 760.0087640285492,
+         "elapsed_s": 760.002964258194,
          "typical_s": 1860,
          "p90_s": 3000,
          "round": null
@@ -974,10 +1028,10 @@
       "source_lane": {
        "state": "Waiting on a check",
        "cause": "ci-running",
-       "since": "2026-10-15T22:19:54Z",
+       "since": "2026-10-16T17:39:25Z",
        "last_word": {
         "verb": "working",
-        "at": "2026-10-15T22:12:54Z"
+        "at": "2026-10-16T17:32:25Z"
        },
        "short_title": "Lobby ready-check countdown"
       },
@@ -992,8 +1046,8 @@
        "mark": "b9bee17409d2"
       },
       "age": {
-       "s": 784,
-       "since": "2026-10-15T22:19:34Z",
+       "s": 785,
+       "since": "2026-10-16T17:39:05Z",
        "basis": "last_event"
       }
      },
@@ -1008,11 +1062,11 @@
       "doing": "Stopped at review: 1 finding needs a product call",
       "state": "waiting",
       "state_detail": "stopped at review: 1 finding",
-      "started_at": "2026-10-15T18:58:34Z",
+      "started_at": "2026-10-16T14:18:05Z",
       "last_event": {
        "state": "waiting",
        "text": "cover art: embed full-size or downscale?",
-       "at": "2026-10-15T20:20:34Z"
+       "at": "2026-10-16T15:40:05Z"
       },
       "progress": {
        "basis": "history",
@@ -1029,7 +1083,7 @@
         "round": 1,
         "activity": "waiting",
         "last_activity_age_s": 7720,
-        "waiting_since": "2026-10-15T20:21:34Z"
+        "waiting_since": "2026-10-16T15:41:05Z"
        },
        "steps": [
         {
@@ -1173,10 +1227,10 @@
       "source_lane": {
        "state": "Waiting on you",
        "cause": "owner-hold",
-       "since": "2026-10-15T20:20:54Z",
+       "since": "2026-10-16T15:40:25Z",
        "last_word": {
         "verb": "needs-decision",
-        "at": "2026-10-15T20:20:54Z"
+        "at": "2026-10-16T15:40:25Z"
        },
        "short_title": "EPUB export: cover art handling"
       },
@@ -1191,8 +1245,8 @@
        "mark": "81c0a484508d"
       },
       "age": {
-       "s": 7864,
-       "since": "2026-10-15T20:21:34Z",
+       "s": 7865,
+       "since": "2026-10-16T15:41:05Z",
        "basis": "step_waiting"
       }
      },
@@ -1207,11 +1261,11 @@
       "doing": "Checks green: ready for review",
       "state": "done",
       "state_detail": null,
-      "started_at": "2026-10-15T20:40:34Z",
+      "started_at": "2026-10-16T16:00:05Z",
       "last_event": {
        "state": "done",
        "text": "ready, checks green",
-       "at": "2026-10-15T22:18:34Z"
+       "at": "2026-10-16T17:38:05Z"
       },
       "progress": {
        "basis": "default",
@@ -1266,7 +1320,7 @@
       },
       "handoff": {
        "state": "awaiting_you",
-       "since": "2026-10-15T22:18:34Z"
+       "since": "2026-10-16T17:38:05Z"
       },
       "link": {
        "url": "https://example.com/changes/3",
@@ -1298,10 +1352,10 @@
       "source_lane": {
        "state": "Finished",
        "cause": "pr-ready",
-       "since": "2026-10-15T22:18:34Z",
+       "since": "2026-10-16T17:38:05Z",
        "last_word": {
         "verb": "done",
-        "at": "2026-10-15T22:18:34Z"
+        "at": "2026-10-16T17:38:05Z"
        },
        "short_title": "Status feed adapter for the primary workstation"
       },
@@ -1316,8 +1370,8 @@
        "mark": "8c54a914cf13"
       },
       "age": {
-       "s": 844,
-       "since": "2026-10-15T22:18:34Z",
+       "s": 845,
+       "since": "2026-10-16T17:38:05Z",
        "basis": "handoff"
       }
      },
@@ -1332,11 +1386,11 @@
       "doing": "Running the 4096-tile suite, 6 of 9 maps done",
       "state": "running",
       "state_detail": null,
-      "started_at": "2026-10-15T20:32:34Z",
+      "started_at": "2026-10-16T15:52:05Z",
       "last_event": {
        "state": "running",
        "text": "map 6 of 9 done",
-       "at": "2026-10-15T22:24:34Z"
+       "at": "2026-10-16T17:44:05Z"
       },
       "progress": {
        "basis": "coarse",
@@ -1409,10 +1463,10 @@
       "source_lane": {
        "state": "Waiting on the supervisor",
        "cause": "at-gate",
-       "since": "2026-10-15T21:55:54Z",
+       "since": "2026-10-16T17:15:25Z",
        "last_word": {
         "verb": "parked",
-        "at": "2026-10-15T21:55:54Z"
+        "at": "2026-10-16T17:15:25Z"
        },
        "short_title": "Pathfinding benchmark on large maps"
       },
@@ -1427,8 +1481,8 @@
        "mark": "057f7958957f"
       },
       "age": {
-       "s": 484,
-       "since": "2026-10-15T22:24:34Z",
+       "s": 485,
+       "since": "2026-10-16T17:44:05Z",
        "basis": "last_event"
       }
      },
@@ -1443,11 +1497,11 @@
       "doing": "Signing step queued behind the key prompt",
       "state": "paused",
       "state_detail": null,
-      "started_at": "2026-10-15T21:22:34Z",
+      "started_at": "2026-10-16T16:42:05Z",
       "last_event": {
        "state": "running",
        "text": "build finished, signing",
-       "at": "2026-10-15T22:27:34Z"
+       "at": "2026-10-16T17:47:05Z"
       },
       "progress": {
        "basis": "coarse",
@@ -1501,7 +1555,7 @@
        "label": "signing step",
        "percent": 70,
        "basis": "reported",
-       "at": "2026-10-15T22:31:34Z"
+       "at": "2026-10-16T17:51:05Z"
       },
       "waiting_on": "human",
       "summary": "signing step waits for the key prompt",
@@ -1523,7 +1577,7 @@
        {
         "t": "worker-gone",
         "how": "ended",
-        "at": "2026-10-15T20:32:34Z"
+        "at": "2026-10-16T15:52:05Z"
        }
       ],
       "phase": "build",
@@ -1532,10 +1586,10 @@
       "source_lane": {
        "state": "Needs attention",
        "cause": "worker-gone",
-       "since": "2026-10-15T20:32:34Z",
+       "since": "2026-10-16T15:52:05Z",
        "last_word": {
         "verb": "working",
-        "at": "2026-10-15T19:50:54Z"
+        "at": "2026-10-16T15:10:25Z"
        },
        "short_title": "Installer: signed package build"
       },
@@ -1562,11 +1616,11 @@
       "doing": "Encoding 1,200 sample replays, 38% done",
       "state": "running",
       "state_detail": null,
-      "started_at": "2026-10-15T18:32:34Z",
+      "started_at": "2026-10-16T13:52:05Z",
       "last_event": {
        "state": "running",
        "text": "batch 3 of 8",
-       "at": "2026-10-15T22:29:34Z"
+       "at": "2026-10-16T17:49:05Z"
       },
       "progress": {
        "basis": "coarse",
@@ -1631,7 +1685,7 @@
        {
         "t": "last-word",
         "verb": "paused",
-        "at": "2026-10-15T20:02:54Z"
+        "at": "2026-10-16T15:22:25Z"
        }
       ],
       "phase": "build",
@@ -1643,7 +1697,7 @@
        "since": null,
        "last_word": {
         "verb": "paused",
-        "at": "2026-10-15T20:02:54Z"
+        "at": "2026-10-16T15:22:25Z"
        },
        "short_title": "Replay files: delta compression"
       },
@@ -1658,8 +1712,8 @@
        "mark": "3676c80ca4e3"
       },
       "age": {
-       "s": 184,
-       "since": "2026-10-15T22:29:34Z",
+       "s": 185,
+       "since": "2026-10-16T17:49:05Z",
        "basis": "last_event"
       }
      },
@@ -1674,7 +1728,7 @@
       "doing": "Writing the feed spec",
       "state": "running",
       "state_detail": null,
-      "started_at": "2026-10-15T21:32:34Z",
+      "started_at": "2026-10-16T16:52:05Z",
       "last_event": null,
       "progress": {
        "basis": "none",
@@ -1716,10 +1770,247 @@
        "mark": "e75fddd308cf"
       },
       "age": {
-       "s": 3604,
-       "since": "2026-10-15T21:32:34Z",
+       "s": 3605,
+       "since": "2026-10-16T16:52:05Z",
        "basis": "started_at"
       }
+     },
+     {
+      "id": "bo-asset-bake",
+      "owner": "borealis-lanes",
+      "relayed": false,
+      "group": "skyforge",
+      "machine": "atlas",
+      "kind": "task",
+      "title": "Bake the lighting assets for the harbor map on the primary box, where the big GPU is free tonight",
+      "doing": null,
+      "state": "running",
+      "state_detail": null,
+      "started_at": "2026-10-16T12:00:25Z",
+      "last_event": null,
+      "progress": {
+       "basis": "none",
+       "history_n": 0,
+       "percent_floor": null,
+       "percent_ceiling": null,
+       "regressed": false,
+       "reason": "state only: no step data from this source",
+       "current": null,
+       "steps": []
+      },
+      "handoff": {
+       "state": "none",
+       "since": null
+      },
+      "link": null,
+      "flags": [],
+      "needs_you": false,
+      "project": "Skyforge",
+      "agent": {
+       "state": "alive",
+       "since": "2026-10-16T17:25:25Z",
+       "as_of": "2026-10-16T17:51:55Z",
+       "reason": null
+      },
+      "lane": {
+       "kind": "moving",
+       "cls": "ok",
+       "waiting_on": null,
+       "until": null,
+       "agent_gone_s": null,
+       "asks_you": false
+      },
+      "say": [
+       {
+        "t": "working"
+       }
+      ],
+      "source": "borealis-lanes",
+      "second_hand": false,
+      "source_lane": {
+       "state": "Working",
+       "cause": "worker-busy",
+       "since": "2026-10-16T17:25:25Z",
+       "last_word": {
+        "verb": "working",
+        "at": "2026-10-16T17:25:25Z"
+       },
+       "short_title": "Bake the lighting assets"
+      },
+      "row": {
+       "chip": "Skyforge",
+       "title": "Bake the lighting assets for the harbor map on the primary box, where the big GPU is free tonight",
+       "summary": null,
+       "order": [
+        1,
+        0
+       ],
+       "mark": "2ce8928df2a6"
+      },
+      "age": {
+       "s": 21105,
+       "since": "2026-10-16T12:00:25Z",
+       "basis": "started_at"
+      }
+     },
+     {
+      "id": "bo-crash-dump",
+      "owner": "borealis-lanes",
+      "relayed": false,
+      "group": "inkwell",
+      "machine": "borealis",
+      "kind": "task",
+      "title": "Crash dumps: upload them from the installer's first run so a failed install can be read later",
+      "doing": null,
+      "state": "unknown",
+      "state_detail": null,
+      "started_at": "2026-10-16T12:00:25Z",
+      "last_event": null,
+      "progress": {
+       "basis": "none",
+       "history_n": 0,
+       "percent_floor": null,
+       "percent_ceiling": null,
+       "regressed": false,
+       "reason": "state only: no step data from this source",
+       "current": null,
+       "steps": []
+      },
+      "handoff": {
+       "state": "none",
+       "since": null
+      },
+      "link": {
+       "url": "https://example.com/harbor/inkwell/pull/429",
+       "label": "#429",
+       "state": "open",
+       "state_as_of": "2026-10-16T17:48:25Z"
+      },
+      "flags": [],
+      "needs_you": false,
+      "project": "Inkwell",
+      "agent": null,
+      "lane": {
+       "kind": "pr_open",
+       "cls": "waiting",
+       "waiting_on": "pr",
+       "until": null,
+       "agent_gone_s": null,
+       "asks_you": false
+      },
+      "say": [
+       {
+        "t": "unreadable"
+       },
+       {
+        "t": "last-word",
+        "verb": "done",
+        "at": "2026-10-14T09:40:25Z"
+       }
+      ],
+      "source": "borealis-lanes",
+      "second_hand": false,
+      "source_lane": {
+       "state": "Can't tell",
+       "cause": "state-unreadable",
+       "since": null,
+       "last_word": {
+        "verb": "done",
+        "at": "2026-10-14T09:40:25Z"
+       },
+       "short_title": "Crash dumps"
+      },
+      "row": {
+       "chip": "Inkwell",
+       "title": "Crash dumps: upload them from the installer's first run so a failed install can be read later",
+       "summary": null,
+       "order": [
+        0,
+        1
+       ],
+       "mark": "5b49bafb7acf"
+      },
+      "age": null
+     },
+     {
+      "id": "bo-shader-cache",
+      "owner": "borealis-lanes",
+      "relayed": false,
+      "group": "inkwell",
+      "machine": "borealis",
+      "kind": "task",
+      "title": "Shader cache: keep the compiled variants between runs, so that a cold start does not stall the first match of the evening",
+      "doing": null,
+      "state": "unknown",
+      "state_detail": null,
+      "started_at": "2026-10-16T12:00:25Z",
+      "last_event": null,
+      "progress": {
+       "basis": "none",
+       "history_n": 0,
+       "percent_floor": null,
+       "percent_ceiling": null,
+       "regressed": false,
+       "reason": "state only: no step data from this source",
+       "current": null,
+       "steps": []
+      },
+      "handoff": {
+       "state": "none",
+       "since": null
+      },
+      "link": null,
+      "flags": [],
+      "needs_you": false,
+      "project": "Inkwell",
+      "agent": {
+       "state": "ended",
+       "since": "2026-10-16T17:50:05Z",
+       "as_of": "2026-10-16T17:51:55Z",
+       "reason": null
+      },
+      "lane": {
+       "kind": "unknown",
+       "cls": "quiet",
+       "waiting_on": null,
+       "until": null,
+       "agent_gone_s": null,
+       "asks_you": false
+      },
+      "say": [
+       {
+        "t": "unreadable"
+       },
+       {
+        "t": "last-word",
+        "verb": "done",
+        "at": "2026-10-16T13:22:25Z"
+       }
+      ],
+      "source": "borealis-lanes",
+      "second_hand": false,
+      "source_lane": {
+       "state": "Can't tell",
+       "cause": "state-unreadable",
+       "since": null,
+       "last_word": {
+        "verb": "done",
+        "at": "2026-10-16T13:22:25Z"
+       },
+       "short_title": "Shader cache",
+       "branch": true
+      },
+      "row": {
+       "chip": "Inkwell",
+       "title": "Shader cache: keep the compiled variants between runs, so that a cold start does not stall the first match of the evening",
+       "summary": null,
+       "order": [
+        0,
+        1
+       ],
+       "mark": "4c25fe324b32"
+      },
+      "age": null
      },
      {
       "id": "ci-index",
@@ -1732,11 +2023,11 @@
       "doing": "Rebuilding the search index",
       "state": "running",
       "state_detail": null,
-      "started_at": "2026-10-15T21:42:34Z",
+      "started_at": "2026-10-16T17:02:05Z",
       "last_event": {
        "state": "running",
        "text": "shard 2 of 6",
-       "at": "2026-10-15T22:30:34Z"
+       "at": "2026-10-16T17:50:05Z"
       },
       "progress": {
        "basis": "coarse",
@@ -1810,8 +2101,8 @@
        "mark": "d1132cdcd044"
       },
       "age": {
-       "s": 124,
-       "since": "2026-10-15T22:30:34Z",
+       "s": 125,
+       "since": "2026-10-16T17:50:05Z",
        "basis": "last_event"
       }
      }
@@ -1823,7 +2114,7 @@
       "severity": "action",
       "title": "Inkwell: how should EPUB export handle cover art?",
       "detail": "Embed the full-size image, or downscale to 1600 px. The export item is stopped until you choose.",
-      "since": "2026-10-15T20:21:34Z",
+      "since": "2026-10-16T15:41:05Z",
       "machine": "atlas",
       "item": "iw-export",
       "group": "inkwell",
@@ -1832,13 +2123,14 @@
        "url": "http://board-host.example:4387/session/0123456789abcdef",
        "label": "review board",
        "state": "open",
-       "state_as_of": "2026-10-15T22:31:34Z",
+       "state_as_of": "2026-10-16T17:51:05Z",
        "why": null
       },
       "how": "Answer in the team chat",
       "say": "iw-export: downscale to 1600 px",
       "options": [],
-      "source": "atlas-main"
+      "source": "atlas-main",
+      "aside": null
      },
      {
       "id": "approval:tw-feed",
@@ -1846,7 +2138,7 @@
       "severity": "action",
       "title": "Ready for approval: status feed adapter",
       "detail": "Checks green for 14 min, nothing left to review.",
-      "since": "2026-10-15T22:18:34Z",
+      "since": "2026-10-16T17:38:05Z",
       "machine": "atlas",
       "item": "tw-feed",
       "group": "tidewatch",
@@ -1857,7 +2149,8 @@
       "how": "Approve in the team chat",
       "say": "tw-feed: approve",
       "options": [],
-      "source": "atlas-main"
+      "source": "atlas-main",
+      "aside": null
      },
      {
       "id": "capacity:week",
@@ -1865,14 +2158,15 @@
       "severity": "action",
       "title": "The primary plan's week runs out before it resets",
       "detail": "18% left. At this pace it empties Sat 10:00, 9 h before the Sat 19:00 reset.",
-      "since": "2026-10-15T20:06:34Z",
+      "since": "2026-10-16T15:26:05Z",
       "machine": "atlas",
       "item": null,
       "group": null,
       "link": null,
       "how": "Move heavy work to another machine or slow new starts",
       "options": [],
-      "source": "atlas-main"
+      "source": "atlas-main",
+      "aside": null
      },
      {
       "id": "credential:sample-provider",
@@ -1880,14 +2174,109 @@
       "severity": "info",
       "title": "Sample provider sign-in expired",
       "detail": "Nothing uses it right now; its allowance is unreadable until it is refreshed.",
-      "since": "2026-10-15T14:03:34Z",
+      "since": "2026-10-16T09:23:05Z",
       "machine": "atlas",
       "item": null,
       "group": null,
       "link": null,
       "how": "Sign in once",
+      "actor": {
+       "role": "viewer",
+       "name": null
+      },
       "options": [],
-      "source": "atlas-main"
+      "source": "atlas-main",
+      "aside": null
+     },
+     {
+      "id": "decision:tide-reading",
+      "kind": "decision",
+      "severity": "action",
+      "title": "Take the second tide-gauge reading",
+      "detail": "Compare it with the first before the harbor schedule changes.",
+      "since": "2026-10-15T07:32:25Z",
+      "machine": "atlas",
+      "item": null,
+      "group": null,
+      "link": null,
+      "how": "answer in the home's chat",
+      "hold": {
+       "bucket": "dated",
+       "until": "2026-10-22",
+       "reason": "you put it off until the new gauge is fitted",
+       "since": "2026-10-15T07:32:25Z"
+      },
+      "options": [],
+      "source": "atlas-main",
+      "aside": "deferred"
+     },
+     {
+      "id": "gate:sf-lobby",
+      "kind": "decision",
+      "severity": "info",
+      "title": "2 blocked notices for the lobby countdown",
+      "detail": "The supervisor answers these; they are not yours.",
+      "since": "2026-10-16T17:00:25Z",
+      "machine": "atlas",
+      "item": null,
+      "group": "skyforge",
+      "link": null,
+      "how": null,
+      "actor": {
+       "role": "supervisor",
+       "name": "skipper"
+      },
+      "options": [],
+      "source": "atlas-main",
+      "aside": "theirs"
+     },
+     {
+      "id": "train:sf-netcode",
+      "kind": "approval",
+      "severity": "action",
+      "title": "Netcode PR held for the release train",
+      "detail": "Merges with the next train once the fleet verdict is in.",
+      "since": "2026-10-16T14:25:25Z",
+      "machine": "atlas",
+      "item": null,
+      "group": "skyforge",
+      "link": {
+       "url": "https://example.com/changes/431",
+       "label": "#431"
+      },
+      "how": null,
+      "actor": {
+       "role": "supervisor",
+       "name": "skipper"
+      },
+      "verdict": {
+       "name": "fleet verdict",
+       "state": "pending",
+       "as_of": "2026-10-16T17:40:25Z"
+      },
+      "options": [],
+      "source": "atlas-main",
+      "aside": "theirs"
+     },
+     {
+      "id": "summary:borealis-old",
+      "kind": "service",
+      "severity": "info",
+      "title": "Borealis summary 40 min old (remade every 5 min)",
+      "detail": "Its home's refresh did not remake it.",
+      "since": "2026-10-16T17:12:05Z",
+      "machine": "borealis",
+      "item": null,
+      "group": null,
+      "link": null,
+      "how": null,
+      "actor": {
+       "role": "supervisor",
+       "name": "skipper"
+      },
+      "options": [],
+      "source": "atlas-main",
+      "aside": "theirs"
      }
     ],
     "attention_pending": [],
@@ -1900,8 +2289,9 @@
       "blocked_by": [],
       "reason": "next free slot on that machine",
       "until": null,
-      "filed": "2026-10-15",
-      "source": "borealis-lanes"
+      "filed": "2026-10-16",
+      "source": "borealis-lanes",
+      "aside": null
      },
      {
       "id": "iw-dict",
@@ -1911,8 +2301,9 @@
       "blocked_by": [],
       "reason": "waits for a free slot",
       "until": null,
-      "filed": "2026-10-15",
-      "source": "atlas-main"
+      "filed": "2026-10-16",
+      "source": "atlas-main",
+      "aside": null
      },
      {
       "id": "sf-tech-ui",
@@ -1924,8 +2315,9 @@
       ],
       "reason": "starts after the lobby countdown lands",
       "until": null,
-      "filed": "2026-10-14",
-      "source": "atlas-main"
+      "filed": "2026-10-15",
+      "source": "atlas-main",
+      "aside": null
      },
      {
       "id": "sf-cut-015",
@@ -1937,8 +2329,9 @@
       ],
       "reason": "waits for fog of war",
       "until": null,
-      "filed": "2026-10-12",
-      "source": "atlas-main"
+      "filed": "2026-10-13",
+      "source": "atlas-main",
+      "aside": null
      },
      {
       "id": "iw-notes-19",
@@ -1947,9 +2340,16 @@
       "kind": "held",
       "blocked_by": [],
       "reason": "you deferred it",
-      "until": "2026-10-19",
-      "filed": "2026-10-10",
-      "source": "atlas-main"
+      "until": "2026-10-20",
+      "filed": "2026-10-11",
+      "hold": {
+       "bucket": "dated",
+       "until": "2026-10-20",
+       "reason": "you deferred it until the 1.9 notes are reviewed",
+       "since": "2026-10-11T08:20:25Z"
+      },
+      "source": "atlas-main",
+      "aside": "deferred"
      }
     ],
     "done": [
@@ -1960,7 +2360,7 @@
       "title": "Minimap pings fade after 4 s",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-15T21:51:34Z",
+      "at": "2026-10-16T17:11:05Z",
       "source": "atlas-main"
      },
      {
@@ -1970,7 +2370,7 @@
       "title": "Autosave no longer crashes on long chapters",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-15T20:13:34Z",
+      "at": "2026-10-16T15:33:05Z",
       "source": "atlas-main"
      },
      {
@@ -1980,7 +2380,7 @@
       "title": "Netcode fuzz harness runs on the render box",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-15T19:41:34Z",
+      "at": "2026-10-16T15:01:05Z",
       "source": "borealis-lanes"
      },
      {
@@ -1990,7 +2390,7 @@
       "title": "Heavy work routes by allowance runway",
       "via": "local merge",
       "link": null,
-      "at": "2026-10-15T19:27:34Z",
+      "at": "2026-10-16T14:47:05Z",
       "source": "atlas-main"
      },
      {
@@ -2000,7 +2400,7 @@
       "title": "Export formats: findings report",
       "via": "report",
       "link": null,
-      "at": "2026-10-15T18:52:34Z",
+      "at": "2026-10-16T14:12:05Z",
       "source": "atlas-main"
      },
      {
@@ -2010,7 +2410,7 @@
       "title": "Unit hotkeys remember their groups",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-15T17:22:34Z",
+      "at": "2026-10-16T12:42:05Z",
       "source": "atlas-main"
      },
      {
@@ -2020,7 +2420,7 @@
       "title": "Earlier work 1d-0",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-14T21:32:34Z",
+      "at": "2026-10-15T16:52:05Z",
       "source": "atlas-main"
      },
      {
@@ -2030,7 +2430,7 @@
       "title": "Earlier work 1d-1",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-14T20:32:34Z",
+      "at": "2026-10-15T15:52:05Z",
       "source": "atlas-main"
      },
      {
@@ -2040,7 +2440,7 @@
       "title": "Earlier work 1d-2",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-14T19:32:34Z",
+      "at": "2026-10-15T14:52:05Z",
       "source": "atlas-main"
      },
      {
@@ -2050,7 +2450,7 @@
       "title": "Earlier work 1d-3",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-14T18:32:34Z",
+      "at": "2026-10-15T13:52:05Z",
       "source": "atlas-main"
      },
      {
@@ -2060,7 +2460,7 @@
       "title": "Earlier work 2d-0",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-13T21:32:34Z",
+      "at": "2026-10-14T16:52:05Z",
       "source": "atlas-main"
      },
      {
@@ -2070,7 +2470,7 @@
       "title": "Earlier work 2d-1",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-13T20:32:34Z",
+      "at": "2026-10-14T15:52:05Z",
       "source": "atlas-main"
      },
      {
@@ -2080,7 +2480,7 @@
       "title": "Earlier work 2d-2",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-13T19:32:34Z",
+      "at": "2026-10-14T14:52:05Z",
       "source": "atlas-main"
      },
      {
@@ -2090,7 +2490,7 @@
       "title": "Earlier work 3d-0",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-12T21:32:34Z",
+      "at": "2026-10-13T16:52:05Z",
       "source": "atlas-main"
      },
      {
@@ -2100,7 +2500,7 @@
       "title": "Earlier work 4d-0",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-11T21:32:34Z",
+      "at": "2026-10-12T16:52:05Z",
       "source": "atlas-main"
      },
      {
@@ -2110,7 +2510,7 @@
       "title": "Earlier work 4d-1",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-11T20:32:34Z",
+      "at": "2026-10-12T15:52:05Z",
       "source": "atlas-main"
      },
      {
@@ -2120,7 +2520,7 @@
       "title": "Earlier work 4d-2",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-11T19:32:34Z",
+      "at": "2026-10-12T14:52:05Z",
       "source": "atlas-main"
      },
      {
@@ -2130,7 +2530,7 @@
       "title": "Earlier work 4d-3",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-11T18:32:34Z",
+      "at": "2026-10-12T13:52:05Z",
       "source": "atlas-main"
      },
      {
@@ -2140,7 +2540,7 @@
       "title": "Earlier work 5d-0",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-10T21:32:34Z",
+      "at": "2026-10-11T16:52:05Z",
       "source": "atlas-main"
      },
      {
@@ -2150,7 +2550,7 @@
       "title": "Earlier work 5d-1",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-10T20:32:34Z",
+      "at": "2026-10-11T15:52:05Z",
       "source": "atlas-main"
      },
      {
@@ -2160,7 +2560,7 @@
       "title": "Earlier work 5d-2",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-10T19:32:34Z",
+      "at": "2026-10-11T14:52:05Z",
       "source": "atlas-main"
      },
      {
@@ -2170,7 +2570,7 @@
       "title": "Earlier work 5d-3",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-10T18:32:34Z",
+      "at": "2026-10-11T13:52:05Z",
       "source": "atlas-main"
      },
      {
@@ -2180,7 +2580,7 @@
       "title": "Earlier work 6d-0",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-09T21:32:34Z",
+      "at": "2026-10-10T16:52:05Z",
       "source": "atlas-main"
      },
      {
@@ -2190,7 +2590,7 @@
       "title": "Earlier work 6d-1",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-09T20:32:34Z",
+      "at": "2026-10-10T15:52:05Z",
       "source": "atlas-main"
      },
      {
@@ -2200,7 +2600,7 @@
       "title": "Earlier work 7d-0",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-08T21:32:34Z",
+      "at": "2026-10-09T16:52:05Z",
       "source": "atlas-main"
      },
      {
@@ -2210,7 +2610,7 @@
       "title": "Earlier work 7d-1",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-08T20:32:34Z",
+      "at": "2026-10-09T15:52:05Z",
       "source": "atlas-main"
      },
      {
@@ -2220,7 +2620,7 @@
       "title": "Earlier work 8d-0",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-07T21:32:34Z",
+      "at": "2026-10-08T16:52:05Z",
       "source": "atlas-main"
      }
     ],
@@ -2231,7 +2631,7 @@
       "label": "Skyforge",
       "color": null,
       "checkpoint": {
-       "as_of": "2026-10-15T19:01:34Z",
+       "as_of": "2026-10-16T14:21:05Z",
        "live": {
         "version": "0.14.2",
         "since": "2026-10-06"
@@ -2245,7 +2645,7 @@
        },
        "gate": {
         "value": "pass",
-        "as_of": "2026-10-15T18:41:34Z",
+        "as_of": "2026-10-16T14:01:05Z",
         "note": "frame-time floor held on the reference map",
         "tiers": []
        },
@@ -2257,7 +2657,7 @@
       "label": "Inkwell",
       "color": null,
       "checkpoint": {
-       "as_of": "2026-10-15T19:01:34Z",
+       "as_of": "2026-10-16T14:21:05Z",
        "live": {
         "version": "1.8.3",
         "since": "2026-10-01"
@@ -2299,7 +2699,7 @@
          "label": "5-hour",
          "short": "5h",
          "percent_remaining": 81,
-         "resets_at": "2026-10-16T00:40:54Z",
+         "resets_at": "2026-10-16T20:00:25Z",
          "pace": "behind"
         },
         {
@@ -2307,7 +2707,7 @@
          "label": "Week",
          "short": "wk",
          "percent_remaining": 57,
-         "resets_at": "2026-10-19T12:00:54Z",
+         "resets_at": "2026-10-20T07:20:25Z",
          "pace": "behind"
         }
        ],
@@ -2318,7 +2718,7 @@
         "source": "the provider's own projection"
        },
        "source": "borealis-lanes",
-       "as_of": "2026-10-15T22:30:04Z"
+       "as_of": "2026-10-16T17:49:35Z"
       },
       {
        "id": "primary-plan",
@@ -2329,27 +2729,27 @@
          "id": "short",
          "label": "5-hour",
          "percent_remaining": 62,
-         "resets_at": "2026-10-16T01:20:34Z",
+         "resets_at": "2026-10-16T20:40:05Z",
          "pace": "ahead"
         },
         {
          "id": "week",
          "label": "Week",
          "percent_remaining": 18,
-         "resets_at": "2026-10-18T04:32:34Z",
+         "resets_at": "2026-10-18T23:52:05Z",
          "pace": "ahead"
         }
        ],
        "runway": {
         "status": "exhausts_before_reset",
         "confidence": "medium",
-        "projected_empty_at": "2026-10-17T20:32:34Z",
+        "projected_empty_at": "2026-10-18T15:52:05Z",
         "source": "the provider's own projection"
        },
        "provider": "Orbit",
        "account": "Team plan",
        "source": "atlas-main",
-       "as_of": "2026-10-15T22:30:04Z"
+       "as_of": "2026-10-16T17:49:35Z"
       }
      ],
      "chips": [
@@ -2372,12 +2772,12 @@
         "short": "wk"
        },
        "left": 57,
-       "resets_at": "2026-10-19T12:00:54Z",
-       "resets": "Mon 05:00",
+       "resets_at": "2026-10-20T07:20:25Z",
+       "resets": "Tue 00:20",
        "state": "ok",
        "sentence": null,
        "forms": [
-        "Orbit Borealis wk 57% Mon 05:00",
+        "Orbit Borealis wk 57% Tue 00:20",
         "Orbit Borealis wk 57%",
         "Orbit wk 57%",
         "Orb 57%"
@@ -2390,11 +2790,11 @@
        "account": "Team plan",
        "projection": {
         "status": "exhausts_before_reset",
-        "empty_at": "2026-10-17T20:32:34Z",
+        "empty_at": "2026-10-18T15:52:05Z",
         "confidence": "medium",
         "source": "the provider's own projection"
        },
-       "countdown_s": 165595,
+       "countdown_s": 165594,
        "back_in_s": null,
        "window": {
         "id": "week",
@@ -2402,14 +2802,14 @@
         "short": "wk"
        },
        "left": 18,
-       "resets_at": "2026-10-18T04:32:34Z",
-       "resets": "Sat 21:32",
+       "resets_at": "2026-10-18T23:52:05Z",
+       "resets": "Sun 16:52",
        "state": "low",
-       "sentence": "Orbit (Team plan) may run out in 1 d 21 h (Sat 13:32), before the Week reset Sat 21:32",
+       "sentence": "Orbit (Team plan) may run out in 1 d 21 h (Sun 08:52), before the Week reset Sun 16:52",
        "forms": [
         "Orbit Team plan wk 18% out in 1 d 21 h",
         "Orbit wk 18% out in 1 d 21 h",
-        "Orbit Team plan wk 18% Sat 21:32",
+        "Orbit Team plan wk 18% Sun 16:52",
         "Orbit Team plan wk 18%",
         "Orbit wk 18%",
         "Orb 18%"
@@ -2419,21 +2819,21 @@
     },
     "omitted": [],
     "counts": {
-     "items": 9,
-     "running": 6,
+     "items": 12,
+     "running": 7,
      "off_course": 2,
-     "lanes_waiting": 1,
+     "lanes_waiting": 2,
      "waiting": 1,
      "awaiting_you": 1,
-     "unknown": 0,
-     "attention": 3,
+     "unknown": 2,
+     "attention": 5,
      "attention_pending": 0,
      "waiting_on_you": 3,
      "calls": 3,
      "waiting_unverified": [],
      "next": 5,
      "agent_gone": 0,
-     "outside": 0,
+     "outside": 1,
      "queued": 0,
      "version_skew": [],
      "version_unknown": []
@@ -2442,18 +2842,30 @@
     "sample": true,
     "sample_only": true,
     "gaps": {
-     "waits_outside": [],
+     "waits_outside": [
+      {
+       "id": "bo-crash-dump",
+       "source": "borealis-lanes",
+       "owner": "borealis-lanes",
+       "title": "Crash dumps: upload them from the installer's first run so a failed install can be read later",
+       "chip": "Inkwell",
+       "waiting_on": "pr",
+       "who": "a review upstream",
+       "since": null,
+       "age_s": null
+      }
+     ],
      "oldest_waiting": {
-      "s": 7864,
+      "s": 7865,
       "id": "iw-export",
       "source": "atlas-main"
      },
      "queues": [],
      "coming_up": [
       {
-       "at": 1792368000.0,
+       "at": 1792454400.0,
        "date_only": true,
-       "date": "2026-10-19",
+       "date": "2026-10-20",
        "kind": "next",
        "id": "iw-notes-19",
        "source": "atlas-main",
@@ -2469,16 +2881,12 @@
      "done_today": 6,
      "landed": {
       "mode": "rolling",
-      "since": 1792017158.3711731,
+      "since": 1792086730.7092538,
       "hours": 24,
       "day_start": null,
       "n": 6
      },
      "by_day": [
-      {
-       "day": "2026-10-02",
-       "done": {}
-      },
       {
        "day": "2026-10-03",
        "done": {}
@@ -2497,28 +2905,24 @@
       },
       {
        "day": "2026-10-07",
+       "done": {}
+      },
+      {
+       "day": "2026-10-08",
        "done": {
         "tidewatch": 1
        }
       },
       {
-       "day": "2026-10-08",
+       "day": "2026-10-09",
        "done": {
         "tidewatch": 1,
         "inkwell": 1
        }
       },
       {
-       "day": "2026-10-09",
-       "done": {
-        "inkwell": 1,
-        "skyforge": 1
-       }
-      },
-      {
        "day": "2026-10-10",
        "done": {
-        "tidewatch": 2,
         "inkwell": 1,
         "skyforge": 1
        }
@@ -2526,19 +2930,27 @@
       {
        "day": "2026-10-11",
        "done": {
+        "tidewatch": 2,
+        "inkwell": 1,
+        "skyforge": 1
+       }
+      },
+      {
+       "day": "2026-10-12",
+       "done": {
         "inkwell": 2,
         "skyforge": 1,
         "tidewatch": 1
        }
       },
       {
-       "day": "2026-10-12",
+       "day": "2026-10-13",
        "done": {
         "skyforge": 1
        }
       },
       {
-       "day": "2026-10-13",
+       "day": "2026-10-14",
        "done": {
         "inkwell": 1,
         "skyforge": 1,
@@ -2546,7 +2958,7 @@
        }
       },
       {
-       "day": "2026-10-14",
+       "day": "2026-10-15",
        "done": {
         "inkwell": 2,
         "skyforge": 1,
@@ -2554,7 +2966,7 @@
        }
       },
       {
-       "day": "2026-10-15",
+       "day": "2026-10-16",
        "done": {
         "skyforge": 3,
         "inkwell": 2,
@@ -2564,7 +2976,7 @@
      ],
      "timeline": [
       {
-       "at": 1792101094.0,
+       "at": 1792170665.0,
        "owner": "atlas-main",
        "item": "sf-lobby",
        "group": null,
@@ -2572,7 +2984,7 @@
        "text": "Lobby countdown: change open, waiting on checks"
       },
       {
-       "at": 1792101094.0,
+       "at": 1792170665.0,
        "owner": "atlas-main",
        "item": "sf-minimap",
        "group": "skyforge",
@@ -2580,7 +2992,7 @@
        "text": "Minimap pings fade after 4 s"
       },
       {
-       "at": 1792095634.0,
+       "at": 1792165205.0,
        "owner": "atlas-main",
        "item": "iw-export",
        "group": null,
@@ -2588,7 +3000,7 @@
        "text": "EPUB cover art needs your call"
       },
       {
-       "at": 1792095214.0,
+       "at": 1792164785.0,
        "owner": "atlas-main",
        "item": "iw-autosave",
        "group": "inkwell",
@@ -2596,7 +3008,7 @@
        "text": "Autosave no longer crashes on long chapters"
       },
       {
-       "at": 1792093294.0,
+       "at": 1792162865.0,
        "owner": "borealis-lanes",
        "item": "bo-netcode",
        "group": "skyforge",
@@ -2604,7 +3016,7 @@
        "text": "Netcode fuzz harness runs on the render box"
       },
       {
-       "at": 1792092454.0,
+       "at": 1792162025.0,
        "owner": "atlas-main",
        "item": "tw-routing",
        "group": "tidewatch",
@@ -2612,7 +3024,7 @@
        "text": "Heavy work routes by allowance runway"
       },
       {
-       "at": 1792090354.0,
+       "at": 1792159925.0,
        "owner": "atlas-main",
        "item": "iw-scout",
        "group": "inkwell",
@@ -2620,7 +3032,7 @@
        "text": "Export formats: findings report"
       },
       {
-       "at": 1792084954.0,
+       "at": 1792154525.0,
        "owner": "atlas-main",
        "item": "sf-hotkeys",
        "group": "skyforge",
@@ -2639,39 +3051,39 @@
       ],
       "stuck": [],
       "landed": [
-       1791577954.0,
-       1791581554.0,
-       1791657154.0,
-       1791660754.0,
-       1791664354.0,
-       1791667954.0,
-       1791743554.0,
-       1791747154.0,
-       1791750754.0,
-       1791754354.0,
-       1791840754.0,
-       1791919954.0,
-       1791923554.0,
-       1791927154.0,
-       1792002754.0,
-       1792006354.0,
-       1792009954.0,
-       1792013554.0,
-       1792084954.0,
-       1792090354.0,
-       1792092454.0,
-       1792093294.0,
-       1792095214.0,
-       1792101094.0
+       1791647525.0,
+       1791651125.0,
+       1791726725.0,
+       1791730325.0,
+       1791733925.0,
+       1791737525.0,
+       1791813125.0,
+       1791816725.0,
+       1791820325.0,
+       1791823925.0,
+       1791910325.0,
+       1791989525.0,
+       1791993125.0,
+       1791996725.0,
+       1792072325.0,
+       1792075925.0,
+       1792079525.0,
+       1792083125.0,
+       1792154525.0,
+       1792159925.0,
+       1792162025.0,
+       1792162865.0,
+       1792164785.0,
+       1792170665.0
       ]
      },
      "projects": [
       {
        "key": "inkwell",
        "chip": "Inkwell",
-       "n": 2,
+       "n": 4,
        "off": 1,
-       "waiting": 1,
+       "waiting": 2,
        "machines": [
         "atlas",
         "borealis"
@@ -2680,7 +3092,7 @@
       {
        "key": "skyforge",
        "chip": "Skyforge",
-       "n": 4,
+       "n": 5,
        "off": 0,
        "waiting": 0,
        "machines": [
@@ -2806,7 +3218,7 @@
        }
       ],
       "link": "https://example.invalid/releases/runbook",
-      "updated_at": "2026-10-15T22:32:34Z",
+      "updated_at": "2026-10-16T17:52:05Z",
       "stale_after_s": 86400
      },
      {
@@ -2828,7 +3240,7 @@
         "value": 1
        }
       ],
-      "updated_at": "2026-10-15T22:32:34Z",
+      "updated_at": "2026-10-16T17:52:05Z",
       "mode": "advice-only",
       "stale_after_s": 600
      },
@@ -2851,7 +3263,7 @@
         "value": 0
        }
       ],
-      "updated_at": "2026-10-15T22:32:34Z",
+      "updated_at": "2026-10-16T17:52:05Z",
       "stale_after_s": 900
      }
     ],
@@ -2863,7 +3275,7 @@
     }
    },
    "server": {
-    "version": "0.9.0-592d1dd8",
+    "version": "0.9.0-30fe6871",
     "host": "demo host",
     "config": {
      "title": "Weatherdeck",
@@ -2908,8 +3320,25 @@
       "lane_ask_reason": "Its lane says it is waiting for your OK; {who} has not raised it as a call.",
       "lane_ask_reason_none": "Its lane says it is waiting for your OK; no source has raised it as a call.",
       "disagree_badge": "Sources disagree",
-      "disagree_lane": "{source} says {title} is waiting for your OK; no call names it.",
-      "disagree_call": "{source} raises {call}; its lane on {lane_source} does not say it is waiting for your OK.",
+      "disagree_lane": "{source} says its lane {title} is waiting for your OK; no source has raised a call for it.",
+      "disagree_call": "{source} says {call} is waiting on you; {lane_source} says its lane {title} is not waiting for your OK.",
+      "fyi_line": "{what}: {title} ({owner})",
+      "fyi_kind_decision": "A decision notice",
+      "fyi_kind_approval": "An approval notice",
+      "fyi_kind_capacity": "A capacity notice",
+      "fyi_kind_credential": "A sign-in notice",
+      "fyi_kind_machine": "A machine notice",
+      "fyi_kind_service": "A service notice",
+      "fyi_kind_disk": "A disk notice",
+      "fyi_kind_info": "A notice",
+      "fyi_kind_other": "A notice",
+      "fyi_owner": "{name}'s to act on",
+      "fyi_owner_you": "yours to know; not counted as waiting on you",
+      "fyi_owner_unreported": "from {source}; whose it is: not reported",
+      "actor_viewer": "you",
+      "actor_supervisor": "the supervisor",
+      "actor_worker": "its worker",
+      "actor_external": "someone outside the fleet",
       "problem": "Problem",
       "as_of": "as of {t}",
       "ago": "{t} ago",
@@ -3129,6 +3558,8 @@
       "sec_fyi": "FYI",
       "sec_lane": "Lanes waiting for your OK",
       "sec_disagree": "Sources disagree",
+      "sec_deferred": "Deferred",
+      "sec_theirs": "Someone else's turn",
       "sec_ships": "Machines",
       "sec_reporters": "Who reports",
       "sec_tools": "Tools",
@@ -3458,6 +3889,15 @@
       "collector_failed": "{name}: {what} failed",
       "collector_old_short": "{what} {t} old",
       "collector_failed_short": "{what} failed",
+      "collector_made_stale": "{name}: its {what} copy was made {t} ago and is remade every {every}: STALE",
+      "collector_made_stale_n": "{name}: its {what} copy was made {t} ago: STALE",
+      "collector_made_short": "{what} made {t} ago",
+      "lanes_running": "lanes {n} running",
+      "lanes_running_of": "lanes {n} running of {total}",
+      "lanes_or_more": "or more",
+      "lanes_homes_one": "1 home",
+      "lanes_homes": "{n} homes",
+      "lanes_unreported": "{n} not reported",
       "collector_error_word": "failed",
       "adapter_v": "adapter {v}",
       "adapter_unknown": "version unknown",
@@ -3694,8 +4134,8 @@
       "ls_but": "{a}, but {b}.",
       "ls_no_news": "No news for {t}.",
       "ls_unreadable": "Its state can't be read now",
-      "ls_last_word": "; the last thing it said was {what}, {t} ago.",
-      "ls_last_word_now": "; the last thing it said was {what}.",
+      "ls_recorded": "The last thing it said was {what}, {t} ago; nothing newer is recorded.",
+      "ls_recorded_now": "The last thing it said was {what}; nothing newer is recorded.",
       "ls_no_last_word": "; nothing it said is recorded.",
       "ls_gate_owner_unknown": "It stopped at a gate, and the record does not say whose answer it waits on.",
       "ls_verb_working": "that it was working",
@@ -3783,6 +4223,7 @@
       "rs_key_you": "It waits on you.",
       "rs_key_stuck": "It needs a hand; its feed does not say why.",
       "rs_key_unk": "Its state can't be read now.",
+      "rs_key_unk_said": "{said}; nothing newer is recorded.",
       "rs_key_work": "Its worker is on it.",
       "rs_key_other": "It waits on someone else; its feed does not say who.",
       "rs_key_done": "It finished.",
@@ -3795,7 +4236,7 @@
       "rs_was_paused": "it was paused",
       "rs_was_waiting": "it was waiting",
       "rs_was_other": "no word on what it was doing",
-      "rs_unknown": "Its state can't be read now. Last news {ago} ago.",
+      "rs_unknown": "Its last news was {ago} ago; nothing newer is recorded.",
       "rs_unknown_never": "Its state can't be read now, and no news of it is recorded.",
       "rs_gone": "Nobody is on it: its worker's session ended {gone} ago.",
       "rs_gone_pane": "Nobody is on it: its worker's pane or process is gone ({gone} ago).",
@@ -3825,6 +4266,31 @@
       "rs_scout": "Exploring.",
       "rs_scout_d": "Exploring: {detail}.",
       "rs_until": " Until {t}.",
+      "rs_said": "The last thing it said was {what}, {t} ago",
+      "rs_said_now": "The last thing it said was {what}",
+      "rs_rec_pr_open": "Finished; waiting on upstream review of PR {pr}. {said}.",
+      "rs_rec_merged": "Finished; PR {pr} has merged. {said}.",
+      "rs_rec_held": "Held; no worker is moving it. {said}.",
+      "rs_rec_branch": "Branch only, no worker running. {said}.",
+      "rs_rec_no_worker": "No PR is recorded and no worker is running. {said}.",
+      "aside_deferred": "Deferred",
+      "aside_deferred_n": "Deferred {n}",
+      "aside_theirs": "Someone else's turn",
+      "aside_theirs_named": "{name}'s turn",
+      "aside_not_counted": "Not counted in Needs you.",
+      "aside_until": "until {d}",
+      "aside_until_unreported": "until: not reported",
+      "aside_reason_unreported": "reason not reported",
+      "aside_owner": "{name} owns it",
+      "aside_owner_unreported": "owner not reported",
+      "aside_since": "since {t} ago",
+      "aside_since_unreported": "since: not reported",
+      "aside_verdict": "waits on the {name}: {state}",
+      "aside_not_reported": "not reported",
+      "verdict_pending": "pending",
+      "verdict_pass": "passed",
+      "verdict_fail": "failed",
+      "verdict_unknown": "unknown",
       "strip_label": "What needs to occur",
       "strip_you": "Needs you",
       "strip_you_none": "Nothing needs you.",
@@ -3847,8 +4313,8 @@
       "strip_n_calls": "{n} calls",
       "strip_n_problem": "{n} problem",
       "strip_n_problems": "{n} problems",
-      "att_unreadable_one": "1 lane on {where} can't be read right now; it shows its last word below.",
-      "att_unreadable_many": "{n} lanes on {where} can't be read right now; each shows its last word below.",
+      "att_unreadable_one": "1 lane on {where} reads Can't tell; its row says what is recorded of it.",
+      "att_unreadable_many": "{n} lanes on {where} read Can't tell; each row says what is recorded of it.",
       "att_unverified": "{name}'s waiting number is unverified: {reason}",
       "hdr_feeds": "{live} of {total} feeds report",
       "grp_no_project": "Other work",
@@ -4051,7 +4517,7 @@
   },
   {
    "after_s": 140.0,
-   "served_at": 1792103693.0,
+   "served_at": 1792173265.0,
    "view": {
     "sources": [
      {
@@ -4064,46 +4530,48 @@
        "borealis-lanes",
        "cinder-lanes"
       ],
-      "received_at": 1792103685.088545,
+      "received_at": 1792173255.86156,
       "interval_s": 10,
       "interval_declared": true,
       "mode": "sample",
-      "boot_id": "demo-1792103554",
+      "boot_id": "demo-1792173125",
       "seq": 14,
-      "skew_s": 0.1,
-      "generated_at": "2026-10-15T22:34:45Z",
+      "skew_s": 0.9,
+      "generated_at": "2026-10-16T17:54:15Z",
       "collectors": [
        {
         "id": "items",
-        "as_of": "2026-10-15T22:34:43Z",
+        "as_of": "2026-10-16T17:54:13Z",
         "status": "ok",
         "error": null,
         "warnings": 0
        },
        {
         "id": "machines",
-        "as_of": "2026-10-15T22:34:40Z",
+        "as_of": "2026-10-16T17:54:10Z",
         "status": "ok",
         "error": null,
         "warnings": 0
        },
        {
         "id": "queue",
-        "as_of": "2026-10-15T22:34:42Z",
+        "as_of": "2026-10-16T17:54:12Z",
         "status": "ok",
         "error": null,
         "warnings": 0
        },
        {
         "id": "attention",
-        "as_of": "2026-10-15T22:34:42Z",
+        "as_of": "2026-10-16T17:54:12Z",
         "status": "ok",
         "error": null,
-        "warnings": 0
+        "warnings": 0,
+        "made_at": "2026-10-16T17:52:15Z",
+        "refresh_s": 300
        },
        {
         "id": "meters",
-        "as_of": "2026-10-15T22:32:15Z",
+        "as_of": "2026-10-16T17:51:45Z",
         "status": "ok",
         "error": null,
         "warnings": 0
@@ -4126,42 +4594,52 @@
        {
         "id": "items",
         "label": "items",
-        "age_s": 10,
+        "age_s": 11,
         "limit_s": null,
         "state": "ok",
-        "error": null
+        "error": null,
+        "made": false,
+        "refresh_s": null
        },
        {
         "id": "machines",
         "label": "machines",
-        "age_s": 13,
+        "age_s": 14,
         "limit_s": null,
         "state": "ok",
-        "error": null
+        "error": null,
+        "made": false,
+        "refresh_s": null
        },
        {
         "id": "queue",
         "label": "queue",
-        "age_s": 11,
+        "age_s": 12,
         "limit_s": null,
         "state": "ok",
-        "error": null
+        "error": null,
+        "made": false,
+        "refresh_s": null
        },
        {
         "id": "attention",
         "label": "attention",
-        "age_s": 11,
-        "limit_s": null,
+        "age_s": 129,
+        "limit_s": 600,
         "state": "ok",
-        "error": null
+        "error": null,
+        "made": true,
+        "refresh_s": 300
        },
        {
         "id": "meters",
         "label": "meters",
-        "age_s": 158,
+        "age_s": 159,
         "limit_s": 900,
         "state": "ok",
-        "error": null
+        "error": null,
+        "made": false,
+        "refresh_s": null
        }
       ]
      },
@@ -4174,46 +4652,48 @@
       "peers": [
        "atlas-main"
       ],
-      "received_at": 1792103685.250348,
+      "received_at": 1792173255.875895,
       "interval_s": 10,
       "interval_declared": true,
       "mode": "sample",
-      "boot_id": "demo-1792103554",
+      "boot_id": "demo-1792173125",
       "seq": 14,
-      "skew_s": 0.3,
-      "generated_at": "2026-10-15T22:34:45Z",
+      "skew_s": 0.9,
+      "generated_at": "2026-10-16T17:54:15Z",
       "collectors": [
        {
         "id": "items",
-        "as_of": "2026-10-15T22:34:43Z",
+        "as_of": "2026-10-16T17:54:13Z",
         "status": "ok",
         "error": null,
         "warnings": 0
        },
        {
         "id": "machines",
-        "as_of": "2026-10-15T22:34:40Z",
+        "as_of": "2026-10-16T17:54:10Z",
         "status": "ok",
         "error": null,
         "warnings": 0
        },
        {
         "id": "queue",
-        "as_of": "2026-10-15T22:34:42Z",
+        "as_of": "2026-10-16T17:54:12Z",
         "status": "ok",
         "error": null,
-        "warnings": 0
+        "warnings": 0,
+        "made_at": "2026-10-16T17:14:15Z",
+        "refresh_s": 300
        },
        {
         "id": "attention",
-        "as_of": "2026-10-15T22:34:42Z",
+        "as_of": "2026-10-16T17:54:12Z",
         "status": "ok",
         "error": null,
         "warnings": 0
        },
        {
         "id": "meters",
-        "as_of": "2026-10-15T22:32:15Z",
+        "as_of": "2026-10-16T17:51:45Z",
         "status": "ok",
         "error": null,
         "warnings": 0
@@ -4236,42 +4716,52 @@
        {
         "id": "items",
         "label": "items",
-        "age_s": 9,
+        "age_s": 11,
         "limit_s": null,
         "state": "ok",
-        "error": null
+        "error": null,
+        "made": false,
+        "refresh_s": null
        },
        {
         "id": "machines",
         "label": "machines",
-        "age_s": 12,
+        "age_s": 14,
         "limit_s": null,
         "state": "ok",
-        "error": null
+        "error": null,
+        "made": false,
+        "refresh_s": null
        },
        {
         "id": "queue",
         "label": "queue",
-        "age_s": 10,
-        "limit_s": null,
-        "state": "ok",
-        "error": null
+        "age_s": 2409,
+        "limit_s": 600,
+        "state": "old",
+        "error": null,
+        "made": true,
+        "refresh_s": 300
        },
        {
         "id": "attention",
         "label": "attention",
-        "age_s": 10,
+        "age_s": 12,
         "limit_s": null,
         "state": "ok",
-        "error": null
+        "error": null,
+        "made": false,
+        "refresh_s": null
        },
        {
         "id": "meters",
         "label": "meters",
-        "age_s": 157,
+        "age_s": 159,
         "limit_s": 900,
         "state": "ok",
-        "error": null
+        "error": null,
+        "made": false,
+        "refresh_s": null
        }
       ]
      },
@@ -4284,46 +4774,46 @@
       "peers": [
        "atlas-main"
       ],
-      "received_at": 1792103635.0953972,
+      "received_at": 1792173205.855218,
       "interval_s": 10,
       "interval_declared": true,
       "mode": "sample",
-      "boot_id": "demo-1792103554",
+      "boot_id": "demo-1792173125",
       "seq": 9,
-      "skew_s": 0.1,
-      "generated_at": "2026-10-15T22:33:55Z",
+      "skew_s": 0.9,
+      "generated_at": "2026-10-16T17:53:25Z",
       "collectors": [
        {
         "id": "items",
-        "as_of": "2026-10-15T22:33:53Z",
+        "as_of": "2026-10-16T17:53:23Z",
         "status": "ok",
         "error": null,
         "warnings": 0
        },
        {
         "id": "machines",
-        "as_of": "2026-10-15T22:33:50Z",
+        "as_of": "2026-10-16T17:53:20Z",
         "status": "ok",
         "error": null,
         "warnings": 0
        },
        {
         "id": "queue",
-        "as_of": "2026-10-15T22:33:52Z",
+        "as_of": "2026-10-16T17:53:22Z",
         "status": "ok",
         "error": null,
         "warnings": 0
        },
        {
         "id": "attention",
-        "as_of": "2026-10-15T22:33:52Z",
+        "as_of": "2026-10-16T17:53:22Z",
         "status": "ok",
         "error": null,
         "warnings": 0
        },
        {
         "id": "meters",
-        "as_of": "2026-10-15T22:31:25Z",
+        "as_of": "2026-10-16T17:50:55Z",
         "status": "ok",
         "error": null,
         "warnings": 0
@@ -4346,42 +4836,52 @@
        {
         "id": "items",
         "label": "items",
-        "age_s": 60,
+        "age_s": 61,
         "limit_s": null,
         "state": "ok",
-        "error": null
+        "error": null,
+        "made": false,
+        "refresh_s": null
        },
        {
         "id": "machines",
         "label": "machines",
-        "age_s": 63,
+        "age_s": 64,
         "limit_s": null,
         "state": "ok",
-        "error": null
+        "error": null,
+        "made": false,
+        "refresh_s": null
        },
        {
         "id": "queue",
         "label": "queue",
-        "age_s": 61,
+        "age_s": 62,
         "limit_s": null,
         "state": "ok",
-        "error": null
+        "error": null,
+        "made": false,
+        "refresh_s": null
        },
        {
         "id": "attention",
         "label": "attention",
-        "age_s": 61,
+        "age_s": 62,
         "limit_s": null,
         "state": "ok",
-        "error": null
+        "error": null,
+        "made": false,
+        "refresh_s": null
        },
        {
         "id": "meters",
         "label": "meters",
-        "age_s": 208,
+        "age_s": 209,
         "limit_s": 900,
         "state": "ok",
-        "error": null
+        "error": null,
+        "made": false,
+        "refresh_s": null
        }
       ]
      }
@@ -4392,11 +4892,11 @@
       "label": "Atlas",
       "role": "primary workstation",
       "status": "warn",
-      "as_of": "2026-10-15T22:34:40Z",
+      "as_of": "2026-10-16T17:54:10Z",
       "reach": {
        "probe_ok": true,
        "rtt_ms": null,
-       "last_ok_at": "2026-10-15T22:34:40Z",
+       "last_ok_at": "2026-10-16T17:54:10Z",
        "error": null
       },
       "load": {
@@ -4423,7 +4923,7 @@
         "crit_gb": 25
        }
       ],
-      "uptime_s": 1206130.0701971054,
+      "uptime_s": 1206130.0449581146,
       "on_battery": false,
       "extras": [
        {
@@ -4457,12 +4957,22 @@
         "over_budget": false
        }
       },
+      "lanes": {
+       "running": 3,
+       "total": 5,
+       "homes": [
+        "atlas-main",
+        "borealis-lanes"
+       ],
+       "unreported": [],
+       "or_more": false
+      },
       "observed_by": "atlas-main",
       "sources": [
        "atlas-main"
       ],
       "beat_seen": {
-       "at": "2026-10-15T22:34:45Z",
+       "at": "2026-10-16T17:54:15Z",
        "interval_s": 15
       },
       "strain": {
@@ -4471,7 +4981,7 @@
        "warm": false,
        "baseline": 2.1,
        "threshold": 1.0,
-       "since": 1792103554.996018,
+       "since": 1792173125.814273,
        "sustained_s": 130
       }
      },
@@ -4480,11 +4990,11 @@
       "label": "Borealis",
       "role": "render box",
       "status": "ok",
-      "as_of": "2026-10-15T22:34:40Z",
+      "as_of": "2026-10-16T17:54:10Z",
       "reach": {
        "probe_ok": true,
        "rtt_ms": null,
-       "last_ok_at": "2026-10-15T22:34:40Z",
+       "last_ok_at": "2026-10-16T17:54:10Z",
        "error": null
       },
       "load": {
@@ -4518,7 +5028,7 @@
         "crit_gb": 60
        }
       ],
-      "uptime_s": 3530.0701971054077,
+      "uptime_s": 3530.044958114624,
       "on_battery": false,
       "extras": [
        {
@@ -4544,12 +5054,21 @@
         "over_budget": false
        }
       },
+      "lanes": {
+       "running": 2,
+       "total": 3,
+       "homes": [
+        "borealis-lanes"
+       ],
+       "unreported": [],
+       "or_more": false
+      },
       "observed_by": "borealis-lanes",
       "sources": [
        "borealis-lanes"
       ],
       "beat_seen": {
-       "at": "2026-10-15T22:34:45Z",
+       "at": "2026-10-16T17:54:15Z",
        "interval_s": 15
       },
       "strain": {
@@ -4567,11 +5086,11 @@
       "label": "Cinder",
       "role": "lab server",
       "status": "ok",
-      "as_of": "2026-10-15T22:33:50Z",
+      "as_of": "2026-10-16T17:53:20Z",
       "reach": {
        "probe_ok": true,
        "rtt_ms": null,
-       "last_ok_at": "2026-10-15T22:33:50Z",
+       "last_ok_at": "2026-10-16T17:53:20Z",
        "error": null
       },
       "load": {
@@ -4598,7 +5117,7 @@
         "crit_gb": 25
        }
       ],
-      "uptime_s": 734080.0397980213,
+      "uptime_s": 734080.0266139507,
       "on_battery": false,
       "extras": [
        {
@@ -4628,8 +5147,9 @@
       "sources": [
        "cinder-lanes"
       ],
+      "lanes": null,
       "beat_seen": {
-       "at": "2026-10-15T22:33:55Z",
+       "at": "2026-10-16T17:53:25Z",
        "interval_s": 15
       },
       "strain": {
@@ -4655,11 +5175,11 @@
       "doing": "Review fixed 2 findings; tests running",
       "state": "running",
       "state_detail": "validating (running)",
-      "started_at": "2026-10-15T20:52:34Z",
+      "started_at": "2026-10-16T16:12:05Z",
       "last_event": {
        "state": "running",
        "text": "review round 2 clean",
-       "at": "2026-10-15T22:01:34Z"
+       "at": "2026-10-16T17:21:05Z"
       },
       "progress": {
        "basis": "history",
@@ -4670,7 +5190,7 @@
        "reason": null,
        "current": {
         "step": "push",
-        "elapsed_s": 1990.0701971054077,
+        "elapsed_s": 1990.044958114624,
         "typical_s": 2640,
         "p90_s": 4200,
         "round": 2,
@@ -4734,7 +5254,7 @@
          "label": "Test",
          "status": "current",
          "weight": 0.327,
-         "elapsed_s": 1990.0701971054077,
+         "elapsed_s": 1990.044958114624,
          "typical_s": 2640,
          "p90_s": 4200,
          "round": null
@@ -4820,10 +5340,10 @@
       "source_lane": {
        "state": "Working",
        "cause": "worker-busy",
-       "since": "2026-10-15T22:12:54Z",
+       "since": "2026-10-16T17:32:25Z",
        "last_word": {
         "verb": "working",
-        "at": "2026-10-15T22:12:54Z"
+        "at": "2026-10-16T17:32:25Z"
        },
        "short_title": "Fog of war: hide units outside sight radius"
       },
@@ -4838,8 +5358,8 @@
        "mark": "bfcf10dd2e67"
       },
       "age": {
-       "s": 1999,
-       "since": "2026-10-15T22:01:34Z",
+       "s": 2000,
+       "since": "2026-10-16T17:21:05Z",
        "basis": "last_event"
       }
      },
@@ -4854,11 +5374,11 @@
       "doing": "Change request open, waiting on checks",
       "state": "done",
       "state_detail": "checks running",
-      "started_at": "2026-10-15T19:02:34Z",
+      "started_at": "2026-10-16T14:22:05Z",
       "last_event": {
        "state": "running",
        "text": "waiting on checks",
-       "at": "2026-10-15T22:19:34Z"
+       "at": "2026-10-16T17:39:05Z"
       },
       "progress": {
        "basis": "history",
@@ -4869,7 +5389,7 @@
        "reason": null,
        "current": {
         "step": "ci",
-        "elapsed_s": 890.0701971054077,
+        "elapsed_s": 890.044958114624,
         "typical_s": 1860,
         "p90_s": 3000,
         "round": 1,
@@ -4983,7 +5503,7 @@
          "label": "Checks",
          "status": "current",
          "weight": 0.229,
-         "elapsed_s": 890.0701971054077,
+         "elapsed_s": 890.044958114624,
          "typical_s": 1860,
          "p90_s": 3000,
          "round": null
@@ -4992,7 +5512,7 @@
       },
       "handoff": {
        "state": "complete",
-       "since": "2026-10-15T22:32:54Z"
+       "since": "2026-10-16T17:52:25Z"
       },
       "link": {
        "url": "https://example.com/changes/418",
@@ -5022,10 +5542,10 @@
       "source_lane": {
        "state": "Waiting on a check",
        "cause": "ci-running",
-       "since": "2026-10-15T22:19:54Z",
+       "since": "2026-10-16T17:39:25Z",
        "last_word": {
         "verb": "working",
-        "at": "2026-10-15T22:12:54Z"
+        "at": "2026-10-16T17:32:25Z"
        },
        "short_title": "Lobby ready-check countdown"
       },
@@ -5052,11 +5572,11 @@
       "doing": "Stopped at review: 1 finding needs a product call",
       "state": "waiting",
       "state_detail": "stopped at review: 1 finding",
-      "started_at": "2026-10-15T18:58:34Z",
+      "started_at": "2026-10-16T14:18:05Z",
       "last_event": {
        "state": "waiting",
        "text": "cover art: embed full-size or downscale?",
-       "at": "2026-10-15T20:20:34Z"
+       "at": "2026-10-16T15:40:05Z"
       },
       "progress": {
        "basis": "history",
@@ -5073,7 +5593,7 @@
         "round": 1,
         "activity": "waiting",
         "last_activity_age_s": 7720,
-        "waiting_since": "2026-10-15T20:21:34Z"
+        "waiting_since": "2026-10-16T15:41:05Z"
        },
        "steps": [
         {
@@ -5217,10 +5737,10 @@
       "source_lane": {
        "state": "Waiting on you",
        "cause": "owner-hold",
-       "since": "2026-10-15T20:20:54Z",
+       "since": "2026-10-16T15:40:25Z",
        "last_word": {
         "verb": "needs-decision",
-        "at": "2026-10-15T20:20:54Z"
+        "at": "2026-10-16T15:40:25Z"
        },
        "short_title": "EPUB export: cover art handling"
       },
@@ -5235,8 +5755,8 @@
        "mark": "81c0a484508d"
       },
       "age": {
-       "s": 7999,
-       "since": "2026-10-15T20:21:34Z",
+       "s": 8000,
+       "since": "2026-10-16T15:41:05Z",
        "basis": "step_waiting"
       }
      },
@@ -5251,11 +5771,11 @@
       "doing": "Checks green: ready for review",
       "state": "done",
       "state_detail": null,
-      "started_at": "2026-10-15T20:40:34Z",
+      "started_at": "2026-10-16T16:00:05Z",
       "last_event": {
        "state": "done",
        "text": "ready, checks green",
-       "at": "2026-10-15T22:18:34Z"
+       "at": "2026-10-16T17:38:05Z"
       },
       "progress": {
        "basis": "default",
@@ -5310,7 +5830,7 @@
       },
       "handoff": {
        "state": "awaiting_you",
-       "since": "2026-10-15T22:18:34Z"
+       "since": "2026-10-16T17:38:05Z"
       },
       "link": {
        "url": "https://example.com/changes/3",
@@ -5342,10 +5862,10 @@
       "source_lane": {
        "state": "Finished",
        "cause": "pr-ready",
-       "since": "2026-10-15T22:18:34Z",
+       "since": "2026-10-16T17:38:05Z",
        "last_word": {
         "verb": "done",
-        "at": "2026-10-15T22:18:34Z"
+        "at": "2026-10-16T17:38:05Z"
        },
        "short_title": "Status feed adapter for the primary workstation"
       },
@@ -5360,8 +5880,8 @@
        "mark": "8c54a914cf13"
       },
       "age": {
-       "s": 979,
-       "since": "2026-10-15T22:18:34Z",
+       "s": 980,
+       "since": "2026-10-16T17:38:05Z",
        "basis": "handoff"
       }
      },
@@ -5376,11 +5896,11 @@
       "doing": "Running the 4096-tile suite, 6 of 9 maps done",
       "state": "running",
       "state_detail": null,
-      "started_at": "2026-10-15T20:32:34Z",
+      "started_at": "2026-10-16T15:52:05Z",
       "last_event": {
        "state": "running",
        "text": "map 6 of 9 done",
-       "at": "2026-10-15T22:24:34Z"
+       "at": "2026-10-16T17:44:05Z"
       },
       "progress": {
        "basis": "coarse",
@@ -5462,10 +5982,10 @@
       "source_lane": {
        "state": "Waiting on the supervisor",
        "cause": "at-gate",
-       "since": "2026-10-15T21:55:54Z",
+       "since": "2026-10-16T17:15:25Z",
        "last_word": {
         "verb": "parked",
-        "at": "2026-10-15T21:55:54Z"
+        "at": "2026-10-16T17:15:25Z"
        },
        "short_title": "Pathfinding benchmark on large maps"
       },
@@ -5480,8 +6000,8 @@
        "mark": "057f7958957f"
       },
       "age": {
-       "s": 619,
-       "since": "2026-10-15T22:24:34Z",
+       "s": 620,
+       "since": "2026-10-16T17:44:05Z",
        "basis": "last_event"
       }
      },
@@ -5496,11 +6016,11 @@
       "doing": "Signing step queued behind the key prompt",
       "state": "paused",
       "state_detail": null,
-      "started_at": "2026-10-15T21:22:34Z",
+      "started_at": "2026-10-16T16:42:05Z",
       "last_event": {
        "state": "running",
        "text": "build finished, signing",
-       "at": "2026-10-15T22:27:34Z"
+       "at": "2026-10-16T17:47:05Z"
       },
       "progress": {
        "basis": "coarse",
@@ -5563,7 +6083,7 @@
        "label": "signing step",
        "percent": 70,
        "basis": "reported",
-       "at": "2026-10-15T22:31:34Z"
+       "at": "2026-10-16T17:51:05Z"
       },
       "waiting_on": "human",
       "summary": "signing step waits for the key prompt",
@@ -5585,7 +6105,7 @@
        {
         "t": "worker-gone",
         "how": "ended",
-        "at": "2026-10-15T20:32:34Z"
+        "at": "2026-10-16T15:52:05Z"
        }
       ],
       "phase": "build",
@@ -5594,10 +6114,10 @@
       "source_lane": {
        "state": "Needs attention",
        "cause": "worker-gone",
-       "since": "2026-10-15T20:32:34Z",
+       "since": "2026-10-16T15:52:05Z",
        "last_word": {
         "verb": "working",
-        "at": "2026-10-15T19:50:54Z"
+        "at": "2026-10-16T15:10:25Z"
        },
        "short_title": "Installer: signed package build"
       },
@@ -5624,11 +6144,11 @@
       "doing": "Encoding 1,200 sample replays, 38% done",
       "state": "running",
       "state_detail": null,
-      "started_at": "2026-10-15T18:32:34Z",
+      "started_at": "2026-10-16T13:52:05Z",
       "last_event": {
        "state": "running",
        "text": "batch 3 of 8",
-       "at": "2026-10-15T22:29:34Z"
+       "at": "2026-10-16T17:49:05Z"
       },
       "progress": {
        "basis": "coarse",
@@ -5693,7 +6213,7 @@
        {
         "t": "last-word",
         "verb": "paused",
-        "at": "2026-10-15T20:02:54Z"
+        "at": "2026-10-16T15:22:25Z"
        }
       ],
       "phase": "build",
@@ -5705,7 +6225,7 @@
        "since": null,
        "last_word": {
         "verb": "paused",
-        "at": "2026-10-15T20:02:54Z"
+        "at": "2026-10-16T15:22:25Z"
        },
        "short_title": "Replay files: delta compression"
       },
@@ -5720,8 +6240,8 @@
        "mark": "3676c80ca4e3"
       },
       "age": {
-       "s": 319,
-       "since": "2026-10-15T22:29:34Z",
+       "s": 320,
+       "since": "2026-10-16T17:49:05Z",
        "basis": "last_event"
       }
      },
@@ -5736,7 +6256,7 @@
       "doing": "Writing the feed spec",
       "state": "running",
       "state_detail": null,
-      "started_at": "2026-10-15T21:32:34Z",
+      "started_at": "2026-10-16T16:52:05Z",
       "last_event": null,
       "progress": {
        "basis": "none",
@@ -5778,10 +6298,247 @@
        "mark": "e75fddd308cf"
       },
       "age": {
-       "s": 3739,
-       "since": "2026-10-15T21:32:34Z",
+       "s": 3740,
+       "since": "2026-10-16T16:52:05Z",
        "basis": "started_at"
       }
+     },
+     {
+      "id": "bo-asset-bake",
+      "owner": "borealis-lanes",
+      "relayed": false,
+      "group": "skyforge",
+      "machine": "atlas",
+      "kind": "task",
+      "title": "Bake the lighting assets for the harbor map on the primary box, where the big GPU is free tonight",
+      "doing": null,
+      "state": "running",
+      "state_detail": null,
+      "started_at": "2026-10-16T12:00:25Z",
+      "last_event": null,
+      "progress": {
+       "basis": "none",
+       "history_n": 0,
+       "percent_floor": null,
+       "percent_ceiling": null,
+       "regressed": false,
+       "reason": "state only: no step data from this source",
+       "current": null,
+       "steps": []
+      },
+      "handoff": {
+       "state": "none",
+       "since": null
+      },
+      "link": null,
+      "flags": [],
+      "needs_you": false,
+      "project": "Skyforge",
+      "agent": {
+       "state": "alive",
+       "since": "2026-10-16T17:25:25Z",
+       "as_of": "2026-10-16T17:54:05Z",
+       "reason": null
+      },
+      "lane": {
+       "kind": "moving",
+       "cls": "ok",
+       "waiting_on": null,
+       "until": null,
+       "agent_gone_s": null,
+       "asks_you": false
+      },
+      "say": [
+       {
+        "t": "working"
+       }
+      ],
+      "source": "borealis-lanes",
+      "second_hand": false,
+      "source_lane": {
+       "state": "Working",
+       "cause": "worker-busy",
+       "since": "2026-10-16T17:25:25Z",
+       "last_word": {
+        "verb": "working",
+        "at": "2026-10-16T17:25:25Z"
+       },
+       "short_title": "Bake the lighting assets"
+      },
+      "row": {
+       "chip": "Skyforge",
+       "title": "Bake the lighting assets for the harbor map on the primary box, where the big GPU is free tonight",
+       "summary": null,
+       "order": [
+        1,
+        0
+       ],
+       "mark": "2ce8928df2a6"
+      },
+      "age": {
+       "s": 21240,
+       "since": "2026-10-16T12:00:25Z",
+       "basis": "started_at"
+      }
+     },
+     {
+      "id": "bo-crash-dump",
+      "owner": "borealis-lanes",
+      "relayed": false,
+      "group": "inkwell",
+      "machine": "borealis",
+      "kind": "task",
+      "title": "Crash dumps: upload them from the installer's first run so a failed install can be read later",
+      "doing": null,
+      "state": "unknown",
+      "state_detail": null,
+      "started_at": "2026-10-16T12:00:25Z",
+      "last_event": null,
+      "progress": {
+       "basis": "none",
+       "history_n": 0,
+       "percent_floor": null,
+       "percent_ceiling": null,
+       "regressed": false,
+       "reason": "state only: no step data from this source",
+       "current": null,
+       "steps": []
+      },
+      "handoff": {
+       "state": "none",
+       "since": null
+      },
+      "link": {
+       "url": "https://example.com/harbor/inkwell/pull/429",
+       "label": "#429",
+       "state": "open",
+       "state_as_of": "2026-10-16T17:48:25Z"
+      },
+      "flags": [],
+      "needs_you": false,
+      "project": "Inkwell",
+      "agent": null,
+      "lane": {
+       "kind": "pr_open",
+       "cls": "waiting",
+       "waiting_on": "pr",
+       "until": null,
+       "agent_gone_s": null,
+       "asks_you": false
+      },
+      "say": [
+       {
+        "t": "unreadable"
+       },
+       {
+        "t": "last-word",
+        "verb": "done",
+        "at": "2026-10-14T09:40:25Z"
+       }
+      ],
+      "source": "borealis-lanes",
+      "second_hand": false,
+      "source_lane": {
+       "state": "Can't tell",
+       "cause": "state-unreadable",
+       "since": null,
+       "last_word": {
+        "verb": "done",
+        "at": "2026-10-14T09:40:25Z"
+       },
+       "short_title": "Crash dumps"
+      },
+      "row": {
+       "chip": "Inkwell",
+       "title": "Crash dumps: upload them from the installer's first run so a failed install can be read later",
+       "summary": null,
+       "order": [
+        0,
+        1
+       ],
+       "mark": "5b49bafb7acf"
+      },
+      "age": null
+     },
+     {
+      "id": "bo-shader-cache",
+      "owner": "borealis-lanes",
+      "relayed": false,
+      "group": "inkwell",
+      "machine": "borealis",
+      "kind": "task",
+      "title": "Shader cache: keep the compiled variants between runs, so that a cold start does not stall the first match of the evening",
+      "doing": null,
+      "state": "unknown",
+      "state_detail": null,
+      "started_at": "2026-10-16T12:00:25Z",
+      "last_event": null,
+      "progress": {
+       "basis": "none",
+       "history_n": 0,
+       "percent_floor": null,
+       "percent_ceiling": null,
+       "regressed": false,
+       "reason": "state only: no step data from this source",
+       "current": null,
+       "steps": []
+      },
+      "handoff": {
+       "state": "none",
+       "since": null
+      },
+      "link": null,
+      "flags": [],
+      "needs_you": false,
+      "project": "Inkwell",
+      "agent": {
+       "state": "ended",
+       "since": "2026-10-16T17:50:05Z",
+       "as_of": "2026-10-16T17:54:05Z",
+       "reason": null
+      },
+      "lane": {
+       "kind": "unknown",
+       "cls": "quiet",
+       "waiting_on": null,
+       "until": null,
+       "agent_gone_s": null,
+       "asks_you": false
+      },
+      "say": [
+       {
+        "t": "unreadable"
+       },
+       {
+        "t": "last-word",
+        "verb": "done",
+        "at": "2026-10-16T13:22:25Z"
+       }
+      ],
+      "source": "borealis-lanes",
+      "second_hand": false,
+      "source_lane": {
+       "state": "Can't tell",
+       "cause": "state-unreadable",
+       "since": null,
+       "last_word": {
+        "verb": "done",
+        "at": "2026-10-16T13:22:25Z"
+       },
+       "short_title": "Shader cache",
+       "branch": true
+      },
+      "row": {
+       "chip": "Inkwell",
+       "title": "Shader cache: keep the compiled variants between runs, so that a cold start does not stall the first match of the evening",
+       "summary": null,
+       "order": [
+        0,
+        1
+       ],
+       "mark": "4c25fe324b32"
+      },
+      "age": null
      },
      {
       "id": "ci-index",
@@ -5794,11 +6551,11 @@
       "doing": "Rebuilding the search index",
       "state": "running",
       "state_detail": null,
-      "started_at": "2026-10-15T21:42:34Z",
+      "started_at": "2026-10-16T17:02:05Z",
       "last_event": {
        "state": "running",
        "text": "shard 2 of 6",
-       "at": "2026-10-15T22:30:34Z"
+       "at": "2026-10-16T17:50:05Z"
       },
       "progress": {
        "basis": "coarse",
@@ -5872,8 +6629,8 @@
        "mark": "d1132cdcd044"
       },
       "age": {
-       "s": 259,
-       "since": "2026-10-15T22:30:34Z",
+       "s": 260,
+       "since": "2026-10-16T17:50:05Z",
        "basis": "last_event"
       }
      }
@@ -5885,7 +6642,7 @@
       "severity": "action",
       "title": "Inkwell: how should EPUB export handle cover art?",
       "detail": "Embed the full-size image, or downscale to 1600 px. The export item is stopped until you choose.",
-      "since": "2026-10-15T20:21:34Z",
+      "since": "2026-10-16T15:41:05Z",
       "machine": "atlas",
       "item": "iw-export",
       "group": "inkwell",
@@ -5894,13 +6651,14 @@
        "url": "http://board-host.example:4387/session/0123456789abcdef",
        "label": "review board",
        "state": "open",
-       "state_as_of": "2026-10-15T22:31:34Z",
+       "state_as_of": "2026-10-16T17:51:05Z",
        "why": null
       },
       "how": "Answer in the team chat",
       "say": "iw-export: downscale to 1600 px",
       "options": [],
-      "source": "atlas-main"
+      "source": "atlas-main",
+      "aside": null
      },
      {
       "id": "approval:tw-feed",
@@ -5908,7 +6666,7 @@
       "severity": "action",
       "title": "Ready for approval: status feed adapter",
       "detail": "Checks green for 14 min, nothing left to review.",
-      "since": "2026-10-15T22:18:34Z",
+      "since": "2026-10-16T17:38:05Z",
       "machine": "atlas",
       "item": "tw-feed",
       "group": "tidewatch",
@@ -5919,7 +6677,8 @@
       "how": "Approve in the team chat",
       "say": "tw-feed: approve",
       "options": [],
-      "source": "atlas-main"
+      "source": "atlas-main",
+      "aside": null
      },
      {
       "id": "capacity:week",
@@ -5927,14 +6686,15 @@
       "severity": "action",
       "title": "The primary plan's week runs out before it resets",
       "detail": "18% left. At this pace it empties Sat 10:00, 9 h before the Sat 19:00 reset.",
-      "since": "2026-10-15T20:06:34Z",
+      "since": "2026-10-16T15:26:05Z",
       "machine": "atlas",
       "item": null,
       "group": null,
       "link": null,
       "how": "Move heavy work to another machine or slow new starts",
       "options": [],
-      "source": "atlas-main"
+      "source": "atlas-main",
+      "aside": null
      },
      {
       "id": "credential:sample-provider",
@@ -5942,14 +6702,109 @@
       "severity": "info",
       "title": "Sample provider sign-in expired",
       "detail": "Nothing uses it right now; its allowance is unreadable until it is refreshed.",
-      "since": "2026-10-15T14:03:34Z",
+      "since": "2026-10-16T09:23:05Z",
       "machine": "atlas",
       "item": null,
       "group": null,
       "link": null,
       "how": "Sign in once",
+      "actor": {
+       "role": "viewer",
+       "name": null
+      },
       "options": [],
-      "source": "atlas-main"
+      "source": "atlas-main",
+      "aside": null
+     },
+     {
+      "id": "decision:tide-reading",
+      "kind": "decision",
+      "severity": "action",
+      "title": "Take the second tide-gauge reading",
+      "detail": "Compare it with the first before the harbor schedule changes.",
+      "since": "2026-10-15T07:32:25Z",
+      "machine": "atlas",
+      "item": null,
+      "group": null,
+      "link": null,
+      "how": "answer in the home's chat",
+      "hold": {
+       "bucket": "dated",
+       "until": "2026-10-22",
+       "reason": "you put it off until the new gauge is fitted",
+       "since": "2026-10-15T07:32:25Z"
+      },
+      "options": [],
+      "source": "atlas-main",
+      "aside": "deferred"
+     },
+     {
+      "id": "gate:sf-lobby",
+      "kind": "decision",
+      "severity": "info",
+      "title": "2 blocked notices for the lobby countdown",
+      "detail": "The supervisor answers these; they are not yours.",
+      "since": "2026-10-16T17:00:25Z",
+      "machine": "atlas",
+      "item": null,
+      "group": "skyforge",
+      "link": null,
+      "how": null,
+      "actor": {
+       "role": "supervisor",
+       "name": "skipper"
+      },
+      "options": [],
+      "source": "atlas-main",
+      "aside": "theirs"
+     },
+     {
+      "id": "train:sf-netcode",
+      "kind": "approval",
+      "severity": "action",
+      "title": "Netcode PR held for the release train",
+      "detail": "Merges with the next train once the fleet verdict is in.",
+      "since": "2026-10-16T14:25:25Z",
+      "machine": "atlas",
+      "item": null,
+      "group": "skyforge",
+      "link": {
+       "url": "https://example.com/changes/431",
+       "label": "#431"
+      },
+      "how": null,
+      "actor": {
+       "role": "supervisor",
+       "name": "skipper"
+      },
+      "verdict": {
+       "name": "fleet verdict",
+       "state": "pending",
+       "as_of": "2026-10-16T17:42:35Z"
+      },
+      "options": [],
+      "source": "atlas-main",
+      "aside": "theirs"
+     },
+     {
+      "id": "summary:borealis-old",
+      "kind": "service",
+      "severity": "info",
+      "title": "Borealis summary 40 min old (remade every 5 min)",
+      "detail": "Its home's refresh did not remake it.",
+      "since": "2026-10-16T17:12:05Z",
+      "machine": "borealis",
+      "item": null,
+      "group": null,
+      "link": null,
+      "how": null,
+      "actor": {
+       "role": "supervisor",
+       "name": "skipper"
+      },
+      "options": [],
+      "source": "atlas-main",
+      "aside": "theirs"
      },
      {
       "id": "decision:sf-budget",
@@ -5957,7 +6812,7 @@
       "severity": "action",
       "title": "Skyforge: raise the pathfinding time budget to 6 ms?",
       "detail": "The large-map suite needs 5.4 ms a tick; the budget is 4 ms.",
-      "since": "2026-10-15T22:34:14Z",
+      "since": "2026-10-16T17:53:45Z",
       "machine": "atlas",
       "item": null,
       "group": "skyforge",
@@ -5965,7 +6820,8 @@
       "how": "Answer in the team chat",
       "say": "sf-budget: raise to 6 ms",
       "options": [],
-      "source": "atlas-main"
+      "source": "atlas-main",
+      "aside": null
      }
     ],
     "attention_pending": [],
@@ -5978,8 +6834,9 @@
       "blocked_by": [],
       "reason": "next free slot on that machine",
       "until": null,
-      "filed": "2026-10-15",
-      "source": "borealis-lanes"
+      "filed": "2026-10-16",
+      "source": "borealis-lanes",
+      "aside": null
      },
      {
       "id": "iw-dict",
@@ -5989,8 +6846,9 @@
       "blocked_by": [],
       "reason": "waits for a free slot",
       "until": null,
-      "filed": "2026-10-15",
-      "source": "atlas-main"
+      "filed": "2026-10-16",
+      "source": "atlas-main",
+      "aside": null
      },
      {
       "id": "sf-tech-ui",
@@ -6002,8 +6860,9 @@
       ],
       "reason": "starts after the lobby countdown lands",
       "until": null,
-      "filed": "2026-10-14",
-      "source": "atlas-main"
+      "filed": "2026-10-15",
+      "source": "atlas-main",
+      "aside": null
      },
      {
       "id": "sf-cut-015",
@@ -6015,8 +6874,9 @@
       ],
       "reason": "waits for fog of war",
       "until": null,
-      "filed": "2026-10-12",
-      "source": "atlas-main"
+      "filed": "2026-10-13",
+      "source": "atlas-main",
+      "aside": null
      },
      {
       "id": "iw-notes-19",
@@ -6025,9 +6885,16 @@
       "kind": "held",
       "blocked_by": [],
       "reason": "you deferred it",
-      "until": "2026-10-19",
-      "filed": "2026-10-10",
-      "source": "atlas-main"
+      "until": "2026-10-20",
+      "filed": "2026-10-11",
+      "hold": {
+       "bucket": "dated",
+       "until": "2026-10-20",
+       "reason": "you deferred it until the 1.9 notes are reviewed",
+       "since": "2026-10-11T08:20:25Z"
+      },
+      "source": "atlas-main",
+      "aside": "deferred"
      }
     ],
     "done": [
@@ -6038,7 +6905,7 @@
       "title": "Tooltips: wrap long unit names",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-15T22:33:54Z",
+      "at": "2026-10-16T17:53:25Z",
       "source": "atlas-main"
      },
      {
@@ -6048,7 +6915,7 @@
       "title": "Inkwell: mirror margins in print",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-15T22:33:54Z",
+      "at": "2026-10-16T17:53:25Z",
       "source": "atlas-main"
      },
      {
@@ -6058,7 +6925,7 @@
       "title": "Lobby: ready-check countdown",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-15T22:32:54Z",
+      "at": "2026-10-16T17:52:25Z",
       "source": "atlas-main"
      },
      {
@@ -6068,7 +6935,7 @@
       "title": "Minimap pings fade after 4 s",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-15T21:51:34Z",
+      "at": "2026-10-16T17:11:05Z",
       "source": "atlas-main"
      },
      {
@@ -6078,7 +6945,7 @@
       "title": "Autosave no longer crashes on long chapters",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-15T20:13:34Z",
+      "at": "2026-10-16T15:33:05Z",
       "source": "atlas-main"
      },
      {
@@ -6088,7 +6955,7 @@
       "title": "Netcode fuzz harness runs on the render box",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-15T19:41:34Z",
+      "at": "2026-10-16T15:01:05Z",
       "source": "borealis-lanes"
      },
      {
@@ -6098,7 +6965,7 @@
       "title": "Heavy work routes by allowance runway",
       "via": "local merge",
       "link": null,
-      "at": "2026-10-15T19:27:34Z",
+      "at": "2026-10-16T14:47:05Z",
       "source": "atlas-main"
      },
      {
@@ -6108,7 +6975,7 @@
       "title": "Export formats: findings report",
       "via": "report",
       "link": null,
-      "at": "2026-10-15T18:52:34Z",
+      "at": "2026-10-16T14:12:05Z",
       "source": "atlas-main"
      },
      {
@@ -6118,7 +6985,7 @@
       "title": "Unit hotkeys remember their groups",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-15T17:22:34Z",
+      "at": "2026-10-16T12:42:05Z",
       "source": "atlas-main"
      },
      {
@@ -6128,7 +6995,7 @@
       "title": "Earlier work 1d-0",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-14T21:32:34Z",
+      "at": "2026-10-15T16:52:05Z",
       "source": "atlas-main"
      },
      {
@@ -6138,7 +7005,7 @@
       "title": "Earlier work 1d-1",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-14T20:32:34Z",
+      "at": "2026-10-15T15:52:05Z",
       "source": "atlas-main"
      },
      {
@@ -6148,7 +7015,7 @@
       "title": "Earlier work 1d-2",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-14T19:32:34Z",
+      "at": "2026-10-15T14:52:05Z",
       "source": "atlas-main"
      },
      {
@@ -6158,7 +7025,7 @@
       "title": "Earlier work 1d-3",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-14T18:32:34Z",
+      "at": "2026-10-15T13:52:05Z",
       "source": "atlas-main"
      },
      {
@@ -6168,7 +7035,7 @@
       "title": "Earlier work 2d-0",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-13T21:32:34Z",
+      "at": "2026-10-14T16:52:05Z",
       "source": "atlas-main"
      },
      {
@@ -6178,7 +7045,7 @@
       "title": "Earlier work 2d-1",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-13T20:32:34Z",
+      "at": "2026-10-14T15:52:05Z",
       "source": "atlas-main"
      },
      {
@@ -6188,7 +7055,7 @@
       "title": "Earlier work 2d-2",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-13T19:32:34Z",
+      "at": "2026-10-14T14:52:05Z",
       "source": "atlas-main"
      },
      {
@@ -6198,7 +7065,7 @@
       "title": "Earlier work 3d-0",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-12T21:32:34Z",
+      "at": "2026-10-13T16:52:05Z",
       "source": "atlas-main"
      },
      {
@@ -6208,7 +7075,7 @@
       "title": "Earlier work 4d-0",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-11T21:32:34Z",
+      "at": "2026-10-12T16:52:05Z",
       "source": "atlas-main"
      },
      {
@@ -6218,7 +7085,7 @@
       "title": "Earlier work 4d-1",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-11T20:32:34Z",
+      "at": "2026-10-12T15:52:05Z",
       "source": "atlas-main"
      },
      {
@@ -6228,7 +7095,7 @@
       "title": "Earlier work 4d-2",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-11T19:32:34Z",
+      "at": "2026-10-12T14:52:05Z",
       "source": "atlas-main"
      },
      {
@@ -6238,7 +7105,7 @@
       "title": "Earlier work 4d-3",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-11T18:32:34Z",
+      "at": "2026-10-12T13:52:05Z",
       "source": "atlas-main"
      },
      {
@@ -6248,7 +7115,7 @@
       "title": "Earlier work 5d-0",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-10T21:32:34Z",
+      "at": "2026-10-11T16:52:05Z",
       "source": "atlas-main"
      },
      {
@@ -6258,7 +7125,7 @@
       "title": "Earlier work 5d-1",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-10T20:32:34Z",
+      "at": "2026-10-11T15:52:05Z",
       "source": "atlas-main"
      },
      {
@@ -6268,7 +7135,7 @@
       "title": "Earlier work 5d-2",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-10T19:32:34Z",
+      "at": "2026-10-11T14:52:05Z",
       "source": "atlas-main"
      },
      {
@@ -6278,7 +7145,7 @@
       "title": "Earlier work 5d-3",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-10T18:32:34Z",
+      "at": "2026-10-11T13:52:05Z",
       "source": "atlas-main"
      },
      {
@@ -6288,7 +7155,7 @@
       "title": "Earlier work 6d-0",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-09T21:32:34Z",
+      "at": "2026-10-10T16:52:05Z",
       "source": "atlas-main"
      },
      {
@@ -6298,7 +7165,7 @@
       "title": "Earlier work 6d-1",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-09T20:32:34Z",
+      "at": "2026-10-10T15:52:05Z",
       "source": "atlas-main"
      }
     ],
@@ -6309,10 +7176,10 @@
       "label": "Skyforge",
       "color": null,
       "checkpoint": {
-       "as_of": "2026-10-15T19:03:45Z",
+       "as_of": "2026-10-16T14:23:15Z",
        "live": {
         "version": "0.15",
-        "since": "2026-10-15T22:33:24Z"
+        "since": "2026-10-16T17:52:55Z"
        },
        "next": {
         "version": "0.15",
@@ -6323,7 +7190,7 @@
        },
        "gate": {
         "value": "pass",
-        "as_of": "2026-10-15T18:43:45Z",
+        "as_of": "2026-10-16T14:03:15Z",
         "note": "frame-time floor held on the reference map",
         "tiers": []
        },
@@ -6335,7 +7202,7 @@
       "label": "Inkwell",
       "color": null,
       "checkpoint": {
-       "as_of": "2026-10-15T19:03:45Z",
+       "as_of": "2026-10-16T14:23:15Z",
        "live": {
         "version": "1.8.3",
         "since": "2026-10-01"
@@ -6377,7 +7244,7 @@
          "label": "5-hour",
          "short": "5h",
          "percent_remaining": 81,
-         "resets_at": "2026-10-16T00:40:54Z",
+         "resets_at": "2026-10-16T20:00:25Z",
          "pace": "behind"
         },
         {
@@ -6385,7 +7252,7 @@
          "label": "Week",
          "short": "wk",
          "percent_remaining": 57,
-         "resets_at": "2026-10-19T12:00:54Z",
+         "resets_at": "2026-10-20T07:20:25Z",
          "pace": "behind"
         }
        ],
@@ -6396,7 +7263,7 @@
         "source": "the provider's own projection"
        },
        "source": "borealis-lanes",
-       "as_of": "2026-10-15T22:32:15Z"
+       "as_of": "2026-10-16T17:51:45Z"
       },
       {
        "id": "primary-plan",
@@ -6407,27 +7274,27 @@
          "id": "short",
          "label": "5-hour",
          "percent_remaining": 62,
-         "resets_at": "2026-10-16T01:20:34Z",
+         "resets_at": "2026-10-16T20:40:05Z",
          "pace": "ahead"
         },
         {
          "id": "week",
          "label": "Week",
          "percent_remaining": 18,
-         "resets_at": "2026-10-18T04:32:34Z",
+         "resets_at": "2026-10-18T23:52:05Z",
          "pace": "ahead"
         }
        ],
        "runway": {
         "status": "exhausts_before_reset",
         "confidence": "medium",
-        "projected_empty_at": "2026-10-17T20:32:34Z",
+        "projected_empty_at": "2026-10-18T15:52:05Z",
         "source": "the provider's own projection"
        },
        "provider": "Orbit",
        "account": "Team plan",
        "source": "atlas-main",
-       "as_of": "2026-10-15T22:32:15Z"
+       "as_of": "2026-10-16T17:51:45Z"
       }
      ],
      "chips": [
@@ -6450,12 +7317,12 @@
         "short": "wk"
        },
        "left": 57,
-       "resets_at": "2026-10-19T12:00:54Z",
-       "resets": "Mon 05:00",
+       "resets_at": "2026-10-20T07:20:25Z",
+       "resets": "Tue 00:20",
        "state": "ok",
        "sentence": null,
        "forms": [
-        "Orbit Borealis wk 57% Mon 05:00",
+        "Orbit Borealis wk 57% Tue 00:20",
         "Orbit Borealis wk 57%",
         "Orbit wk 57%",
         "Orb 57%"
@@ -6468,11 +7335,11 @@
        "account": "Team plan",
        "projection": {
         "status": "exhausts_before_reset",
-        "empty_at": "2026-10-17T20:32:34Z",
+        "empty_at": "2026-10-18T15:52:05Z",
         "confidence": "medium",
         "source": "the provider's own projection"
        },
-       "countdown_s": 165460,
+       "countdown_s": 165459,
        "back_in_s": null,
        "window": {
         "id": "week",
@@ -6480,14 +7347,14 @@
         "short": "wk"
        },
        "left": 18,
-       "resets_at": "2026-10-18T04:32:34Z",
-       "resets": "Sat 21:32",
+       "resets_at": "2026-10-18T23:52:05Z",
+       "resets": "Sun 16:52",
        "state": "low",
-       "sentence": "Orbit (Team plan) may run out in 1 d 21 h (Sat 13:32), before the Week reset Sat 21:32",
+       "sentence": "Orbit (Team plan) may run out in 1 d 21 h (Sun 08:52), before the Week reset Sun 16:52",
        "forms": [
         "Orbit Team plan wk 18% out in 1 d 21 h",
         "Orbit wk 18% out in 1 d 21 h",
-        "Orbit Team plan wk 18% Sat 21:32",
+        "Orbit Team plan wk 18% Sun 16:52",
         "Orbit Team plan wk 18%",
         "Orbit wk 18%",
         "Orb 18%"
@@ -6497,21 +7364,21 @@
     },
     "omitted": [],
     "counts": {
-     "items": 9,
-     "running": 5,
+     "items": 12,
+     "running": 6,
      "off_course": 2,
-     "lanes_waiting": 1,
+     "lanes_waiting": 2,
      "waiting": 1,
      "awaiting_you": 1,
-     "unknown": 0,
-     "attention": 4,
+     "unknown": 2,
+     "attention": 6,
      "attention_pending": 0,
      "waiting_on_you": 4,
      "calls": 4,
      "waiting_unverified": [],
      "next": 5,
      "agent_gone": 0,
-     "outside": 0,
+     "outside": 1,
      "queued": 0,
      "version_skew": [],
      "version_unknown": []
@@ -6520,18 +7387,30 @@
     "sample": true,
     "sample_only": true,
     "gaps": {
-     "waits_outside": [],
+     "waits_outside": [
+      {
+       "id": "bo-crash-dump",
+       "source": "borealis-lanes",
+       "owner": "borealis-lanes",
+       "title": "Crash dumps: upload them from the installer's first run so a failed install can be read later",
+       "chip": "Inkwell",
+       "waiting_on": "pr",
+       "who": "a review upstream",
+       "since": null,
+       "age_s": null
+      }
+     ],
      "oldest_waiting": {
-      "s": 7999,
+      "s": 8000,
       "id": "iw-export",
       "source": "atlas-main"
      },
      "queues": [],
      "coming_up": [
       {
-       "at": 1792368000.0,
+       "at": 1792454400.0,
        "date_only": true,
-       "date": "2026-10-19",
+       "date": "2026-10-20",
        "kind": "next",
        "id": "iw-notes-19",
        "source": "atlas-main",
@@ -6547,16 +7426,12 @@
      "done_today": 9,
      "landed": {
       "mode": "rolling",
-      "since": 1792017293.1450582,
+      "since": 1792086865.685962,
       "hours": 24,
       "day_start": null,
       "n": 9
      },
      "by_day": [
-      {
-       "day": "2026-10-02",
-       "done": {}
-      },
       {
        "day": "2026-10-03",
        "done": {}
@@ -6575,28 +7450,24 @@
       },
       {
        "day": "2026-10-07",
+       "done": {}
+      },
+      {
+       "day": "2026-10-08",
        "done": {
         "tidewatch": 1
        }
       },
       {
-       "day": "2026-10-08",
+       "day": "2026-10-09",
        "done": {
         "tidewatch": 1,
         "inkwell": 1
        }
       },
       {
-       "day": "2026-10-09",
-       "done": {
-        "inkwell": 1,
-        "skyforge": 1
-       }
-      },
-      {
        "day": "2026-10-10",
        "done": {
-        "tidewatch": 2,
         "inkwell": 1,
         "skyforge": 1
        }
@@ -6604,19 +7475,27 @@
       {
        "day": "2026-10-11",
        "done": {
+        "tidewatch": 2,
+        "inkwell": 1,
+        "skyforge": 1
+       }
+      },
+      {
+       "day": "2026-10-12",
+       "done": {
         "inkwell": 2,
         "skyforge": 1,
         "tidewatch": 1
        }
       },
       {
-       "day": "2026-10-12",
+       "day": "2026-10-13",
        "done": {
         "skyforge": 1
        }
       },
       {
-       "day": "2026-10-13",
+       "day": "2026-10-14",
        "done": {
         "inkwell": 1,
         "skyforge": 1,
@@ -6624,7 +7503,7 @@
        }
       },
       {
-       "day": "2026-10-14",
+       "day": "2026-10-15",
        "done": {
         "inkwell": 2,
         "skyforge": 1,
@@ -6632,7 +7511,7 @@
        }
       },
       {
-       "day": "2026-10-15",
+       "day": "2026-10-16",
        "done": {
         "skyforge": 5,
         "inkwell": 3,
@@ -6642,7 +7521,7 @@
      ],
      "timeline": [
       {
-       "at": 1792103655.0507672,
+       "at": 1792173225.8436842,
        "owner": "atlas-main",
        "item": null,
        "group": "skyforge",
@@ -6650,7 +7529,7 @@
        "text": "Skyforge: raise the pathfinding time budget to 6 ms?"
       },
       {
-       "at": 1792103634.0,
+       "at": 1792173205.0,
        "owner": "atlas-main",
        "item": "iw-margins",
        "group": "inkwell",
@@ -6658,7 +7537,7 @@
        "text": "Inkwell: mirror margins in print"
       },
       {
-       "at": 1792103634.0,
+       "at": 1792173205.0,
        "owner": "atlas-main",
        "item": "sf-tooltips",
        "group": "skyforge",
@@ -6666,7 +7545,7 @@
        "text": "Tooltips: wrap long unit names"
       },
       {
-       "at": 1792103575.013969,
+       "at": 1792173145.820232,
        "owner": "atlas-main",
        "item": "sf-lobby",
        "group": "skyforge",
@@ -6674,7 +7553,7 @@
        "text": "Skyforge: lobby ready-check countdown"
       },
       {
-       "at": 1792103574.0,
+       "at": 1792173145.0,
        "owner": "atlas-main",
        "item": "sf-lobby",
        "group": "skyforge",
@@ -6682,7 +7561,7 @@
        "text": "Lobby: ready-check countdown"
       },
       {
-       "at": 1792101094.0,
+       "at": 1792170665.0,
        "owner": "atlas-main",
        "item": "sf-lobby",
        "group": null,
@@ -6690,7 +7569,7 @@
        "text": "Lobby countdown: change open, waiting on checks"
       },
       {
-       "at": 1792101094.0,
+       "at": 1792170665.0,
        "owner": "atlas-main",
        "item": "sf-minimap",
        "group": "skyforge",
@@ -6698,7 +7577,7 @@
        "text": "Minimap pings fade after 4 s"
       },
       {
-       "at": 1792095634.0,
+       "at": 1792165205.0,
        "owner": "atlas-main",
        "item": "iw-export",
        "group": null,
@@ -6706,7 +7585,7 @@
        "text": "EPUB cover art needs your call"
       },
       {
-       "at": 1792095214.0,
+       "at": 1792164785.0,
        "owner": "atlas-main",
        "item": "iw-autosave",
        "group": "inkwell",
@@ -6714,7 +7593,7 @@
        "text": "Autosave no longer crashes on long chapters"
       },
       {
-       "at": 1792093294.0,
+       "at": 1792162865.0,
        "owner": "borealis-lanes",
        "item": "bo-netcode",
        "group": "skyforge",
@@ -6722,7 +7601,7 @@
        "text": "Netcode fuzz harness runs on the render box"
       },
       {
-       "at": 1792092454.0,
+       "at": 1792162025.0,
        "owner": "atlas-main",
        "item": "tw-routing",
        "group": "tidewatch",
@@ -6730,7 +7609,7 @@
        "text": "Heavy work routes by allowance runway"
       },
       {
-       "at": 1792090354.0,
+       "at": 1792159925.0,
        "owner": "atlas-main",
        "item": "iw-scout",
        "group": "inkwell",
@@ -6738,7 +7617,7 @@
        "text": "Export formats: findings report"
       },
       {
-       "at": 1792084954.0,
+       "at": 1792154525.0,
        "owner": "atlas-main",
        "item": "sf-hotkeys",
        "group": "skyforge",
@@ -6758,42 +7637,42 @@
       ],
       "stuck": [],
       "landed": [
-       1791577954.0,
-       1791581554.0,
-       1791657154.0,
-       1791660754.0,
-       1791664354.0,
-       1791667954.0,
-       1791743554.0,
-       1791747154.0,
-       1791750754.0,
-       1791754354.0,
-       1791840754.0,
-       1791919954.0,
-       1791923554.0,
-       1791927154.0,
-       1792002754.0,
-       1792006354.0,
-       1792009954.0,
-       1792013554.0,
-       1792084954.0,
-       1792090354.0,
-       1792092454.0,
-       1792093294.0,
-       1792095214.0,
-       1792101094.0,
-       1792103574.0,
-       1792103634.0,
-       1792103634.0
+       1791647525.0,
+       1791651125.0,
+       1791726725.0,
+       1791730325.0,
+       1791733925.0,
+       1791737525.0,
+       1791813125.0,
+       1791816725.0,
+       1791820325.0,
+       1791823925.0,
+       1791910325.0,
+       1791989525.0,
+       1791993125.0,
+       1791996725.0,
+       1792072325.0,
+       1792075925.0,
+       1792079525.0,
+       1792083125.0,
+       1792154525.0,
+       1792159925.0,
+       1792162025.0,
+       1792162865.0,
+       1792164785.0,
+       1792170665.0,
+       1792173145.0,
+       1792173205.0,
+       1792173205.0
       ]
      },
      "projects": [
       {
        "key": "inkwell",
        "chip": "Inkwell",
-       "n": 2,
+       "n": 4,
        "off": 1,
-       "waiting": 1,
+       "waiting": 2,
        "machines": [
         "atlas",
         "borealis"
@@ -6802,7 +7681,7 @@
       {
        "key": "skyforge",
        "chip": "Skyforge",
-       "n": 4,
+       "n": 5,
        "off": 0,
        "waiting": 0,
        "machines": [
@@ -6928,7 +7807,7 @@
        }
       ],
       "link": "https://example.invalid/releases/runbook",
-      "updated_at": "2026-10-15T22:34:45Z",
+      "updated_at": "2026-10-16T17:54:15Z",
       "stale_after_s": 86400
      },
      {
@@ -6950,7 +7829,7 @@
         "value": 1
        }
       ],
-      "updated_at": "2026-10-15T22:34:45Z",
+      "updated_at": "2026-10-16T17:54:15Z",
       "mode": "advice-only",
       "stale_after_s": 600
      },
@@ -6973,7 +7852,7 @@
         "value": 0
        }
       ],
-      "updated_at": "2026-10-15T22:34:45Z",
+      "updated_at": "2026-10-16T17:54:15Z",
       "stale_after_s": 900
      }
     ],
@@ -6985,7 +7864,7 @@
     }
    },
    "server": {
-    "version": "0.9.0-592d1dd8",
+    "version": "0.9.0-30fe6871",
     "host": "demo host",
     "config": {
      "title": "Weatherdeck",
@@ -7030,8 +7909,25 @@
       "lane_ask_reason": "Its lane says it is waiting for your OK; {who} has not raised it as a call.",
       "lane_ask_reason_none": "Its lane says it is waiting for your OK; no source has raised it as a call.",
       "disagree_badge": "Sources disagree",
-      "disagree_lane": "{source} says {title} is waiting for your OK; no call names it.",
-      "disagree_call": "{source} raises {call}; its lane on {lane_source} does not say it is waiting for your OK.",
+      "disagree_lane": "{source} says its lane {title} is waiting for your OK; no source has raised a call for it.",
+      "disagree_call": "{source} says {call} is waiting on you; {lane_source} says its lane {title} is not waiting for your OK.",
+      "fyi_line": "{what}: {title} ({owner})",
+      "fyi_kind_decision": "A decision notice",
+      "fyi_kind_approval": "An approval notice",
+      "fyi_kind_capacity": "A capacity notice",
+      "fyi_kind_credential": "A sign-in notice",
+      "fyi_kind_machine": "A machine notice",
+      "fyi_kind_service": "A service notice",
+      "fyi_kind_disk": "A disk notice",
+      "fyi_kind_info": "A notice",
+      "fyi_kind_other": "A notice",
+      "fyi_owner": "{name}'s to act on",
+      "fyi_owner_you": "yours to know; not counted as waiting on you",
+      "fyi_owner_unreported": "from {source}; whose it is: not reported",
+      "actor_viewer": "you",
+      "actor_supervisor": "the supervisor",
+      "actor_worker": "its worker",
+      "actor_external": "someone outside the fleet",
       "problem": "Problem",
       "as_of": "as of {t}",
       "ago": "{t} ago",
@@ -7251,6 +8147,8 @@
       "sec_fyi": "FYI",
       "sec_lane": "Lanes waiting for your OK",
       "sec_disagree": "Sources disagree",
+      "sec_deferred": "Deferred",
+      "sec_theirs": "Someone else's turn",
       "sec_ships": "Machines",
       "sec_reporters": "Who reports",
       "sec_tools": "Tools",
@@ -7580,6 +8478,15 @@
       "collector_failed": "{name}: {what} failed",
       "collector_old_short": "{what} {t} old",
       "collector_failed_short": "{what} failed",
+      "collector_made_stale": "{name}: its {what} copy was made {t} ago and is remade every {every}: STALE",
+      "collector_made_stale_n": "{name}: its {what} copy was made {t} ago: STALE",
+      "collector_made_short": "{what} made {t} ago",
+      "lanes_running": "lanes {n} running",
+      "lanes_running_of": "lanes {n} running of {total}",
+      "lanes_or_more": "or more",
+      "lanes_homes_one": "1 home",
+      "lanes_homes": "{n} homes",
+      "lanes_unreported": "{n} not reported",
       "collector_error_word": "failed",
       "adapter_v": "adapter {v}",
       "adapter_unknown": "version unknown",
@@ -7816,8 +8723,8 @@
       "ls_but": "{a}, but {b}.",
       "ls_no_news": "No news for {t}.",
       "ls_unreadable": "Its state can't be read now",
-      "ls_last_word": "; the last thing it said was {what}, {t} ago.",
-      "ls_last_word_now": "; the last thing it said was {what}.",
+      "ls_recorded": "The last thing it said was {what}, {t} ago; nothing newer is recorded.",
+      "ls_recorded_now": "The last thing it said was {what}; nothing newer is recorded.",
       "ls_no_last_word": "; nothing it said is recorded.",
       "ls_gate_owner_unknown": "It stopped at a gate, and the record does not say whose answer it waits on.",
       "ls_verb_working": "that it was working",
@@ -7905,6 +8812,7 @@
       "rs_key_you": "It waits on you.",
       "rs_key_stuck": "It needs a hand; its feed does not say why.",
       "rs_key_unk": "Its state can't be read now.",
+      "rs_key_unk_said": "{said}; nothing newer is recorded.",
       "rs_key_work": "Its worker is on it.",
       "rs_key_other": "It waits on someone else; its feed does not say who.",
       "rs_key_done": "It finished.",
@@ -7917,7 +8825,7 @@
       "rs_was_paused": "it was paused",
       "rs_was_waiting": "it was waiting",
       "rs_was_other": "no word on what it was doing",
-      "rs_unknown": "Its state can't be read now. Last news {ago} ago.",
+      "rs_unknown": "Its last news was {ago} ago; nothing newer is recorded.",
       "rs_unknown_never": "Its state can't be read now, and no news of it is recorded.",
       "rs_gone": "Nobody is on it: its worker's session ended {gone} ago.",
       "rs_gone_pane": "Nobody is on it: its worker's pane or process is gone ({gone} ago).",
@@ -7947,6 +8855,31 @@
       "rs_scout": "Exploring.",
       "rs_scout_d": "Exploring: {detail}.",
       "rs_until": " Until {t}.",
+      "rs_said": "The last thing it said was {what}, {t} ago",
+      "rs_said_now": "The last thing it said was {what}",
+      "rs_rec_pr_open": "Finished; waiting on upstream review of PR {pr}. {said}.",
+      "rs_rec_merged": "Finished; PR {pr} has merged. {said}.",
+      "rs_rec_held": "Held; no worker is moving it. {said}.",
+      "rs_rec_branch": "Branch only, no worker running. {said}.",
+      "rs_rec_no_worker": "No PR is recorded and no worker is running. {said}.",
+      "aside_deferred": "Deferred",
+      "aside_deferred_n": "Deferred {n}",
+      "aside_theirs": "Someone else's turn",
+      "aside_theirs_named": "{name}'s turn",
+      "aside_not_counted": "Not counted in Needs you.",
+      "aside_until": "until {d}",
+      "aside_until_unreported": "until: not reported",
+      "aside_reason_unreported": "reason not reported",
+      "aside_owner": "{name} owns it",
+      "aside_owner_unreported": "owner not reported",
+      "aside_since": "since {t} ago",
+      "aside_since_unreported": "since: not reported",
+      "aside_verdict": "waits on the {name}: {state}",
+      "aside_not_reported": "not reported",
+      "verdict_pending": "pending",
+      "verdict_pass": "passed",
+      "verdict_fail": "failed",
+      "verdict_unknown": "unknown",
       "strip_label": "What needs to occur",
       "strip_you": "Needs you",
       "strip_you_none": "Nothing needs you.",
@@ -7969,8 +8902,8 @@
       "strip_n_calls": "{n} calls",
       "strip_n_problem": "{n} problem",
       "strip_n_problems": "{n} problems",
-      "att_unreadable_one": "1 lane on {where} can't be read right now; it shows its last word below.",
-      "att_unreadable_many": "{n} lanes on {where} can't be read right now; each shows its last word below.",
+      "att_unreadable_one": "1 lane on {where} reads Can't tell; its row says what is recorded of it.",
+      "att_unreadable_many": "{n} lanes on {where} read Can't tell; each row says what is recorded of it.",
       "att_unverified": "{name}'s waiting number is unverified: {reason}",
       "hdr_feeds": "{live} of {total} feeds report",
       "grp_no_project": "Other work",
@@ -8173,7 +9106,7 @@
   },
   {
    "after_s": 205.0,
-   "served_at": 1792103758.0,
+   "served_at": 1792173330.0,
    "view": {
     "sources": [
      {
@@ -8186,46 +9119,48 @@
        "borealis-lanes",
        "cinder-lanes"
       ],
-      "received_at": 1792103755.101276,
+      "received_at": 1792173325.879167,
       "interval_s": 10,
       "interval_declared": true,
       "mode": "sample",
-      "boot_id": "demo-1792103554",
+      "boot_id": "demo-1792173125",
       "seq": 21,
-      "skew_s": 0.1,
-      "generated_at": "2026-10-15T22:35:55Z",
+      "skew_s": 0.9,
+      "generated_at": "2026-10-16T17:55:25Z",
       "collectors": [
        {
         "id": "items",
-        "as_of": "2026-10-15T22:35:53Z",
+        "as_of": "2026-10-16T17:55:23Z",
         "status": "ok",
         "error": null,
         "warnings": 0
        },
        {
         "id": "machines",
-        "as_of": "2026-10-15T22:35:50Z",
+        "as_of": "2026-10-16T17:55:20Z",
         "status": "ok",
         "error": null,
         "warnings": 0
        },
        {
         "id": "queue",
-        "as_of": "2026-10-15T22:35:52Z",
+        "as_of": "2026-10-16T17:55:22Z",
         "status": "ok",
         "error": null,
         "warnings": 0
        },
        {
         "id": "attention",
-        "as_of": "2026-10-15T22:35:52Z",
+        "as_of": "2026-10-16T17:55:22Z",
         "status": "ok",
         "error": null,
-        "warnings": 0
+        "warnings": 0,
+        "made_at": "2026-10-16T17:53:25Z",
+        "refresh_s": 300
        },
        {
         "id": "meters",
-        "as_of": "2026-10-15T22:33:25Z",
+        "as_of": "2026-10-16T17:52:55Z",
         "status": "ok",
         "error": null,
         "warnings": 0
@@ -8248,42 +9183,52 @@
        {
         "id": "items",
         "label": "items",
-        "age_s": 5,
+        "age_s": 6,
         "limit_s": null,
         "state": "ok",
-        "error": null
+        "error": null,
+        "made": false,
+        "refresh_s": null
        },
        {
         "id": "machines",
         "label": "machines",
-        "age_s": 8,
+        "age_s": 9,
         "limit_s": null,
         "state": "ok",
-        "error": null
+        "error": null,
+        "made": false,
+        "refresh_s": null
        },
        {
         "id": "queue",
         "label": "queue",
-        "age_s": 6,
+        "age_s": 7,
         "limit_s": null,
         "state": "ok",
-        "error": null
+        "error": null,
+        "made": false,
+        "refresh_s": null
        },
        {
         "id": "attention",
         "label": "attention",
-        "age_s": 6,
-        "limit_s": null,
+        "age_s": 124,
+        "limit_s": 600,
         "state": "ok",
-        "error": null
+        "error": null,
+        "made": true,
+        "refresh_s": 300
        },
        {
         "id": "meters",
         "label": "meters",
-        "age_s": 153,
+        "age_s": 154,
         "limit_s": 900,
         "state": "ok",
-        "error": null
+        "error": null,
+        "made": false,
+        "refresh_s": null
        }
       ]
      },
@@ -8296,46 +9241,48 @@
       "peers": [
        "atlas-main"
       ],
-      "received_at": 1792103755.142945,
+      "received_at": 1792173325.886116,
       "interval_s": 10,
       "interval_declared": true,
       "mode": "sample",
-      "boot_id": "demo-1792103554",
+      "boot_id": "demo-1792173125",
       "seq": 21,
-      "skew_s": 0.1,
-      "generated_at": "2026-10-15T22:35:55Z",
+      "skew_s": 0.9,
+      "generated_at": "2026-10-16T17:55:25Z",
       "collectors": [
        {
         "id": "items",
-        "as_of": "2026-10-15T22:35:53Z",
+        "as_of": "2026-10-16T17:55:23Z",
         "status": "ok",
         "error": null,
         "warnings": 0
        },
        {
         "id": "machines",
-        "as_of": "2026-10-15T22:35:50Z",
+        "as_of": "2026-10-16T17:55:20Z",
         "status": "ok",
         "error": null,
         "warnings": 0
        },
        {
         "id": "queue",
-        "as_of": "2026-10-15T22:35:52Z",
+        "as_of": "2026-10-16T17:55:22Z",
         "status": "ok",
         "error": null,
-        "warnings": 0
+        "warnings": 0,
+        "made_at": "2026-10-16T17:15:25Z",
+        "refresh_s": 300
        },
        {
         "id": "attention",
-        "as_of": "2026-10-15T22:35:52Z",
+        "as_of": "2026-10-16T17:55:22Z",
         "status": "ok",
         "error": null,
         "warnings": 0
        },
        {
         "id": "meters",
-        "as_of": "2026-10-15T22:33:25Z",
+        "as_of": "2026-10-16T17:52:55Z",
         "status": "ok",
         "error": null,
         "warnings": 0
@@ -8358,42 +9305,52 @@
        {
         "id": "items",
         "label": "items",
-        "age_s": 5,
+        "age_s": 6,
         "limit_s": null,
         "state": "ok",
-        "error": null
+        "error": null,
+        "made": false,
+        "refresh_s": null
        },
        {
         "id": "machines",
         "label": "machines",
-        "age_s": 8,
+        "age_s": 9,
         "limit_s": null,
         "state": "ok",
-        "error": null
+        "error": null,
+        "made": false,
+        "refresh_s": null
        },
        {
         "id": "queue",
         "label": "queue",
-        "age_s": 6,
-        "limit_s": null,
-        "state": "ok",
-        "error": null
+        "age_s": 2404,
+        "limit_s": 600,
+        "state": "old",
+        "error": null,
+        "made": true,
+        "refresh_s": 300
        },
        {
         "id": "attention",
         "label": "attention",
-        "age_s": 6,
+        "age_s": 7,
         "limit_s": null,
         "state": "ok",
-        "error": null
+        "error": null,
+        "made": false,
+        "refresh_s": null
        },
        {
         "id": "meters",
         "label": "meters",
-        "age_s": 153,
+        "age_s": 154,
         "limit_s": 900,
         "state": "ok",
-        "error": null
+        "error": null,
+        "made": false,
+        "refresh_s": null
        }
       ]
      },
@@ -8406,46 +9363,46 @@
       "peers": [
        "atlas-main"
       ],
-      "received_at": 1792103755.154888,
+      "received_at": 1792173325.892235,
       "interval_s": 10,
       "interval_declared": true,
       "mode": "sample",
-      "boot_id": "demo-1792103554",
+      "boot_id": "demo-1792173125",
       "seq": 15,
-      "skew_s": 0.2,
-      "generated_at": "2026-10-15T22:35:55Z",
+      "skew_s": 0.9,
+      "generated_at": "2026-10-16T17:55:25Z",
       "collectors": [
        {
         "id": "items",
-        "as_of": "2026-10-15T22:35:53Z",
+        "as_of": "2026-10-16T17:55:23Z",
         "status": "ok",
         "error": null,
         "warnings": 0
        },
        {
         "id": "machines",
-        "as_of": "2026-10-15T22:35:50Z",
+        "as_of": "2026-10-16T17:55:20Z",
         "status": "ok",
         "error": null,
         "warnings": 0
        },
        {
         "id": "queue",
-        "as_of": "2026-10-15T22:35:52Z",
+        "as_of": "2026-10-16T17:55:22Z",
         "status": "ok",
         "error": null,
         "warnings": 0
        },
        {
         "id": "attention",
-        "as_of": "2026-10-15T22:35:52Z",
+        "as_of": "2026-10-16T17:55:22Z",
         "status": "ok",
         "error": null,
         "warnings": 0
        },
        {
         "id": "meters",
-        "as_of": "2026-10-15T22:33:25Z",
+        "as_of": "2026-10-16T17:52:55Z",
         "status": "ok",
         "error": null,
         "warnings": 0
@@ -8468,42 +9425,52 @@
        {
         "id": "items",
         "label": "items",
-        "age_s": 4,
+        "age_s": 6,
         "limit_s": null,
         "state": "ok",
-        "error": null
+        "error": null,
+        "made": false,
+        "refresh_s": null
        },
        {
         "id": "machines",
         "label": "machines",
-        "age_s": 7,
+        "age_s": 9,
         "limit_s": null,
         "state": "ok",
-        "error": null
+        "error": null,
+        "made": false,
+        "refresh_s": null
        },
        {
         "id": "queue",
         "label": "queue",
-        "age_s": 5,
+        "age_s": 7,
         "limit_s": null,
         "state": "ok",
-        "error": null
+        "error": null,
+        "made": false,
+        "refresh_s": null
        },
        {
         "id": "attention",
         "label": "attention",
-        "age_s": 5,
+        "age_s": 7,
         "limit_s": null,
         "state": "ok",
-        "error": null
+        "error": null,
+        "made": false,
+        "refresh_s": null
        },
        {
         "id": "meters",
         "label": "meters",
-        "age_s": 152,
+        "age_s": 154,
         "limit_s": 900,
         "state": "ok",
-        "error": null
+        "error": null,
+        "made": false,
+        "refresh_s": null
        }
       ]
      }
@@ -8514,11 +9481,11 @@
       "label": "Atlas",
       "role": "primary workstation",
       "status": "warn",
-      "as_of": "2026-10-15T22:35:50Z",
+      "as_of": "2026-10-16T17:55:20Z",
       "reach": {
        "probe_ok": true,
        "rtt_ms": null,
-       "last_ok_at": "2026-10-15T22:35:50Z",
+       "last_ok_at": "2026-10-16T17:55:20Z",
        "error": null
       },
       "load": {
@@ -8545,7 +9512,7 @@
         "crit_gb": 25
        }
       ],
-      "uptime_s": 1206200.1060540676,
+      "uptime_s": 1206200.067116022,
       "on_battery": false,
       "extras": [
        {
@@ -8579,12 +9546,22 @@
         "over_budget": false
        }
       },
+      "lanes": {
+       "running": 3,
+       "total": 5,
+       "homes": [
+        "atlas-main",
+        "borealis-lanes"
+       ],
+       "unreported": [],
+       "or_more": false
+      },
       "observed_by": "atlas-main",
       "sources": [
        "atlas-main"
       ],
       "beat_seen": {
-       "at": "2026-10-15T22:35:55Z",
+       "at": "2026-10-16T17:55:25Z",
        "interval_s": 15
       },
       "strain": {
@@ -8593,7 +9570,7 @@
        "warm": false,
        "baseline": 2.1,
        "threshold": 1.0,
-       "since": 1792103554.996018,
+       "since": 1792173125.814273,
        "sustained_s": 200
       }
      },
@@ -8602,11 +9579,11 @@
       "label": "Borealis",
       "role": "render box",
       "status": "ok",
-      "as_of": "2026-10-15T22:35:50Z",
+      "as_of": "2026-10-16T17:55:20Z",
       "reach": {
        "probe_ok": true,
        "rtt_ms": null,
-       "last_ok_at": "2026-10-15T22:35:50Z",
+       "last_ok_at": "2026-10-16T17:55:20Z",
        "error": null
       },
       "load": {
@@ -8640,7 +9617,7 @@
         "crit_gb": 60
        }
       ],
-      "uptime_s": 3600.1060540676117,
+      "uptime_s": 3600.06711602211,
       "on_battery": false,
       "extras": [
        {
@@ -8666,12 +9643,21 @@
         "over_budget": false
        }
       },
+      "lanes": {
+       "running": 2,
+       "total": 3,
+       "homes": [
+        "borealis-lanes"
+       ],
+       "unreported": [],
+       "or_more": false
+      },
       "observed_by": "borealis-lanes",
       "sources": [
        "borealis-lanes"
       ],
       "beat_seen": {
-       "at": "2026-10-15T22:35:55Z",
+       "at": "2026-10-16T17:55:25Z",
        "interval_s": 15
       },
       "strain": {
@@ -8689,11 +9675,11 @@
       "label": "Cinder",
       "role": "lab server",
       "status": "ok",
-      "as_of": "2026-10-15T22:35:50Z",
+      "as_of": "2026-10-16T17:55:20Z",
       "reach": {
        "probe_ok": true,
        "rtt_ms": null,
-       "last_ok_at": "2026-10-15T22:35:50Z",
+       "last_ok_at": "2026-10-16T17:55:20Z",
        "error": null
       },
       "load": {
@@ -8720,7 +9706,7 @@
         "crit_gb": 25
        }
       ],
-      "uptime_s": 734200.1060540676,
+      "uptime_s": 734200.0671160221,
       "on_battery": false,
       "extras": [
        {
@@ -8750,8 +9736,9 @@
       "sources": [
        "cinder-lanes"
       ],
+      "lanes": null,
       "beat_seen": {
-       "at": "2026-10-15T22:35:55Z",
+       "at": "2026-10-16T17:55:25Z",
        "interval_s": 15
       },
       "strain": {
@@ -8777,11 +9764,11 @@
       "doing": "Review fixed 2 findings; tests running",
       "state": "running",
       "state_detail": "validating (running)",
-      "started_at": "2026-10-15T20:52:34Z",
+      "started_at": "2026-10-16T16:12:05Z",
       "last_event": {
        "state": "running",
        "text": "review round 2 clean",
-       "at": "2026-10-15T22:01:34Z"
+       "at": "2026-10-16T17:21:05Z"
       },
       "progress": {
        "basis": "history",
@@ -8792,7 +9779,7 @@
        "reason": null,
        "current": {
         "step": "push",
-        "elapsed_s": 2060.1060540676117,
+        "elapsed_s": 2060.06711602211,
         "typical_s": 2640,
         "p90_s": 4200,
         "round": 2,
@@ -8856,7 +9843,7 @@
          "label": "Test",
          "status": "current",
          "weight": 0.327,
-         "elapsed_s": 2060.1060540676117,
+         "elapsed_s": 2060.06711602211,
          "typical_s": 2640,
          "p90_s": 4200,
          "round": null
@@ -8942,10 +9929,10 @@
       "source_lane": {
        "state": "Working",
        "cause": "worker-busy",
-       "since": "2026-10-15T22:12:54Z",
+       "since": "2026-10-16T17:32:25Z",
        "last_word": {
         "verb": "working",
-        "at": "2026-10-15T22:12:54Z"
+        "at": "2026-10-16T17:32:25Z"
        },
        "short_title": "Fog of war: hide units outside sight radius"
       },
@@ -8960,8 +9947,8 @@
        "mark": "bfcf10dd2e67"
       },
       "age": {
-       "s": 2064,
-       "since": "2026-10-15T22:01:34Z",
+       "s": 2065,
+       "since": "2026-10-16T17:21:05Z",
        "basis": "last_event"
       }
      },
@@ -8976,11 +9963,11 @@
       "doing": "Change request open, waiting on checks",
       "state": "done",
       "state_detail": "checks running",
-      "started_at": "2026-10-15T19:02:34Z",
+      "started_at": "2026-10-16T14:22:05Z",
       "last_event": {
        "state": "running",
        "text": "waiting on checks",
-       "at": "2026-10-15T22:19:34Z"
+       "at": "2026-10-16T17:39:05Z"
       },
       "progress": {
        "basis": "history",
@@ -8991,7 +9978,7 @@
        "reason": null,
        "current": {
         "step": "ci",
-        "elapsed_s": 960.1060540676117,
+        "elapsed_s": 960.06711602211,
         "typical_s": 1860,
         "p90_s": 3000,
         "round": 1,
@@ -9105,7 +10092,7 @@
          "label": "Checks",
          "status": "current",
          "weight": 0.229,
-         "elapsed_s": 960.1060540676117,
+         "elapsed_s": 960.06711602211,
          "typical_s": 1860,
          "p90_s": 3000,
          "round": null
@@ -9114,7 +10101,7 @@
       },
       "handoff": {
        "state": "complete",
-       "since": "2026-10-15T22:32:54Z"
+       "since": "2026-10-16T17:52:25Z"
       },
       "link": {
        "url": "https://example.com/changes/418",
@@ -9144,10 +10131,10 @@
       "source_lane": {
        "state": "Waiting on a check",
        "cause": "ci-running",
-       "since": "2026-10-15T22:19:54Z",
+       "since": "2026-10-16T17:39:25Z",
        "last_word": {
         "verb": "working",
-        "at": "2026-10-15T22:12:54Z"
+        "at": "2026-10-16T17:32:25Z"
        },
        "short_title": "Lobby ready-check countdown"
       },
@@ -9174,11 +10161,11 @@
       "doing": "Stopped at review: 1 finding needs a product call",
       "state": "waiting",
       "state_detail": "stopped at review: 1 finding",
-      "started_at": "2026-10-15T18:58:34Z",
+      "started_at": "2026-10-16T14:18:05Z",
       "last_event": {
        "state": "waiting",
        "text": "cover art: embed full-size or downscale?",
-       "at": "2026-10-15T20:20:34Z"
+       "at": "2026-10-16T15:40:05Z"
       },
       "progress": {
        "basis": "history",
@@ -9195,7 +10182,7 @@
         "round": 1,
         "activity": "waiting",
         "last_activity_age_s": 7720,
-        "waiting_since": "2026-10-15T20:21:34Z"
+        "waiting_since": "2026-10-16T15:41:05Z"
        },
        "steps": [
         {
@@ -9339,10 +10326,10 @@
       "source_lane": {
        "state": "Waiting on you",
        "cause": "owner-hold",
-       "since": "2026-10-15T20:20:54Z",
+       "since": "2026-10-16T15:40:25Z",
        "last_word": {
         "verb": "needs-decision",
-        "at": "2026-10-15T20:20:54Z"
+        "at": "2026-10-16T15:40:25Z"
        },
        "short_title": "EPUB export: cover art handling"
       },
@@ -9357,8 +10344,8 @@
        "mark": "81c0a484508d"
       },
       "age": {
-       "s": 8064,
-       "since": "2026-10-15T20:21:34Z",
+       "s": 8065,
+       "since": "2026-10-16T15:41:05Z",
        "basis": "step_waiting"
       }
      },
@@ -9373,11 +10360,11 @@
       "doing": "Checks green: ready for review",
       "state": "done",
       "state_detail": null,
-      "started_at": "2026-10-15T20:40:34Z",
+      "started_at": "2026-10-16T16:00:05Z",
       "last_event": {
        "state": "done",
        "text": "ready, checks green",
-       "at": "2026-10-15T22:18:34Z"
+       "at": "2026-10-16T17:38:05Z"
       },
       "progress": {
        "basis": "default",
@@ -9432,7 +10419,7 @@
       },
       "handoff": {
        "state": "awaiting_you",
-       "since": "2026-10-15T22:18:34Z"
+       "since": "2026-10-16T17:38:05Z"
       },
       "link": {
        "url": "https://example.com/changes/3",
@@ -9464,10 +10451,10 @@
       "source_lane": {
        "state": "Finished",
        "cause": "pr-ready",
-       "since": "2026-10-15T22:18:34Z",
+       "since": "2026-10-16T17:38:05Z",
        "last_word": {
         "verb": "done",
-        "at": "2026-10-15T22:18:34Z"
+        "at": "2026-10-16T17:38:05Z"
        },
        "short_title": "Status feed adapter for the primary workstation"
       },
@@ -9482,8 +10469,8 @@
        "mark": "8c54a914cf13"
       },
       "age": {
-       "s": 1044,
-       "since": "2026-10-15T22:18:34Z",
+       "s": 1045,
+       "since": "2026-10-16T17:38:05Z",
        "basis": "handoff"
       }
      },
@@ -9498,11 +10485,11 @@
       "doing": "Running the 4096-tile suite, 6 of 9 maps done",
       "state": "running",
       "state_detail": null,
-      "started_at": "2026-10-15T20:32:34Z",
+      "started_at": "2026-10-16T15:52:05Z",
       "last_event": {
        "state": "running",
        "text": "map 6 of 9 done",
-       "at": "2026-10-15T22:24:34Z"
+       "at": "2026-10-16T17:44:05Z"
       },
       "progress": {
        "basis": "coarse",
@@ -9513,7 +10500,7 @@
        "reason": "state only: no step data from this source",
        "current": {
         "step": "working",
-        "elapsed_s": 200.1060540676117,
+        "elapsed_s": 200.06711602210999,
         "typical_s": null,
         "p90_s": null,
         "round": null,
@@ -9537,7 +10524,7 @@
          "label": "Working",
          "status": "current",
          "weight": null,
-         "elapsed_s": 200.1060540676117,
+         "elapsed_s": 200.06711602210999,
          "typical_s": null,
          "p90_s": null,
          "round": null
@@ -9584,10 +10571,10 @@
       "source_lane": {
        "state": "Waiting on the supervisor",
        "cause": "at-gate",
-       "since": "2026-10-15T21:55:54Z",
+       "since": "2026-10-16T17:15:25Z",
        "last_word": {
         "verb": "parked",
-        "at": "2026-10-15T21:55:54Z"
+        "at": "2026-10-16T17:15:25Z"
        },
        "short_title": "Pathfinding benchmark on large maps"
       },
@@ -9602,8 +10589,8 @@
        "mark": "057f7958957f"
       },
       "age": {
-       "s": 684,
-       "since": "2026-10-15T22:24:34Z",
+       "s": 685,
+       "since": "2026-10-16T17:44:05Z",
        "basis": "last_event"
       }
      },
@@ -9618,11 +10605,11 @@
       "doing": "Signing step queued behind the key prompt",
       "state": "paused",
       "state_detail": null,
-      "started_at": "2026-10-15T21:22:34Z",
+      "started_at": "2026-10-16T16:42:05Z",
       "last_event": {
        "state": "running",
        "text": "build finished, signing",
-       "at": "2026-10-15T22:27:34Z"
+       "at": "2026-10-16T17:47:05Z"
       },
       "progress": {
        "basis": "coarse",
@@ -9633,7 +10620,7 @@
        "reason": "state only: no step data from this source",
        "current": {
         "step": "working",
-        "elapsed_s": 200.1060540676117,
+        "elapsed_s": 200.06711602210999,
         "typical_s": null,
         "p90_s": null,
         "round": null,
@@ -9657,7 +10644,7 @@
          "label": "Working",
          "status": "current",
          "weight": null,
-         "elapsed_s": 200.1060540676117,
+         "elapsed_s": 200.06711602210999,
          "typical_s": null,
          "p90_s": null,
          "round": null
@@ -9685,7 +10672,7 @@
        "label": "signing step",
        "percent": 70,
        "basis": "reported",
-       "at": "2026-10-15T22:31:34Z"
+       "at": "2026-10-16T17:51:05Z"
       },
       "waiting_on": "human",
       "summary": "signing step waits for the key prompt",
@@ -9707,7 +10694,7 @@
        {
         "t": "worker-gone",
         "how": "ended",
-        "at": "2026-10-15T20:32:34Z"
+        "at": "2026-10-16T15:52:05Z"
        }
       ],
       "phase": "build",
@@ -9716,10 +10703,10 @@
       "source_lane": {
        "state": "Needs attention",
        "cause": "worker-gone",
-       "since": "2026-10-15T20:32:34Z",
+       "since": "2026-10-16T15:52:05Z",
        "last_word": {
         "verb": "working",
-        "at": "2026-10-15T19:50:54Z"
+        "at": "2026-10-16T15:10:25Z"
        },
        "short_title": "Installer: signed package build"
       },
@@ -9746,11 +10733,11 @@
       "doing": "Encoding 1,200 sample replays, 38% done",
       "state": "running",
       "state_detail": null,
-      "started_at": "2026-10-15T18:32:34Z",
+      "started_at": "2026-10-16T13:52:05Z",
       "last_event": {
        "state": "running",
        "text": "batch 3 of 8",
-       "at": "2026-10-15T22:29:34Z"
+       "at": "2026-10-16T17:49:05Z"
       },
       "progress": {
        "basis": "coarse",
@@ -9815,7 +10802,7 @@
        {
         "t": "last-word",
         "verb": "paused",
-        "at": "2026-10-15T20:02:54Z"
+        "at": "2026-10-16T15:22:25Z"
        }
       ],
       "phase": "build",
@@ -9827,7 +10814,7 @@
        "since": null,
        "last_word": {
         "verb": "paused",
-        "at": "2026-10-15T20:02:54Z"
+        "at": "2026-10-16T15:22:25Z"
        },
        "short_title": "Replay files: delta compression"
       },
@@ -9842,8 +10829,8 @@
        "mark": "3676c80ca4e3"
       },
       "age": {
-       "s": 384,
-       "since": "2026-10-15T22:29:34Z",
+       "s": 385,
+       "since": "2026-10-16T17:49:05Z",
        "basis": "last_event"
       }
      },
@@ -9858,7 +10845,7 @@
       "doing": "Writing the feed spec",
       "state": "running",
       "state_detail": null,
-      "started_at": "2026-10-15T21:32:34Z",
+      "started_at": "2026-10-16T16:52:05Z",
       "last_event": null,
       "progress": {
        "basis": "none",
@@ -9900,10 +10887,247 @@
        "mark": "e75fddd308cf"
       },
       "age": {
-       "s": 3804,
-       "since": "2026-10-15T21:32:34Z",
+       "s": 3805,
+       "since": "2026-10-16T16:52:05Z",
        "basis": "started_at"
       }
+     },
+     {
+      "id": "bo-asset-bake",
+      "owner": "borealis-lanes",
+      "relayed": false,
+      "group": "skyforge",
+      "machine": "atlas",
+      "kind": "task",
+      "title": "Bake the lighting assets for the harbor map on the primary box, where the big GPU is free tonight",
+      "doing": null,
+      "state": "running",
+      "state_detail": null,
+      "started_at": "2026-10-16T12:00:25Z",
+      "last_event": null,
+      "progress": {
+       "basis": "none",
+       "history_n": 0,
+       "percent_floor": null,
+       "percent_ceiling": null,
+       "regressed": false,
+       "reason": "state only: no step data from this source",
+       "current": null,
+       "steps": []
+      },
+      "handoff": {
+       "state": "none",
+       "since": null
+      },
+      "link": null,
+      "flags": [],
+      "needs_you": false,
+      "project": "Skyforge",
+      "agent": {
+       "state": "alive",
+       "since": "2026-10-16T17:25:25Z",
+       "as_of": "2026-10-16T17:55:15Z",
+       "reason": null
+      },
+      "lane": {
+       "kind": "moving",
+       "cls": "ok",
+       "waiting_on": null,
+       "until": null,
+       "agent_gone_s": null,
+       "asks_you": false
+      },
+      "say": [
+       {
+        "t": "working"
+       }
+      ],
+      "source": "borealis-lanes",
+      "second_hand": false,
+      "source_lane": {
+       "state": "Working",
+       "cause": "worker-busy",
+       "since": "2026-10-16T17:25:25Z",
+       "last_word": {
+        "verb": "working",
+        "at": "2026-10-16T17:25:25Z"
+       },
+       "short_title": "Bake the lighting assets"
+      },
+      "row": {
+       "chip": "Skyforge",
+       "title": "Bake the lighting assets for the harbor map on the primary box, where the big GPU is free tonight",
+       "summary": null,
+       "order": [
+        1,
+        0
+       ],
+       "mark": "2ce8928df2a6"
+      },
+      "age": {
+       "s": 21305,
+       "since": "2026-10-16T12:00:25Z",
+       "basis": "started_at"
+      }
+     },
+     {
+      "id": "bo-crash-dump",
+      "owner": "borealis-lanes",
+      "relayed": false,
+      "group": "inkwell",
+      "machine": "borealis",
+      "kind": "task",
+      "title": "Crash dumps: upload them from the installer's first run so a failed install can be read later",
+      "doing": null,
+      "state": "unknown",
+      "state_detail": null,
+      "started_at": "2026-10-16T12:00:25Z",
+      "last_event": null,
+      "progress": {
+       "basis": "none",
+       "history_n": 0,
+       "percent_floor": null,
+       "percent_ceiling": null,
+       "regressed": false,
+       "reason": "state only: no step data from this source",
+       "current": null,
+       "steps": []
+      },
+      "handoff": {
+       "state": "none",
+       "since": null
+      },
+      "link": {
+       "url": "https://example.com/harbor/inkwell/pull/429",
+       "label": "#429",
+       "state": "open",
+       "state_as_of": "2026-10-16T17:48:25Z"
+      },
+      "flags": [],
+      "needs_you": false,
+      "project": "Inkwell",
+      "agent": null,
+      "lane": {
+       "kind": "pr_open",
+       "cls": "waiting",
+       "waiting_on": "pr",
+       "until": null,
+       "agent_gone_s": null,
+       "asks_you": false
+      },
+      "say": [
+       {
+        "t": "unreadable"
+       },
+       {
+        "t": "last-word",
+        "verb": "done",
+        "at": "2026-10-14T09:40:25Z"
+       }
+      ],
+      "source": "borealis-lanes",
+      "second_hand": false,
+      "source_lane": {
+       "state": "Can't tell",
+       "cause": "state-unreadable",
+       "since": null,
+       "last_word": {
+        "verb": "done",
+        "at": "2026-10-14T09:40:25Z"
+       },
+       "short_title": "Crash dumps"
+      },
+      "row": {
+       "chip": "Inkwell",
+       "title": "Crash dumps: upload them from the installer's first run so a failed install can be read later",
+       "summary": null,
+       "order": [
+        0,
+        1
+       ],
+       "mark": "5b49bafb7acf"
+      },
+      "age": null
+     },
+     {
+      "id": "bo-shader-cache",
+      "owner": "borealis-lanes",
+      "relayed": false,
+      "group": "inkwell",
+      "machine": "borealis",
+      "kind": "task",
+      "title": "Shader cache: keep the compiled variants between runs, so that a cold start does not stall the first match of the evening",
+      "doing": null,
+      "state": "unknown",
+      "state_detail": null,
+      "started_at": "2026-10-16T12:00:25Z",
+      "last_event": null,
+      "progress": {
+       "basis": "none",
+       "history_n": 0,
+       "percent_floor": null,
+       "percent_ceiling": null,
+       "regressed": false,
+       "reason": "state only: no step data from this source",
+       "current": null,
+       "steps": []
+      },
+      "handoff": {
+       "state": "none",
+       "since": null
+      },
+      "link": null,
+      "flags": [],
+      "needs_you": false,
+      "project": "Inkwell",
+      "agent": {
+       "state": "ended",
+       "since": "2026-10-16T17:50:05Z",
+       "as_of": "2026-10-16T17:55:15Z",
+       "reason": null
+      },
+      "lane": {
+       "kind": "unknown",
+       "cls": "quiet",
+       "waiting_on": null,
+       "until": null,
+       "agent_gone_s": null,
+       "asks_you": false
+      },
+      "say": [
+       {
+        "t": "unreadable"
+       },
+       {
+        "t": "last-word",
+        "verb": "done",
+        "at": "2026-10-16T13:22:25Z"
+       }
+      ],
+      "source": "borealis-lanes",
+      "second_hand": false,
+      "source_lane": {
+       "state": "Can't tell",
+       "cause": "state-unreadable",
+       "since": null,
+       "last_word": {
+        "verb": "done",
+        "at": "2026-10-16T13:22:25Z"
+       },
+       "short_title": "Shader cache",
+       "branch": true
+      },
+      "row": {
+       "chip": "Inkwell",
+       "title": "Shader cache: keep the compiled variants between runs, so that a cold start does not stall the first match of the evening",
+       "summary": null,
+       "order": [
+        0,
+        1
+       ],
+       "mark": "4c25fe324b32"
+      },
+      "age": null
      },
      {
       "id": "ci-index",
@@ -9916,11 +11140,11 @@
       "doing": "Rebuilding the search index",
       "state": "running",
       "state_detail": null,
-      "started_at": "2026-10-15T21:42:34Z",
+      "started_at": "2026-10-16T17:02:05Z",
       "last_event": {
        "state": "running",
        "text": "shard 2 of 6",
-       "at": "2026-10-15T22:30:34Z"
+       "at": "2026-10-16T17:50:05Z"
       },
       "progress": {
        "basis": "coarse",
@@ -9994,8 +11218,8 @@
        "mark": "d1132cdcd044"
       },
       "age": {
-       "s": 324,
-       "since": "2026-10-15T22:30:34Z",
+       "s": 325,
+       "since": "2026-10-16T17:50:05Z",
        "basis": "last_event"
       }
      }
@@ -10007,7 +11231,7 @@
       "severity": "action",
       "title": "Inkwell: how should EPUB export handle cover art?",
       "detail": "Embed the full-size image, or downscale to 1600 px. The export item is stopped until you choose.",
-      "since": "2026-10-15T20:21:34Z",
+      "since": "2026-10-16T15:41:05Z",
       "machine": "atlas",
       "item": "iw-export",
       "group": "inkwell",
@@ -10016,13 +11240,14 @@
        "url": "http://board-host.example:4387/session/0123456789abcdef",
        "label": "review board",
        "state": "open",
-       "state_as_of": "2026-10-15T22:31:34Z",
+       "state_as_of": "2026-10-16T17:51:05Z",
        "why": null
       },
       "how": "Answer in the team chat",
       "say": "iw-export: downscale to 1600 px",
       "options": [],
-      "source": "atlas-main"
+      "source": "atlas-main",
+      "aside": null
      },
      {
       "id": "approval:tw-feed",
@@ -10030,7 +11255,7 @@
       "severity": "action",
       "title": "Ready for approval: status feed adapter",
       "detail": "Checks green for 14 min, nothing left to review.",
-      "since": "2026-10-15T22:18:34Z",
+      "since": "2026-10-16T17:38:05Z",
       "machine": "atlas",
       "item": "tw-feed",
       "group": "tidewatch",
@@ -10041,7 +11266,8 @@
       "how": "Approve in the team chat",
       "say": "tw-feed: approve",
       "options": [],
-      "source": "atlas-main"
+      "source": "atlas-main",
+      "aside": null
      },
      {
       "id": "capacity:week",
@@ -10049,14 +11275,15 @@
       "severity": "action",
       "title": "The primary plan's week runs out before it resets",
       "detail": "18% left. At this pace it empties Sat 10:00, 9 h before the Sat 19:00 reset.",
-      "since": "2026-10-15T20:06:34Z",
+      "since": "2026-10-16T15:26:05Z",
       "machine": "atlas",
       "item": null,
       "group": null,
       "link": null,
       "how": "Move heavy work to another machine or slow new starts",
       "options": [],
-      "source": "atlas-main"
+      "source": "atlas-main",
+      "aside": null
      },
      {
       "id": "credential:sample-provider",
@@ -10064,14 +11291,109 @@
       "severity": "info",
       "title": "Sample provider sign-in expired",
       "detail": "Nothing uses it right now; its allowance is unreadable until it is refreshed.",
-      "since": "2026-10-15T14:03:34Z",
+      "since": "2026-10-16T09:23:05Z",
       "machine": "atlas",
       "item": null,
       "group": null,
       "link": null,
       "how": "Sign in once",
+      "actor": {
+       "role": "viewer",
+       "name": null
+      },
       "options": [],
-      "source": "atlas-main"
+      "source": "atlas-main",
+      "aside": null
+     },
+     {
+      "id": "decision:tide-reading",
+      "kind": "decision",
+      "severity": "action",
+      "title": "Take the second tide-gauge reading",
+      "detail": "Compare it with the first before the harbor schedule changes.",
+      "since": "2026-10-15T07:32:25Z",
+      "machine": "atlas",
+      "item": null,
+      "group": null,
+      "link": null,
+      "how": "answer in the home's chat",
+      "hold": {
+       "bucket": "dated",
+       "until": "2026-10-22",
+       "reason": "you put it off until the new gauge is fitted",
+       "since": "2026-10-15T07:32:25Z"
+      },
+      "options": [],
+      "source": "atlas-main",
+      "aside": "deferred"
+     },
+     {
+      "id": "gate:sf-lobby",
+      "kind": "decision",
+      "severity": "info",
+      "title": "2 blocked notices for the lobby countdown",
+      "detail": "The supervisor answers these; they are not yours.",
+      "since": "2026-10-16T17:00:25Z",
+      "machine": "atlas",
+      "item": null,
+      "group": "skyforge",
+      "link": null,
+      "how": null,
+      "actor": {
+       "role": "supervisor",
+       "name": "skipper"
+      },
+      "options": [],
+      "source": "atlas-main",
+      "aside": "theirs"
+     },
+     {
+      "id": "train:sf-netcode",
+      "kind": "approval",
+      "severity": "action",
+      "title": "Netcode PR held for the release train",
+      "detail": "Merges with the next train once the fleet verdict is in.",
+      "since": "2026-10-16T14:25:25Z",
+      "machine": "atlas",
+      "item": null,
+      "group": "skyforge",
+      "link": {
+       "url": "https://example.com/changes/431",
+       "label": "#431"
+      },
+      "how": null,
+      "actor": {
+       "role": "supervisor",
+       "name": "skipper"
+      },
+      "verdict": {
+       "name": "fleet verdict",
+       "state": "pending",
+       "as_of": "2026-10-16T17:43:45Z"
+      },
+      "options": [],
+      "source": "atlas-main",
+      "aside": "theirs"
+     },
+     {
+      "id": "summary:borealis-old",
+      "kind": "service",
+      "severity": "info",
+      "title": "Borealis summary 40 min old (remade every 5 min)",
+      "detail": "Its home's refresh did not remake it.",
+      "since": "2026-10-16T17:12:05Z",
+      "machine": "borealis",
+      "item": null,
+      "group": null,
+      "link": null,
+      "how": null,
+      "actor": {
+       "role": "supervisor",
+       "name": "skipper"
+      },
+      "options": [],
+      "source": "atlas-main",
+      "aside": "theirs"
      },
      {
       "id": "decision:sf-budget",
@@ -10079,7 +11401,7 @@
       "severity": "action",
       "title": "Skyforge: raise the pathfinding time budget to 6 ms?",
       "detail": "The large-map suite needs 5.4 ms a tick; the budget is 4 ms.",
-      "since": "2026-10-15T22:34:14Z",
+      "since": "2026-10-16T17:53:45Z",
       "machine": "atlas",
       "item": null,
       "group": "skyforge",
@@ -10087,7 +11409,8 @@
       "how": "Answer in the team chat",
       "say": "sf-budget: raise to 6 ms",
       "options": [],
-      "source": "atlas-main"
+      "source": "atlas-main",
+      "aside": null
      },
      {
       "id": "service:signing",
@@ -10095,14 +11418,15 @@
       "severity": "critical",
       "title": "Package signing service is down",
       "detail": "The installer build cannot sign its package",
-      "since": "2026-10-15T22:35:54Z",
+      "since": "2026-10-16T17:55:25Z",
       "machine": "borealis",
       "item": "bo-installer",
       "group": null,
       "link": null,
       "how": "Restart the signing service on Borealis",
       "options": [],
-      "source": "borealis-lanes"
+      "source": "borealis-lanes",
+      "aside": null
      }
     ],
     "attention_pending": [],
@@ -10115,8 +11439,9 @@
       "blocked_by": [],
       "reason": "next free slot on that machine",
       "until": null,
-      "filed": "2026-10-15",
-      "source": "borealis-lanes"
+      "filed": "2026-10-16",
+      "source": "borealis-lanes",
+      "aside": null
      },
      {
       "id": "iw-dict",
@@ -10126,8 +11451,9 @@
       "blocked_by": [],
       "reason": "waits for a free slot",
       "until": null,
-      "filed": "2026-10-15",
-      "source": "atlas-main"
+      "filed": "2026-10-16",
+      "source": "atlas-main",
+      "aside": null
      },
      {
       "id": "sf-tech-ui",
@@ -10139,8 +11465,9 @@
       ],
       "reason": "starts after the lobby countdown lands",
       "until": null,
-      "filed": "2026-10-14",
-      "source": "atlas-main"
+      "filed": "2026-10-15",
+      "source": "atlas-main",
+      "aside": null
      },
      {
       "id": "sf-cut-015",
@@ -10152,8 +11479,9 @@
       ],
       "reason": "waits for fog of war",
       "until": null,
-      "filed": "2026-10-12",
-      "source": "atlas-main"
+      "filed": "2026-10-13",
+      "source": "atlas-main",
+      "aside": null
      },
      {
       "id": "iw-notes-19",
@@ -10162,9 +11490,16 @@
       "kind": "held",
       "blocked_by": [],
       "reason": "you deferred it",
-      "until": "2026-10-19",
-      "filed": "2026-10-10",
-      "source": "atlas-main"
+      "until": "2026-10-20",
+      "filed": "2026-10-11",
+      "hold": {
+       "bucket": "dated",
+       "until": "2026-10-20",
+       "reason": "you deferred it until the 1.9 notes are reviewed",
+       "since": "2026-10-11T08:20:25Z"
+      },
+      "source": "atlas-main",
+      "aside": "deferred"
      }
     ],
     "done": [
@@ -10175,7 +11510,7 @@
       "title": "Tooltips: wrap long unit names",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-15T22:33:54Z",
+      "at": "2026-10-16T17:53:25Z",
       "source": "atlas-main"
      },
      {
@@ -10185,7 +11520,7 @@
       "title": "Inkwell: mirror margins in print",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-15T22:33:54Z",
+      "at": "2026-10-16T17:53:25Z",
       "source": "atlas-main"
      },
      {
@@ -10195,7 +11530,7 @@
       "title": "Lobby: ready-check countdown",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-15T22:32:54Z",
+      "at": "2026-10-16T17:52:25Z",
       "source": "atlas-main"
      },
      {
@@ -10205,7 +11540,7 @@
       "title": "Minimap pings fade after 4 s",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-15T21:51:34Z",
+      "at": "2026-10-16T17:11:05Z",
       "source": "atlas-main"
      },
      {
@@ -10215,7 +11550,7 @@
       "title": "Autosave no longer crashes on long chapters",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-15T20:13:34Z",
+      "at": "2026-10-16T15:33:05Z",
       "source": "atlas-main"
      },
      {
@@ -10225,7 +11560,7 @@
       "title": "Netcode fuzz harness runs on the render box",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-15T19:41:34Z",
+      "at": "2026-10-16T15:01:05Z",
       "source": "borealis-lanes"
      },
      {
@@ -10235,7 +11570,7 @@
       "title": "Heavy work routes by allowance runway",
       "via": "local merge",
       "link": null,
-      "at": "2026-10-15T19:27:34Z",
+      "at": "2026-10-16T14:47:05Z",
       "source": "atlas-main"
      },
      {
@@ -10245,7 +11580,7 @@
       "title": "Export formats: findings report",
       "via": "report",
       "link": null,
-      "at": "2026-10-15T18:52:34Z",
+      "at": "2026-10-16T14:12:05Z",
       "source": "atlas-main"
      },
      {
@@ -10255,7 +11590,7 @@
       "title": "Unit hotkeys remember their groups",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-15T17:22:34Z",
+      "at": "2026-10-16T12:42:05Z",
       "source": "atlas-main"
      },
      {
@@ -10265,7 +11600,7 @@
       "title": "Earlier work 1d-0",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-14T21:32:34Z",
+      "at": "2026-10-15T16:52:05Z",
       "source": "atlas-main"
      },
      {
@@ -10275,7 +11610,7 @@
       "title": "Earlier work 1d-1",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-14T20:32:34Z",
+      "at": "2026-10-15T15:52:05Z",
       "source": "atlas-main"
      },
      {
@@ -10285,7 +11620,7 @@
       "title": "Earlier work 1d-2",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-14T19:32:34Z",
+      "at": "2026-10-15T14:52:05Z",
       "source": "atlas-main"
      },
      {
@@ -10295,7 +11630,7 @@
       "title": "Earlier work 1d-3",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-14T18:32:34Z",
+      "at": "2026-10-15T13:52:05Z",
       "source": "atlas-main"
      },
      {
@@ -10305,7 +11640,7 @@
       "title": "Earlier work 2d-0",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-13T21:32:34Z",
+      "at": "2026-10-14T16:52:05Z",
       "source": "atlas-main"
      },
      {
@@ -10315,7 +11650,7 @@
       "title": "Earlier work 2d-1",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-13T20:32:34Z",
+      "at": "2026-10-14T15:52:05Z",
       "source": "atlas-main"
      },
      {
@@ -10325,7 +11660,7 @@
       "title": "Earlier work 2d-2",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-13T19:32:34Z",
+      "at": "2026-10-14T14:52:05Z",
       "source": "atlas-main"
      },
      {
@@ -10335,7 +11670,7 @@
       "title": "Earlier work 3d-0",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-12T21:32:34Z",
+      "at": "2026-10-13T16:52:05Z",
       "source": "atlas-main"
      },
      {
@@ -10345,7 +11680,7 @@
       "title": "Earlier work 4d-0",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-11T21:32:34Z",
+      "at": "2026-10-12T16:52:05Z",
       "source": "atlas-main"
      },
      {
@@ -10355,7 +11690,7 @@
       "title": "Earlier work 4d-1",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-11T20:32:34Z",
+      "at": "2026-10-12T15:52:05Z",
       "source": "atlas-main"
      },
      {
@@ -10365,7 +11700,7 @@
       "title": "Earlier work 4d-2",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-11T19:32:34Z",
+      "at": "2026-10-12T14:52:05Z",
       "source": "atlas-main"
      },
      {
@@ -10375,7 +11710,7 @@
       "title": "Earlier work 4d-3",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-11T18:32:34Z",
+      "at": "2026-10-12T13:52:05Z",
       "source": "atlas-main"
      },
      {
@@ -10385,7 +11720,7 @@
       "title": "Earlier work 5d-0",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-10T21:32:34Z",
+      "at": "2026-10-11T16:52:05Z",
       "source": "atlas-main"
      },
      {
@@ -10395,7 +11730,7 @@
       "title": "Earlier work 5d-1",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-10T20:32:34Z",
+      "at": "2026-10-11T15:52:05Z",
       "source": "atlas-main"
      },
      {
@@ -10405,7 +11740,7 @@
       "title": "Earlier work 5d-2",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-10T19:32:34Z",
+      "at": "2026-10-11T14:52:05Z",
       "source": "atlas-main"
      },
      {
@@ -10415,7 +11750,7 @@
       "title": "Earlier work 5d-3",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-10T18:32:34Z",
+      "at": "2026-10-11T13:52:05Z",
       "source": "atlas-main"
      },
      {
@@ -10425,7 +11760,7 @@
       "title": "Earlier work 6d-0",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-09T21:32:34Z",
+      "at": "2026-10-10T16:52:05Z",
       "source": "atlas-main"
      },
      {
@@ -10435,7 +11770,7 @@
       "title": "Earlier work 6d-1",
       "via": "pull request",
       "link": null,
-      "at": "2026-10-09T20:32:34Z",
+      "at": "2026-10-10T15:52:05Z",
       "source": "atlas-main"
      }
     ],
@@ -10446,10 +11781,10 @@
       "label": "Skyforge",
       "color": null,
       "checkpoint": {
-       "as_of": "2026-10-15T19:04:55Z",
+       "as_of": "2026-10-16T14:24:25Z",
        "live": {
         "version": "0.15",
-        "since": "2026-10-15T22:33:24Z"
+        "since": "2026-10-16T17:52:55Z"
        },
        "next": {
         "version": "0.15",
@@ -10460,7 +11795,7 @@
        },
        "gate": {
         "value": "pass",
-        "as_of": "2026-10-15T18:44:55Z",
+        "as_of": "2026-10-16T14:04:25Z",
         "note": "frame-time floor held on the reference map",
         "tiers": []
        },
@@ -10472,10 +11807,10 @@
       "label": "Inkwell",
       "color": null,
       "checkpoint": {
-       "as_of": "2026-10-15T19:04:55Z",
+       "as_of": "2026-10-16T14:24:25Z",
        "live": {
         "version": "1.9",
-        "since": "2026-10-15T22:35:24Z"
+        "since": "2026-10-16T17:54:55Z"
        },
        "next": {
         "version": "1.9",
@@ -10514,7 +11849,7 @@
          "label": "5-hour",
          "short": "5h",
          "percent_remaining": 81,
-         "resets_at": "2026-10-16T00:40:54Z",
+         "resets_at": "2026-10-16T20:00:25Z",
          "pace": "behind"
         },
         {
@@ -10522,7 +11857,7 @@
          "label": "Week",
          "short": "wk",
          "percent_remaining": 57,
-         "resets_at": "2026-10-19T12:00:54Z",
+         "resets_at": "2026-10-20T07:20:25Z",
          "pace": "behind"
         }
        ],
@@ -10533,7 +11868,7 @@
         "source": "the provider's own projection"
        },
        "source": "borealis-lanes",
-       "as_of": "2026-10-15T22:33:25Z"
+       "as_of": "2026-10-16T17:52:55Z"
       },
       {
        "id": "primary-plan",
@@ -10544,27 +11879,27 @@
          "id": "short",
          "label": "5-hour",
          "percent_remaining": 62,
-         "resets_at": "2026-10-16T01:20:34Z",
+         "resets_at": "2026-10-16T20:40:05Z",
          "pace": "ahead"
         },
         {
          "id": "week",
          "label": "Week",
          "percent_remaining": 18,
-         "resets_at": "2026-10-18T04:32:34Z",
+         "resets_at": "2026-10-18T23:52:05Z",
          "pace": "ahead"
         }
        ],
        "runway": {
         "status": "exhausts_before_reset",
         "confidence": "medium",
-        "projected_empty_at": "2026-10-17T20:32:34Z",
+        "projected_empty_at": "2026-10-18T15:52:05Z",
         "source": "the provider's own projection"
        },
        "provider": "Orbit",
        "account": "Team plan",
        "source": "atlas-main",
-       "as_of": "2026-10-15T22:33:25Z"
+       "as_of": "2026-10-16T17:52:55Z"
       }
      ],
      "chips": [
@@ -10587,12 +11922,12 @@
         "short": "wk"
        },
        "left": 57,
-       "resets_at": "2026-10-19T12:00:54Z",
-       "resets": "Mon 05:00",
+       "resets_at": "2026-10-20T07:20:25Z",
+       "resets": "Tue 00:20",
        "state": "ok",
        "sentence": null,
        "forms": [
-        "Orbit Borealis wk 57% Mon 05:00",
+        "Orbit Borealis wk 57% Tue 00:20",
         "Orbit Borealis wk 57%",
         "Orbit wk 57%",
         "Orb 57%"
@@ -10605,11 +11940,11 @@
        "account": "Team plan",
        "projection": {
         "status": "exhausts_before_reset",
-        "empty_at": "2026-10-17T20:32:34Z",
+        "empty_at": "2026-10-18T15:52:05Z",
         "confidence": "medium",
         "source": "the provider's own projection"
        },
-       "countdown_s": 165395,
+       "countdown_s": 165394,
        "back_in_s": null,
        "window": {
         "id": "week",
@@ -10617,14 +11952,14 @@
         "short": "wk"
        },
        "left": 18,
-       "resets_at": "2026-10-18T04:32:34Z",
-       "resets": "Sat 21:32",
+       "resets_at": "2026-10-18T23:52:05Z",
+       "resets": "Sun 16:52",
        "state": "low",
-       "sentence": "Orbit (Team plan) may run out in 1 d 21 h (Sat 13:32), before the Week reset Sat 21:32",
+       "sentence": "Orbit (Team plan) may run out in 1 d 21 h (Sun 08:52), before the Week reset Sun 16:52",
        "forms": [
         "Orbit Team plan wk 18% out in 1 d 21 h",
         "Orbit wk 18% out in 1 d 21 h",
-        "Orbit Team plan wk 18% Sat 21:32",
+        "Orbit Team plan wk 18% Sun 16:52",
         "Orbit Team plan wk 18%",
         "Orbit wk 18%",
         "Orb 18%"
@@ -10634,21 +11969,21 @@
     },
     "omitted": [],
     "counts": {
-     "items": 9,
-     "running": 5,
+     "items": 12,
+     "running": 6,
      "off_course": 2,
-     "lanes_waiting": 1,
+     "lanes_waiting": 2,
      "waiting": 1,
      "awaiting_you": 1,
-     "unknown": 0,
-     "attention": 5,
+     "unknown": 2,
+     "attention": 7,
      "attention_pending": 0,
      "waiting_on_you": 4,
      "calls": 4,
      "waiting_unverified": [],
      "next": 5,
      "agent_gone": 0,
-     "outside": 0,
+     "outside": 1,
      "queued": 0,
      "version_skew": [],
      "version_unknown": []
@@ -10657,18 +11992,30 @@
     "sample": true,
     "sample_only": true,
     "gaps": {
-     "waits_outside": [],
+     "waits_outside": [
+      {
+       "id": "bo-crash-dump",
+       "source": "borealis-lanes",
+       "owner": "borealis-lanes",
+       "title": "Crash dumps: upload them from the installer's first run so a failed install can be read later",
+       "chip": "Inkwell",
+       "waiting_on": "pr",
+       "who": "a review upstream",
+       "since": null,
+       "age_s": null
+      }
+     ],
      "oldest_waiting": {
-      "s": 8064,
+      "s": 8065,
       "id": "iw-export",
       "source": "atlas-main"
      },
      "queues": [],
      "coming_up": [
       {
-       "at": 1792368000.0,
+       "at": 1792454400.0,
        "date_only": true,
-       "date": "2026-10-19",
+       "date": "2026-10-20",
        "kind": "next",
        "id": "iw-notes-19",
        "source": "atlas-main",
@@ -10684,16 +12031,12 @@
      "done_today": 9,
      "landed": {
       "mode": "rolling",
-      "since": 1792017358.1546838,
+      "since": 1792086930.677089,
       "hours": 24,
       "day_start": null,
       "n": 9
      },
      "by_day": [
-      {
-       "day": "2026-10-02",
-       "done": {}
-      },
       {
        "day": "2026-10-03",
        "done": {}
@@ -10712,28 +12055,24 @@
       },
       {
        "day": "2026-10-07",
+       "done": {}
+      },
+      {
+       "day": "2026-10-08",
        "done": {
         "tidewatch": 1
        }
       },
       {
-       "day": "2026-10-08",
+       "day": "2026-10-09",
        "done": {
         "tidewatch": 1,
         "inkwell": 1
        }
       },
       {
-       "day": "2026-10-09",
-       "done": {
-        "inkwell": 1,
-        "skyforge": 1
-       }
-      },
-      {
        "day": "2026-10-10",
        "done": {
-        "tidewatch": 2,
         "inkwell": 1,
         "skyforge": 1
        }
@@ -10741,19 +12080,27 @@
       {
        "day": "2026-10-11",
        "done": {
+        "tidewatch": 2,
+        "inkwell": 1,
+        "skyforge": 1
+       }
+      },
+      {
+       "day": "2026-10-12",
+       "done": {
         "inkwell": 2,
         "skyforge": 1,
         "tidewatch": 1
        }
       },
       {
-       "day": "2026-10-12",
+       "day": "2026-10-13",
        "done": {
         "skyforge": 1
        }
       },
       {
-       "day": "2026-10-13",
+       "day": "2026-10-14",
        "done": {
         "inkwell": 1,
         "skyforge": 1,
@@ -10761,7 +12108,7 @@
        }
       },
       {
-       "day": "2026-10-14",
+       "day": "2026-10-15",
        "done": {
         "inkwell": 2,
         "skyforge": 1,
@@ -10769,7 +12116,7 @@
        }
       },
       {
-       "day": "2026-10-15",
+       "day": "2026-10-16",
        "done": {
         "skyforge": 5,
         "inkwell": 3,
@@ -10779,7 +12126,7 @@
      ],
      "timeline": [
       {
-       "at": 1792103755.142945,
+       "at": 1792173325.886116,
        "owner": "borealis-lanes",
        "item": "bo-installer",
        "group": null,
@@ -10787,7 +12134,7 @@
        "text": "Package signing service is down"
       },
       {
-       "at": 1792103655.0507672,
+       "at": 1792173225.8436842,
        "owner": "atlas-main",
        "item": null,
        "group": "skyforge",
@@ -10795,7 +12142,7 @@
        "text": "Skyforge: raise the pathfinding time budget to 6 ms?"
       },
       {
-       "at": 1792103634.0,
+       "at": 1792173205.0,
        "owner": "atlas-main",
        "item": "iw-margins",
        "group": "inkwell",
@@ -10803,7 +12150,7 @@
        "text": "Inkwell: mirror margins in print"
       },
       {
-       "at": 1792103634.0,
+       "at": 1792173205.0,
        "owner": "atlas-main",
        "item": "sf-tooltips",
        "group": "skyforge",
@@ -10811,7 +12158,7 @@
        "text": "Tooltips: wrap long unit names"
       },
       {
-       "at": 1792103575.013969,
+       "at": 1792173145.820232,
        "owner": "atlas-main",
        "item": "sf-lobby",
        "group": "skyforge",
@@ -10819,7 +12166,7 @@
        "text": "Skyforge: lobby ready-check countdown"
       },
       {
-       "at": 1792103574.0,
+       "at": 1792173145.0,
        "owner": "atlas-main",
        "item": "sf-lobby",
        "group": "skyforge",
@@ -10827,7 +12174,7 @@
        "text": "Lobby: ready-check countdown"
       },
       {
-       "at": 1792101094.0,
+       "at": 1792170665.0,
        "owner": "atlas-main",
        "item": "sf-lobby",
        "group": null,
@@ -10835,7 +12182,7 @@
        "text": "Lobby countdown: change open, waiting on checks"
       },
       {
-       "at": 1792101094.0,
+       "at": 1792170665.0,
        "owner": "atlas-main",
        "item": "sf-minimap",
        "group": "skyforge",
@@ -10843,7 +12190,7 @@
        "text": "Minimap pings fade after 4 s"
       },
       {
-       "at": 1792095634.0,
+       "at": 1792165205.0,
        "owner": "atlas-main",
        "item": "iw-export",
        "group": null,
@@ -10851,7 +12198,7 @@
        "text": "EPUB cover art needs your call"
       },
       {
-       "at": 1792095214.0,
+       "at": 1792164785.0,
        "owner": "atlas-main",
        "item": "iw-autosave",
        "group": "inkwell",
@@ -10859,7 +12206,7 @@
        "text": "Autosave no longer crashes on long chapters"
       },
       {
-       "at": 1792093294.0,
+       "at": 1792162865.0,
        "owner": "borealis-lanes",
        "item": "bo-netcode",
        "group": "skyforge",
@@ -10867,7 +12214,7 @@
        "text": "Netcode fuzz harness runs on the render box"
       },
       {
-       "at": 1792092454.0,
+       "at": 1792162025.0,
        "owner": "atlas-main",
        "item": "tw-routing",
        "group": "tidewatch",
@@ -10875,7 +12222,7 @@
        "text": "Heavy work routes by allowance runway"
       },
       {
-       "at": 1792090354.0,
+       "at": 1792159925.0,
        "owner": "atlas-main",
        "item": "iw-scout",
        "group": "inkwell",
@@ -10883,7 +12230,7 @@
        "text": "Export formats: findings report"
       },
       {
-       "at": 1792084954.0,
+       "at": 1792154525.0,
        "owner": "atlas-main",
        "item": "sf-hotkeys",
        "group": "skyforge",
@@ -10903,42 +12250,42 @@
       ],
       "stuck": [],
       "landed": [
-       1791577954.0,
-       1791581554.0,
-       1791657154.0,
-       1791660754.0,
-       1791664354.0,
-       1791667954.0,
-       1791743554.0,
-       1791747154.0,
-       1791750754.0,
-       1791754354.0,
-       1791840754.0,
-       1791919954.0,
-       1791923554.0,
-       1791927154.0,
-       1792002754.0,
-       1792006354.0,
-       1792009954.0,
-       1792013554.0,
-       1792084954.0,
-       1792090354.0,
-       1792092454.0,
-       1792093294.0,
-       1792095214.0,
-       1792101094.0,
-       1792103574.0,
-       1792103634.0,
-       1792103634.0
+       1791647525.0,
+       1791651125.0,
+       1791726725.0,
+       1791730325.0,
+       1791733925.0,
+       1791737525.0,
+       1791813125.0,
+       1791816725.0,
+       1791820325.0,
+       1791823925.0,
+       1791910325.0,
+       1791989525.0,
+       1791993125.0,
+       1791996725.0,
+       1792072325.0,
+       1792075925.0,
+       1792079525.0,
+       1792083125.0,
+       1792154525.0,
+       1792159925.0,
+       1792162025.0,
+       1792162865.0,
+       1792164785.0,
+       1792170665.0,
+       1792173145.0,
+       1792173205.0,
+       1792173205.0
       ]
      },
      "projects": [
       {
        "key": "inkwell",
        "chip": "Inkwell",
-       "n": 2,
+       "n": 4,
        "off": 1,
-       "waiting": 1,
+       "waiting": 2,
        "machines": [
         "atlas",
         "borealis"
@@ -10947,7 +12294,7 @@
       {
        "key": "skyforge",
        "chip": "Skyforge",
-       "n": 4,
+       "n": 5,
        "off": 0,
        "waiting": 0,
        "machines": [
@@ -11073,7 +12420,7 @@
        }
       ],
       "link": "https://example.invalid/releases/runbook",
-      "updated_at": "2026-10-15T22:35:55Z",
+      "updated_at": "2026-10-16T17:55:25Z",
       "stale_after_s": 86400
      },
      {
@@ -11095,7 +12442,7 @@
         "value": 1
        }
       ],
-      "updated_at": "2026-10-15T22:35:55Z",
+      "updated_at": "2026-10-16T17:55:25Z",
       "mode": "advice-only",
       "stale_after_s": 600
      },
@@ -11118,7 +12465,7 @@
         "value": 0
        }
       ],
-      "updated_at": "2026-10-15T22:35:55Z",
+      "updated_at": "2026-10-16T17:55:25Z",
       "stale_after_s": 900
      }
     ],
@@ -11130,7 +12477,7 @@
     }
    },
    "server": {
-    "version": "0.9.0-592d1dd8",
+    "version": "0.9.0-30fe6871",
     "host": "demo host",
     "config": {
      "title": "Weatherdeck",
@@ -11175,8 +12522,25 @@
       "lane_ask_reason": "Its lane says it is waiting for your OK; {who} has not raised it as a call.",
       "lane_ask_reason_none": "Its lane says it is waiting for your OK; no source has raised it as a call.",
       "disagree_badge": "Sources disagree",
-      "disagree_lane": "{source} says {title} is waiting for your OK; no call names it.",
-      "disagree_call": "{source} raises {call}; its lane on {lane_source} does not say it is waiting for your OK.",
+      "disagree_lane": "{source} says its lane {title} is waiting for your OK; no source has raised a call for it.",
+      "disagree_call": "{source} says {call} is waiting on you; {lane_source} says its lane {title} is not waiting for your OK.",
+      "fyi_line": "{what}: {title} ({owner})",
+      "fyi_kind_decision": "A decision notice",
+      "fyi_kind_approval": "An approval notice",
+      "fyi_kind_capacity": "A capacity notice",
+      "fyi_kind_credential": "A sign-in notice",
+      "fyi_kind_machine": "A machine notice",
+      "fyi_kind_service": "A service notice",
+      "fyi_kind_disk": "A disk notice",
+      "fyi_kind_info": "A notice",
+      "fyi_kind_other": "A notice",
+      "fyi_owner": "{name}'s to act on",
+      "fyi_owner_you": "yours to know; not counted as waiting on you",
+      "fyi_owner_unreported": "from {source}; whose it is: not reported",
+      "actor_viewer": "you",
+      "actor_supervisor": "the supervisor",
+      "actor_worker": "its worker",
+      "actor_external": "someone outside the fleet",
       "problem": "Problem",
       "as_of": "as of {t}",
       "ago": "{t} ago",
@@ -11396,6 +12760,8 @@
       "sec_fyi": "FYI",
       "sec_lane": "Lanes waiting for your OK",
       "sec_disagree": "Sources disagree",
+      "sec_deferred": "Deferred",
+      "sec_theirs": "Someone else's turn",
       "sec_ships": "Machines",
       "sec_reporters": "Who reports",
       "sec_tools": "Tools",
@@ -11725,6 +13091,15 @@
       "collector_failed": "{name}: {what} failed",
       "collector_old_short": "{what} {t} old",
       "collector_failed_short": "{what} failed",
+      "collector_made_stale": "{name}: its {what} copy was made {t} ago and is remade every {every}: STALE",
+      "collector_made_stale_n": "{name}: its {what} copy was made {t} ago: STALE",
+      "collector_made_short": "{what} made {t} ago",
+      "lanes_running": "lanes {n} running",
+      "lanes_running_of": "lanes {n} running of {total}",
+      "lanes_or_more": "or more",
+      "lanes_homes_one": "1 home",
+      "lanes_homes": "{n} homes",
+      "lanes_unreported": "{n} not reported",
       "collector_error_word": "failed",
       "adapter_v": "adapter {v}",
       "adapter_unknown": "version unknown",
@@ -11961,8 +13336,8 @@
       "ls_but": "{a}, but {b}.",
       "ls_no_news": "No news for {t}.",
       "ls_unreadable": "Its state can't be read now",
-      "ls_last_word": "; the last thing it said was {what}, {t} ago.",
-      "ls_last_word_now": "; the last thing it said was {what}.",
+      "ls_recorded": "The last thing it said was {what}, {t} ago; nothing newer is recorded.",
+      "ls_recorded_now": "The last thing it said was {what}; nothing newer is recorded.",
       "ls_no_last_word": "; nothing it said is recorded.",
       "ls_gate_owner_unknown": "It stopped at a gate, and the record does not say whose answer it waits on.",
       "ls_verb_working": "that it was working",
@@ -12050,6 +13425,7 @@
       "rs_key_you": "It waits on you.",
       "rs_key_stuck": "It needs a hand; its feed does not say why.",
       "rs_key_unk": "Its state can't be read now.",
+      "rs_key_unk_said": "{said}; nothing newer is recorded.",
       "rs_key_work": "Its worker is on it.",
       "rs_key_other": "It waits on someone else; its feed does not say who.",
       "rs_key_done": "It finished.",
@@ -12062,7 +13438,7 @@
       "rs_was_paused": "it was paused",
       "rs_was_waiting": "it was waiting",
       "rs_was_other": "no word on what it was doing",
-      "rs_unknown": "Its state can't be read now. Last news {ago} ago.",
+      "rs_unknown": "Its last news was {ago} ago; nothing newer is recorded.",
       "rs_unknown_never": "Its state can't be read now, and no news of it is recorded.",
       "rs_gone": "Nobody is on it: its worker's session ended {gone} ago.",
       "rs_gone_pane": "Nobody is on it: its worker's pane or process is gone ({gone} ago).",
@@ -12092,6 +13468,31 @@
       "rs_scout": "Exploring.",
       "rs_scout_d": "Exploring: {detail}.",
       "rs_until": " Until {t}.",
+      "rs_said": "The last thing it said was {what}, {t} ago",
+      "rs_said_now": "The last thing it said was {what}",
+      "rs_rec_pr_open": "Finished; waiting on upstream review of PR {pr}. {said}.",
+      "rs_rec_merged": "Finished; PR {pr} has merged. {said}.",
+      "rs_rec_held": "Held; no worker is moving it. {said}.",
+      "rs_rec_branch": "Branch only, no worker running. {said}.",
+      "rs_rec_no_worker": "No PR is recorded and no worker is running. {said}.",
+      "aside_deferred": "Deferred",
+      "aside_deferred_n": "Deferred {n}",
+      "aside_theirs": "Someone else's turn",
+      "aside_theirs_named": "{name}'s turn",
+      "aside_not_counted": "Not counted in Needs you.",
+      "aside_until": "until {d}",
+      "aside_until_unreported": "until: not reported",
+      "aside_reason_unreported": "reason not reported",
+      "aside_owner": "{name} owns it",
+      "aside_owner_unreported": "owner not reported",
+      "aside_since": "since {t} ago",
+      "aside_since_unreported": "since: not reported",
+      "aside_verdict": "waits on the {name}: {state}",
+      "aside_not_reported": "not reported",
+      "verdict_pending": "pending",
+      "verdict_pass": "passed",
+      "verdict_fail": "failed",
+      "verdict_unknown": "unknown",
       "strip_label": "What needs to occur",
       "strip_you": "Needs you",
       "strip_you_none": "Nothing needs you.",
@@ -12114,8 +13515,8 @@
       "strip_n_calls": "{n} calls",
       "strip_n_problem": "{n} problem",
       "strip_n_problems": "{n} problems",
-      "att_unreadable_one": "1 lane on {where} can't be read right now; it shows its last word below.",
-      "att_unreadable_many": "{n} lanes on {where} can't be read right now; each shows its last word below.",
+      "att_unreadable_one": "1 lane on {where} reads Can't tell; its row says what is recorded of it.",
+      "att_unreadable_many": "{n} lanes on {where} read Can't tell; each row says what is recorded of it.",
       "att_unverified": "{name}'s waiting number is unverified: {reason}",
       "hdr_feeds": "{live} of {total} feeds report",
       "grp_no_project": "Other work",

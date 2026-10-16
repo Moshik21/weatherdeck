@@ -15,8 +15,9 @@ import urllib.request
 from . import cards, config, ingest, schema
 
 DEMO_DIR = config.ROOT / "examples" / "demo"
-# Times of measurements move with each push; times of events stay where the first push put them.
-MEASURED = {"generated_at", "as_of", "last_ok_at"}
+# Times of measurements move with each push; times of events stay where the first push put them. A copy's `made_at` (1.12)
+# moves too, so a fresh copy stays fresh and a stale one stays exactly as stale while the demo runs.
+MEASURED = {"generated_at", "as_of", "last_ok_at", "made_at"}
 # Dates (YYYY-MM-DD) move by whole days, so a hold "until tomorrow" in the fixture stays tomorrow.
 DATED = {"until", "filed"}
 

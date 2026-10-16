@@ -60,11 +60,18 @@ function bridgeRows(B, ship) {
     title: L("unverified_line", { name: u.name, reason: u.reason }), age: "", rec: null, sub: null, how: null, frozen: false, c: { id: "unverified:" + u.id, source: u.id, title: L("waiting_unverified"), detail: u.reason } });
   for (const c of B.pending || []) if (onShip(ship, c.machine, c.source)) rows.push(Object.assign(callRow(c, "also"), { sub: L("alert_unconfirmed_sub"), age: "" }));
   // An info card is an FYI on its own line: never a call, never counted.
-  for (const c of B.also || []) if (onShip(ship, c.machine, c.source) && !explainsUnverified(unver, c)) rows.push(callRow(c, "fyi"));
+  for (const c of B.also || []) if (onShip(ship, c.machine, c.source) && !explainsUnverified(unver, c)) rows.push(Object.assign(callRow(c, "fyi"), { title: c.fyi || c.title || c.id }));
+  // Feed 1.12: the viewer's dated holds and someone else's turn, listed apart and never counted (model.js asideModel).
+  for (const r of (B.aside || {}).deferred || []) if (onShip(ship, r.card ? r.card.machine : null, r.source)) rows.push({ key: "deferred:" + r.key, tier: "deferred", glyph: "asleep", slot: "ink2",
+    title: r.title, age: "", rec: null, sub: [r.untilWord ? L("aside_until", { d: r.untilWord }) : L("aside_until_unreported"), r.hold.reason || L("aside_reason_unreported")].join(" · "), how: null, frozen: false,
+    c: Object.assign({ id: "deferred:" + r.key }, r.card || r.row) });
+  for (const r of (B.aside || {}).theirs || []) if (onShip(ship, r.card.machine, r.card.source)) rows.push(Object.assign(callRow(r.card, "theirs"), {
+    sub: [r.owner ? L("aside_owner", { name: r.owner }) : L("aside_owner_unreported"), r.ageS != null ? L("aside_since", { t: age(r.ageS) }) : L("aside_since_unreported"),
+      r.verdict && r.verdict.name ? L("aside_verdict", { name: r.verdict.name, state: r.verdict.state || L("aside_not_reported") }) : null].filter(Boolean).join(" · ") }));
   return rows;
 }
 function callRow(c, tier) {
-  const aside = tier === "also" || tier === "fyi" || tier === "disagree";
+  const aside = tier === "also" || tier === "fyi" || tier === "disagree" || tier === "deferred" || tier === "theirs";
   const glyph = tier === "alarm" ? "failed" : aside ? "silent" : c.frozen ? "silent" : c.glyph;
   const slot = tier === "alarm" ? "trouble" : aside || c.frozen ? "ink2" : "needs";
   return { key: c.id, tier, glyph, slot, title: c.title || c.id, age: aside ? "" : callAge(c), rec: c.recommend || null,
@@ -157,6 +164,8 @@ function nestRows(B, ship) {
       title: srcName(s), word: rest ? L("src_resting") : lv === "absent" ? L("src_absent") : L("src_" + lv), wordSlot: lv === "live" ? "ink" : "ink2", stale: quiet(lv) && !rest,
       sub: s.placeholder ? s.reason : [sourceSay(s).line || L("last_report", { t: age(srcAge(s)) }), s.station, softwareOf(s).adapter, (s.skew || []).length ? L("skew_short") : null, s.rejected ? L("rejected_since", { name: "", t: hm(s.rejected.since), reason: s.rejected.reason }).trim() : null,
         ...(B.slowed || []).filter(f => f.source === s.id).map(() => L("slowed_short")),
+        // Feed 1.12: a copy's age since its maker made it, said while it is fine too (an old one is said below as old)
+        ...(B.madeAges || []).filter(f => f.source === s.id && f.state === "ok" && f.s != null).map(f => L("collector_made_short", { what: f.label, t: age(f.s) })),
         ...(B.staleCollectors || []).filter(f => f.source === s.id).map(f => f.state === "error" ? L("collector_failed_short", { what: f.label }) : L("collector_old_short", { what: f.label, t: f.s != null ? age(f.s) : "?" }))].filter(Boolean).join(" · "),
       right: machineName(s.machine), s });
   }

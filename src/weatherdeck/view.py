@@ -170,6 +170,28 @@ def _hide_machine_detail(view):
             s["rejected"] = dict(s["rejected"], reason="rejected")
 
 
+def _hold_words(row):
+    """1.12: a hold's reason is the holder's own words; its bucket and dates stay."""
+    if isinstance(row.get("hold"), dict):
+        row["hold"] = dict(row["hold"], reason=None)
+
+
+def machine_lanes(by_source, with_items, silent=()):
+    """1.12: a machine's lanes, every source's own count on it added up, so two homes on one machine are one count. `by_source` is
+    {source: {running, total}} as each sent it; `with_items` the sources with any lane on this machine in the view. A source with lanes
+    here that sent no count is `unreported`, as is a `silent` source (one past the host's silence limit: its last count is not summed), and a count it left out makes the sum `or_more`: a sum is never said as more than it is.
+    -> None when no source sends a count (the board then says nothing new), else {running, total, homes[], unreported[], or_more}."""
+    if not by_source:
+        return None
+    num = lambda v: v if isinstance(v, int) and not isinstance(v, bool) and v >= 0 else None
+    by_source = {s: v for s, v in by_source.items() if s not in silent}
+    run = [num(v.get("running")) for v in by_source.values()]
+    tot = [num(v.get("total")) for v in by_source.values()]
+    unreported = sorted((set(with_items) | set(silent)) - set(by_source))
+    return {"running": sum(x for x in run if x is not None), "total": sum(tot) if None not in tot else None,
+            "homes": sorted(by_source), "unreported": unreported, "or_more": None in run or bool(unreported)}
+
+
 def redact(view, level, labels):
     """Strip what a profile may not show, on the host, before the view is cached or sent.
 
@@ -200,8 +222,10 @@ def redact(view, level, labels):
         for a in view["attention"] + view["attention_pending"]:
             a["detail"], a["recommend"], a["say"], a["answer_link"] = None, None, None, None   # 1.6: the answer address is the full profile's
             a.pop("options", None)   # 1.9: so are the choices
+            _hold_words(a)
         for n in view["next"]:
             n["reason"] = None
+            _hold_words(n)
         for g in view["groups"]:
             gate = (g.get("checkpoint") or {}).get("gate")
             if gate:
@@ -248,11 +272,17 @@ def redact(view, level, labels):
         a["id"], a["title"], a["detail"], a["how"], a["link"], a["item"] = _opaque(a["id"]), alert, None, None, None, _opaque(a.get("item"))
         a["recommend"], a["say"], a["answer_link"] = None, None, None
         a.pop("options", None)
+        _hold_words(a)
+        if isinstance(a.get("actor"), dict):
+            a["actor"] = dict(a["actor"], name=None)
+        if isinstance(a.get("verdict"), dict):
+            a["verdict"] = dict(a["verdict"], name=None)
     for s in view["sources"]:
         if (s.get("waiting") or {}).get("note") is not None:
             s["waiting"] = dict(s["waiting"], note=_opaque(s["waiting"]["note"]))
     for n in view["next"]:
         n["id"], n["title"], n["reason"] = _opaque(n["id"]), generic, None
+        _hold_words(n)
         n["blocked_by"] = [_opaque(b) for b in n.get("blocked_by") or []]
     for d in view["done"]:
         d["id"], d["title"], d["link"] = _opaque(d["id"]), generic, None
@@ -320,9 +350,30 @@ def relayed_copy_dropped(sid, call_id, feeds, known, owned_calls):
     return m.group(2) in feeds and (m.group(1), m.group(2), m.group(3)) not in owned_calls
 
 
+# 1.12: the roles a card's `actor` may name that are not the viewer's turn; any other word (or none) leaves the card as it was
+NOT_VIEWER = ("supervisor", "worker", "external")
+
+
+def aside(row, now):
+    """Whether a card or a queued row is set aside from the viewer's asks (feed 1.12), on the host's clock: "deferred" while the viewer's
+    dated hold holds (`hold.bucket` "dated" and an `until` that has not passed; a date holds through that whole day), "theirs" when its
+    `actor.role` says it is someone else's turn, else None. A hold with no readable date, a passed date or an unknown role is None: an
+    ask is never set aside on a guess."""
+    hold = row.get("hold") if isinstance(row.get("hold"), dict) else {}
+    if hold.get("bucket") == "dated" and isinstance(hold.get("until"), str) and not _expired(hold, now):
+        try:
+            schema.parse_time(hold["until"] if "T" in hold["until"] else hold["until"] + "T00:00:00Z")
+            return "deferred"
+        except ValueError:
+            pass
+    actor = row.get("actor") if isinstance(row.get("actor"), dict) else {}
+    return "theirs" if actor.get("role") in NOT_VIEWER else None
+
+
 def is_call(a):
-    """A call waits on the viewer: an attention card that is neither critical (a problem, shown on its own line) nor info (an FYI)."""
-    return a.get("severity") not in ("info", "critical")
+    """A call waits on the viewer: an attention card that is neither critical (a problem, shown on its own line) nor info (an FYI),
+    and that the host has not set aside (1.12 `aside`: deferred by the viewer, or someone else's turn)."""
+    return a.get("severity") not in ("info", "critical") and not a.get("aside")
 
 
 def waits_for_ok(it):
@@ -369,9 +420,11 @@ def lane_asks(attention, items):
     not wait (`reports_no_wait`). Run it on the lanes as their sources sent them, before a call marks them `needs_you`.
     -> (asks: [item], disagree: [{kind: "lane"|"call", item, item_source, call, call_source}])."""
     calls = [a for a in attention or [] if is_call(a)]
+    # A card set aside (deferred, or someone else's turn) that names a lane takes the lane aside with it: never an ask of its own.
+    holders = calls + [a for a in attention or [] if a.get("aside") and a.get("severity") != "critical"]
     asks, disagree = [], []
     for it in items or []:
-        if waits_for_ok(it) and not any(call_names_lane(a, it) for a in calls):
+        if waits_for_ok(it) and not any(call_names_lane(a, it) for a in holders):
             asks.append(it)
             disagree.append({"kind": "lane", "item": it.get("id"), "item_source": it.get("source"), "call": None, "call_source": None})
     for a in calls:
@@ -495,7 +548,7 @@ def build(now=None, redaction="none"):
         # ---- machines: one per physical machine, its sources' views of it as stations -----------------
         # A source says which part of its machine it reports (source.station: the Windows host, a Linux guest). Rows for
         # one machine id from different stations stay apart as stations[]; the machine itself shows the worst of them.
-        machines, reported, by_station, named = {}, {}, {}, {}
+        machines, reported, by_station, named, lanes_by = {}, {}, {}, {}, {}
         src_of = {s["id"]: s for s in sources}
         own_machine = {s["id"]: s["machine"] for s in sources if s["machine"]}
         for sid, doc in feeds.items():
@@ -506,6 +559,8 @@ def build(now=None, redaction="none"):
                 if hl.get("state") in _HEALTH_RANK and not _expired(hl, now):  # health is whoever observes the host
                     reported.setdefault(mid, []).append((_HEALTH_RANK[hl["state"]], doc["received_at"], sid, hl))
                 mine = own_machine.get(sid) == mid
+                if isinstance(m0.get("lanes"), dict):   # 1.12: each source counts its own lanes here; the machine adds them all
+                    lanes_by.setdefault(mid, {})[sid] = m0["lanes"]
                 station = aliases[m0["id"]][1] if m0["id"] in aliases else src_of[sid]["station"] if mine else None
                 if m0["id"] == mid and m0.get("label"):  # the machine's own id names it, never a row sent under an alias
                     named[mid] = m0["label"]
@@ -538,6 +593,8 @@ def build(now=None, redaction="none"):
             m = {k: v for k, v in machines[mid].items() if not k.startswith("_")}
             m["label"] = named.get(mid) or m.get("label") or mid
             m["sources"] = [s["id"] for s in sources if s["machine"] == mid]
+            m["lanes"] = machine_lanes(lanes_by.get(mid), {i["owner"] for i in items if i.get("machine") == mid},
+                                       {s for s in lanes_by.get(mid, ()) if age(s) > th["lost_after_s"]})
             m["beat_seen"] = ({"at": _iso(beat_seen[mid][0]), "interval_s": beat_seen[mid][1]}
                               if mid in beat_seen else None)
             top = max(reported.get(mid, []), key=lambda r: r[:2], default=None)
@@ -640,12 +697,14 @@ def build(now=None, redaction="none"):
                     "detail": hl.get("reason") or labels["host_lost_beat"], "since": hl.get("since"),
                     "machine": m["id"], "item": None, "group": None, "link": None,
                     "how": labels["host_lost_how"], "source": hl.get("source")})
+        for a in attention:
+            a["aside"] = aside(a, now)
         nxt, seen = [], set()
         for sid in newest:
             for n in feeds[sid]["feed"]["next"]:
                 if n["id"] not in seen:
                     seen.add(n["id"])
-                    nxt.append(dict(n, source=sid))
+                    nxt.append(dict(n, source=sid, aside="deferred" if aside(n, now) == "deferred" else None))
         nxt.sort(key=lambda n: n.get("filed") or "", reverse=True)
         done, seen = [], set()
         for sid in newest:
@@ -678,7 +737,7 @@ def build(now=None, redaction="none"):
         # Each lane's kind and class (lanes.py) and its row text; a step's clock runs on for up to two intervals after a push.
         glabel = {g["id"]: g["label"] for g in groups.values()}
         # A lane a call names is waiting on the viewer whether or not its source set needs_you (feed-spec: attention.item).
-        called = {(a.get("source"), a.get("item")) for a in attention if a.get("item") and a.get("severity") == "action"}
+        called = {(a.get("source"), a.get("item")) for a in attention if a.get("item") and a.get("severity") == "action" and not a.get("aside")}
         # A lane that waits for the viewer's OK and that no call names is an ask of its own; the calls and the lanes that disagree.
         asks, disagree = lane_asks(attention, items)
         gone_s = 60 * float(th.get("agent_gone_min", 10))
