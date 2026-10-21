@@ -1,0 +1,29 @@
+{"v":1,"ts":1792514113,"event":"task.dispatched","task":"fix-login","kind":"ship","project":"webapp","harness":"harness-a","model":null}
+{"v":1,"ts":1792514113,"event":"task.status","task":"fix-login","state":"working","key":null,"text":" bug reproduced"}
+{"v":1,"ts":1792514114,"event":"task.dispatched","task":"map-tiles","kind":"scout","project":"atlas","harness":"harness-a","model":null}
+{"v":1,"ts":1792514114,"event":"task.status","task":"map-tiles","state":"working","key":null,"text":" reading the tile cache code"}
+{"v":1,"ts":1792514115,"event":"task.dispatched","task":"docs-sweep","kind":"ship","project":"webapp","harness":"harness-b","model":"model-b"}
+{"v":1,"ts":1792514115,"event":"task.status","task":"docs-sweep","state":"needs-decision","key":"nm-1-review","text":" which of the two layouts should the index page use?"}
+{"v":1,"ts":1792514116,"event":"task.dispatched","task":"flaky-test","kind":"ship","project":"atlas","harness":"harness-a","model":"model-a"}
+{"v":1,"ts":1792514116,"event":"task.status","task":"flaky-test","state":"blocked","key":null,"text":" waiting on the staging database"}
+{"v":1,"ts":1792514117,"event":"task.dispatched","task":"cache-warm","kind":"ship","project":"atlas","harness":"harness-a","model":"model-a"}
+{"v":1,"ts":1792514117,"event":"task.status","task":"cache-warm","state":"paused","key":null,"text":" paused until the nightly job ends"}
+{"v":1,"ts":1792514118,"event":"task.dispatched","task":"tidy-config","kind":"ship","project":"webapp","harness":"harness-a","model":"model-a"}
+{"v":1,"ts":1792514119,"event":"task.status","task":"tidy-config","state":"failed","key":null,"text":" the lint step failed twice"}
+{"v":1,"ts":1792514120,"event":"task.dispatched","task":"add-export","kind":"ship","project":"webapp","harness":"harness-a","model":"model-a"}
+{"v":1,"ts":1792514120,"event":"task.status","task":"add-export","state":"working","key":null,"text":" writing the export tests"}
+{"v":1,"ts":1792514121,"event":"task.status","task":"add-export","state":"done","key":null,"text":" PR https://github.com/acme/webapp/pull/7 checks green"}
+{"v":1,"ts":1792514122,"event":"task.pr_ready","task":"add-export","pr":"https://github.com/acme/webapp/pull/7"}
+{"v":1,"ts":1792514122,"event":"task.dispatched","task":"old-bug","kind":"ship","project":"webapp","harness":"harness-a","model":"model-a"}
+{"v":1,"ts":1792514122,"event":"task.status","task":"old-bug","state":"done","key":null,"text":" PR https://github.com/acme/webapp/pull/5 checks green"}
+{"v":1,"ts":1792514123,"event":"task.pr_ready","task":"old-bug","pr":"https://github.com/acme/webapp/pull/5"}
+{"v":1,"ts":1792514123,"event":"task.merged","task":"old-bug","via":"pr","pr":"https://github.com/acme/webapp/pull/5"}
+{"v":1,"ts":1792514123,"event":"task.cleaned_up","task":"old-bug"}
+{"v":1,"ts":1792514123,"event":"task.dispatched","task":"local-fix","kind":"ship","project":"atlas","harness":"harness-a","model":"model-a"}
+{"v":1,"ts":1792514123,"event":"task.status","task":"local-fix","state":"done","key":null,"text":" landed on main locally"}
+{"v":1,"ts":1792514125,"event":"task.merged","task":"local-fix","via":"local"}
+{"v":1,"ts":1792514125,"event":"task.dispatched","task":"abandoned","kind":"ship","project":"webapp","harness":"harness-a","model":"model-a"}
+{"v":1,"ts":1792514125,"event":"task.status","task":"abandoned","state":"working","key":null,"text":" started"}
+{"v":1,"ts":1792514126,"event":"task.cleaned_up","task":"abandoned"}
+{"v":1,"ts":1792514126,"event":"task.dispatched","task":"remote-home","kind":"secondmate","project":null,"harness":"harness-a","model":null}
+{"v":1,"ts":1792514126,"event":"task.status","task":"remote-home","state":"working","key":null,"text":" second mate reports 2 lanes running"}

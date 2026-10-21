@@ -143,6 +143,9 @@ own repository, not here.
 - `tests/test_calloptions.py`: **added after 0.7.0 (unreleased) under the same exception** for pure core logic and the feed-spec contract
   only: the 1.9 `options` field (`src/weatherdeck/schema.py`) and what the television, guest and public views drop of it (`src/weatherdeck/view.py`).
   The same rules hold: synthetic data, standard library, no network, no clock; still no tests for adapter glue, the page or themes.
+- `tests/test_redaction.py`: **added after 0.10.1 (unreleased) under the same exception** for pure core logic only: that the household, guest and
+  public views carry no unknown field and none of a machine's pressure reasons, a list's cut reason, a source's pace reasons, a version gap's sentence or the Logbook's notes
+  (`src/weatherdeck/view.py`, `src/weatherdeck/allowlist.py`). The same rules hold: synthetic data, standard library, no network, no clock.
 - `tests/test_ledgerwriter.py`: **added after 0.7.1 (unreleased) under the same exception** for pure core logic only: the lines the host's
   own ledger writer derives from its history (`src/weatherdeck/ledgerwriter.py`: counts with their range and the digest of exactly the rows
   counted, sample rows left out and counted, a day with no push is unknown and never a zero, a floor of nothing is unknown, silence
@@ -235,11 +238,28 @@ own repository, not here.
   wording rule (`web/frontdoor.js` `sourceSaying`, with the machine row and the trust line it feeds), over a silent feed with a fresh,
   a stale and no beat, a declared 20 s interval at 1.5x, 3x and 10x, and no declared interval. The feeds go in through the public ingest
   into a temporary data directory; the page half runs in Node and is skipped without it. Synthetic data, standard library, no network.
+- `tests/test_firstmate_push.py`: **added after 0.10.1 (unreleased) as a task brief's named acceptance test** for the firstmate pusher
+  (`examples/adapter/firstmate_push.py`), over recorded fixtures in `tests/fixtures/firstmate/`: a ledger written by firstmate's own writer
+  in a scratch home beside cut, replayed, hostile and from-the-future variants of it, and `state/lane-capacity.json` files. Each ledger
+  event lands in its one feed field; the ledger absent (nothing is pushed), empty, truncated mid-line or full of unknown events, members and
+  versions still gives an honest feed; repeated records are one task, one state and one `done[]` row (a cleanup with no merge before it is a row that says so); no liveness, summary or call is ever
+  invented; ledger text stays inert, cut text; lists are capped with `omitted[]`; the same files give the same feed; the home is left
+  byte for byte as it was; and the host takes the feed without letting it replace a machine's own row. Each rule was also checked by breaking it
+  (mutation): the tests fail with it broken. The feeds are checked with `weatherdeck.schema.validate` and one goes in through `weatherdeck ingest`
+  into a temporary data directory. Synthetic data (made-up tasks, projects and PR addresses), standard library, no network; the only files it
+  writes are in temporary directories.
 - `tests/test_staticdemo.py`: **added after 0.7.1 (unreleased) with the static demo** for its contract only: the build
   (`scripts/build-static-demo`) carries the "DEMO: recorded synthetic feed" label and its demo files, passes the self-audit, and
   refuses to delete a folder that is not an earlier demo build; the recording (`examples/static-demo/recorded-feed.json`) has at
   least two frames, each with the host name replaced and every source named. Standard library, no network; the only files it
   writes are temporary builds. Still no tests for adapter glue, the rest of the page or themes.
+- `tests/test_cuapush.py`: **added after 0.10.1 (unreleased) because the task brief for the Cua Spaces pusher asked for them, an exception to
+  "an adapter for a specific tool is tested in its own repository"**: the acceptance tests of `examples/adapter/cua_push.py` over the
+  hand-written fixtures in `tests/fixtures/cua/` (normal, offline host, crashed run, schema drift, signed out) and a command that is not
+  installed: the mapping from `cua` output to machines, lanes, calls, events and an allowance chip, each gap staying a gap (an offline host is
+  never ok and its runs are unknown, an unreadable answer is an error and empty, never zero), the feed limits, and that only read-only
+  commands are run. The fixtures were not recorded from a live cua. Synthetic data, standard library, no network, no cua, an injected clock;
+  every feed is checked with the host's own validator.
 
 ## Words
 

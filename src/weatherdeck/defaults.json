@@ -652,6 +652,7 @@
     "software": "Software",
     "runs_on": "runs on {host}",
     "skew_note": "{name} runs adapter {v}, older than {since}, which {other} already runs ({newer}): {effect}",
+    "skew_note_n": "{name} runs adapter {v}, older than {since}, which {other} already runs ({newer})",
     "trust_slowed": "{name}: slowed on purpose ({why}), reports about every {t}",
     "slowed_short": "slowed on purpose",
     "pace_head": "Pace",

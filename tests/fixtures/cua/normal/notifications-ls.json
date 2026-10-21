@@ -1,0 +1,5 @@
+{"notifications": [
+  {"id": "n-1", "kind": "access_request", "run": "run-2", "title": "run-2 asks to read a folder", "at": "2026-10-20T08:05:00Z"},
+  {"id": "n-2", "kind": "turn_end", "run": "run-1", "message": "finished a turn", "at": "2026-10-20T08:06:00Z"},
+  {"id": "n-3", "kind": "access_request", "run": "run-3", "title": "an earlier request", "status": "approved", "at": "2026-10-20T07:00:00Z"}
+]}

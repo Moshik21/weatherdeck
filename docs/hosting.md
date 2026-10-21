@@ -77,9 +77,11 @@ read token (`profiles` in the config; defaults below).
 | `public` | `/public/` | counts, group and machine names, states, percent ranges and ages. No item titles, details, links (review-board answer links included), branch names, paths, step labels, queue or done rows, attention text, machine extras, health reasons or beat errors; ids are opaque |
 
 Redaction happens on the host while the view is built, cached per profile; the browser never
-receives what a profile hides. A listener that serves one profile also serves it at `/`; other
+receives what a profile hides. Every redacted level keeps only the fields the host lists for it
+(`src/weatherdeck/allowlist.py`), so a field the host does not know, such as an extension a source added, is in the `full` view only. A field that holds a word, a version or a short name (a state, a status, a severity, a kind, a role, a cause, a provider) keeps only a legal one there, and a sentence in it becomes the spec's `unknown` word or nothing (the list is in the feed spec's "Rules that apply everywhere"). The
+redacted views also drop a machine's pressure reasons, the reason a list was cut (`omitted[]`), a source's reasons for slowing (`pace.why`), the sentence of a version gap (`skew[].effect`) and the Logbook's notes. A listener that serves one profile also serves it at `/`; other
 profiles' paths return 404 there. Levels for custom profiles: `none`, `household` (see `tv`),
-`guest` (titles, details, links and ids stripped; machine and group names kept), `public`. A profile
+`guest` (titles, details, links and ids stripped, add-in cards cut to tool name, status, mode and age; machine and group names kept), `public`. A profile
 with `"privacy": true` is shown at the `public` level while privacy mode is on (`weatherdeck privacy on`).
 
 Read tokens: `weatherdeck token new --read public` prints one (shown once; only its hash is stored).

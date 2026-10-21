@@ -12,7 +12,7 @@ import re
 import time
 from datetime import datetime, timedelta
 
-from . import allowance, cards, config, debounce, fleet, gaps, glance, goals, lanes, norms, schema, skew, store
+from . import allowance, allowlist, cards, config, debounce, fleet, gaps, glance, goals, lanes, norms, schema, skew, store
 from .ingest import norm_id
 
 try:
@@ -203,13 +203,24 @@ def redact(view, level, labels):
     public:    guest, plus step labels, flags, queue and done rows, attention text, machine extras,
                timeline text and error texts. What is left is counts, names of groups and machines,
                states, percent ranges and ages.
+    Every level then keeps only the keys allowlist.VIEW lists: a field the feed carries that is not listed there (an extension
+    a source added, a field a later version adds) is not in the view.
     """
     view["cards"] = cards.redact(view["cards"], level)
     if level != "none":
         view["cards_rejected"] = 0
+        for m in [x for mm in view["machines"] for x in [mm, *(mm.get("stations") or [])]]:
+            if m.get("pressure"):
+                m["pressure"] = dict(m["pressure"], why=[])   # the reporter's reasons, in its own words
+        for o in view.get("omitted") or []:
+            o["reason"] = None
+        view["history"]["notes"] = []   # a note is only its words, and they are a source's own
         for s in view["sources"]:
             if s.get("producer"):
                 s["producer"] = dict(s["producer"], host=None)
+            if s.get("pace"):
+                s["pace"] = dict(s["pace"], why=[])   # the source's own words for why it slowed
+            s["skew"] = [dict(k, effect="") for k in s.get("skew") or []]   # the adapter's own sentence on what it cannot do
     if level == "household":
         for it in view["items"]:
             it["doing"], it["state_detail"], it["last_event"], it["summary"] = None, None, None, None
@@ -238,6 +249,7 @@ def redact(view, level, labels):
         for r in view["gaps"].get("mirrors") or []:   # 1.10: the folder, its word and its ages stay; the receipt's words and the retirement note go
             r["detail"], r["note"] = None, None
         _hide_machine_detail(view)
+        allowlist.restrict(view)
         return
     generic, alert = labels.get("guest_item", "Work item"), labels.get("guest_attention", "Something needs you")
     public = level == "public"
@@ -324,6 +336,7 @@ def redact(view, level, labels):
         view["next"], view["done"] = [], []
         view["history"]["timeline"], view["history"]["notes"] = [], []
         _hide_machine_detail(view)
+    allowlist.restrict(view)
 
 
 def owned_call_keys(feeds):

@@ -1,0 +1,47 @@
+{"v":1,"ts":1792514000,"event":"task.status","task":"race","state":"working","key":null,"text":" first line before its dispatch"}
+{"v":1,"ts":1792514001,"event":"task.dispatched","task":"race","kind":"ship","project":"webapp","harness":"harness-a","model":null}
+{"v":1,"ts":1792514010,"event":"task.dispatched","task":"replay","kind":"ship","project":"webapp","harness":"harness-a","model":null}
+{"v":1,"ts":1792514011,"event":"task.status","task":"replay","state":"working","key":null,"text":" step one"}
+{"v":1,"ts":1792514012,"event":"task.status","task":"replay","state":"blocked","key":null,"text":" step two"}
+{"v":1,"ts":1792514013,"event":"task.status","task":"replay","state":"working","key":null,"text":" step three"}
+{"v":1,"ts":1792514020,"event":"task.status","task":"replay","state":"working","key":null,"text":" step one"}
+{"v":1,"ts":1792514021,"event":"task.status","task":"replay","state":"blocked","key":null,"text":" step two"}
+{"v":1,"ts":1792514022,"event":"task.status","task":"replay","state":"working","key":null,"text":" step three"}
+{"v":1,"ts":1792514030,"event":"task.dispatched","task":"steady","kind":"ship","project":"webapp","harness":"harness-a","model":null}
+{"v":1,"ts":1792514031,"event":"task.status","task":"steady","state":"working","key":null,"text":" compiling"}
+{"v":1,"ts":1792514040,"event":"task.status","task":"steady","state":"working","key":null,"text":" compiling"}
+{"v":1,"ts":1792514050,"event":"task.status","task":"steady","state":"working","key":null,"text":" still compiling"}
+{"v":1,"ts":1792514060,"event":"task.dispatched","task":"dup","kind":"ship","project":"webapp","harness":"harness-a","model":null}
+{"v":1,"ts":1792514061,"event":"task.status","task":"dup","state":"working","key":null,"text":" building"}
+{"v":1,"ts":1792514062,"event":"task.dispatched","task":"dup","kind":"ship","project":"webapp","harness":"harness-a","model":null}
+{"v":1,"ts":1792514070,"event":"task.dispatched","task":"pr-twice","kind":"ship","project":"webapp","harness":"harness-a","model":null}
+{"v":1,"ts":1792514071,"event":"task.pr_ready","task":"pr-twice","pr":"https://github.com/acme/webapp/pull/21"}
+{"v":1,"ts":1792514072,"event":"task.pr_ready","task":"pr-twice","pr":"https://github.com/acme/webapp/pull/22"}
+{"v":1,"ts":1792514080,"event":"task.dispatched","task":"twice-merged","kind":"ship","project":"webapp","harness":"harness-a","model":null}
+{"v":1,"ts":1792514081,"event":"task.merged","task":"twice-merged","via":"pr","pr":"https://github.com/acme/webapp/pull/23"}
+{"v":1,"ts":1792514085,"event":"task.merged","task":"twice-merged","via":"pr","pr":"https://github.com/acme/webapp/pull/23"}
+{"v":1,"ts":1792514086,"event":"task.cleaned_up","task":"twice-merged"}
+{"v":1,"ts":1792514090,"event":"task.dispatched","task":"reuse","kind":"ship","project":"webapp","harness":"harness-a","model":null}
+{"v":1,"ts":1792514091,"event":"task.status","task":"reuse","state":"done","key":null,"text":" first life done"}
+{"v":1,"ts":1792514092,"event":"task.merged","task":"reuse","via":"local"}
+{"v":1,"ts":1792514093,"event":"task.cleaned_up","task":"reuse"}
+{"v":1,"ts":1792514095,"event":"task.dispatched","task":"reuse","kind":"scout","project":"atlas","harness":"harness-a","model":null}
+{"v":1,"ts":1792514096,"event":"task.status","task":"reuse","state":"working","key":null,"text":" second life"}
+{"v":1,"ts":1792514100,"event":"task.dispatched","task":"stray","kind":"ship","project":"webapp","harness":"harness-a","model":null}
+{"v":1,"ts":1792514101,"event":"task.merged","task":"stray","via":"local"}
+{"v":1,"ts":1792514102,"event":"task.cleaned_up","task":"stray"}
+{"v":1,"ts":1792514103,"event":"task.status","task":"stray","state":"done","key":null,"text":" late line"}
+{"v":1,"ts":1792514110,"event":"task.status","task":"midlife","state":"working","key":null,"text":" ledger was turned on after this began"}
+{"v":1,"ts":1792514120,"event":"task.dispatched","task":"dropped","kind":"ship","project":"webapp","harness":"harness-a","model":null}
+{"v":1,"ts":1792514121,"event":"task.status","task":"dropped","state":"working","key":null,"text":" started"}
+{"v":1,"ts":1792514122,"event":"task.cleaned_up","task":"dropped"}
+{"v":1,"ts":1792514130,"event":"task.dispatched","task":"batch-twice","kind":"ship","project":"webapp","harness":"harness-a","model":null}
+{"v":1,"ts":1792514131,"event":"task.merged","task":"batch-twice","via":"pr","pr":"https://github.com/acme/webapp/pull/31"}
+{"v":1,"ts":1792514130,"event":"task.dispatched","task":"batch-twice","kind":"ship","project":"webapp","harness":"harness-a","model":null}
+{"v":1,"ts":1792514131,"event":"task.merged","task":"batch-twice","via":"pr","pr":"https://github.com/acme/webapp/pull/31"}
+{"v":1,"ts":1792514140,"event":"task.dispatched","task":"stray-twice","kind":"ship","project":"webapp","harness":"harness-a","model":null}
+{"v":1,"ts":1792514141,"event":"task.merged","task":"stray-twice","via":"local"}
+{"v":1,"ts":1792514142,"event":"task.status","task":"stray-twice","state":"done","key":null,"text":" late line"}
+{"v":1,"ts":1792514140,"event":"task.dispatched","task":"stray-twice","kind":"ship","project":"webapp","harness":"harness-a","model":null}
+{"v":1,"ts":1792514141,"event":"task.merged","task":"stray-twice","via":"local"}
+{"v":1,"ts":1792514142,"event":"task.status","task":"stray-twice","state":"done","key":null,"text":" late line"}

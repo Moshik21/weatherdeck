@@ -73,7 +73,7 @@ unknown, ok); the mode is shown when the row has room. On the phone, a **Tools**
 numbers, mode and link. A status is always a glyph and a word, never colour alone.
 
 Profiles: the full view shows everything. The `tv` (household) view shows only title, status word, mode and staleness, because
-headlines, numbers and links are free text a tool wrote. The `public` view, and the `tv` view while privacy mode is on, show no cards.
+headlines, numbers and links are free text a tool wrote. The guest view shows the same without the title (the tool's name stands in). The `public` view, and the `tv` view while privacy mode is on, show no cards.
 The host removes them before the view is cached.
 
 ## Ledger cards (off unless asked)

@@ -199,11 +199,12 @@ def view(now=None):
 
 
 def redact(cards, level):
-    """household: title, status, mode and age only (the rest is free text a tool wrote); public: none."""
+    """household: title, status, mode and age only (the rest is free text a tool wrote); guest: the same without the title; public: none."""
     if level == "public":
         return []
-    if level == "household":
-        return [{k: c[k] for k in ("tool", "title", "status", "mode", "updated_at", "stale_after_s") if k in c} for c in cards]
+    if level in ("household", "guest"):
+        keep = ("tool", "title", "status", "mode", "updated_at", "stale_after_s") if level == "household" else ("tool", "status", "mode", "updated_at", "stale_after_s")
+        return [{k: c[k] for k in keep if k in c} for c in cards]
     return cards
 
 

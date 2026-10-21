@@ -9,6 +9,8 @@ adapter without running the real tool.
 The field-by-field definition is [feed-spec.md](feed-spec.md). The rules the board keeps are in
 [honesty.md](honesty.md). A working, standard-library-only starting point is `examples/adapter/push_example.py`, with its
 `work.example.json` and `sinks.example.txt`. Read the example once before you write anything: it is under 200 lines.
+A worked adapter for one tool, with recorded fixtures, is `examples/adapter/firstmate_push.py` (README, "Feed it from a firstmate home").
+A worked adapter for a real tool, with fixtures, is `examples/adapter/cua_push.py` ([cua.md](cua.md)).
 
 ## What an adapter does
 

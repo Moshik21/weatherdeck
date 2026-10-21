@@ -1,0 +1,72 @@
+{
+  "schema": "fm-lane-capacity.v1",
+  "home": "main",
+  "machine": "desk-pc",
+  "lanes": {
+    "count": 8,
+    "pr_ready": 1,
+    "ids": [
+      "fix-login",
+      "map-tiles",
+      "docs-sweep",
+      "flaky-test",
+      "cache-warm",
+      "tidy-config",
+      "add-export",
+      "remote-home"
+    ]
+  },
+  "cap": {
+    "target": 6,
+    "status": "ok"
+  },
+  "projects": [
+    "atlas",
+    "webapp"
+  ],
+  "pressure": {
+    "level": "warn",
+    "why": [
+      "memory: 3.1 GB available of 32"
+    ],
+    "basis": "beat",
+    "beat_age_s": 12,
+    "avail_gb": 3.1,
+    "total_gb": 32,
+    "runq_per_core": 0.4,
+    "swap_rate_pps_1m": 0,
+    "mem_stall_pct": null,
+    "load1": 2.1,
+    "on_battery": false,
+    "disks": [
+      {
+        "label": "disk",
+        "free_gb": 120
+      }
+    ]
+  },
+  "uptime_s": 86400,
+  "boot_id": "boot-a",
+  "boots": [
+    1792428000
+  ],
+  "watcher_beat_age_s": 9,
+  "reserve": {
+    "flag": "not-configured",
+    "label": null
+  },
+  "captain": "not-configured",
+  "quota": null,
+  "limits": {
+    "min_avail_gb": 4,
+    "min_disk_gb": null,
+    "max_load1": null
+  },
+  "verdict": {
+    "admit": false,
+    "free_lanes": 0,
+    "reasons": [
+      "memory: 3.1 GB available, below the 4 GB floor"
+    ]
+  }
+}

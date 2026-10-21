@@ -6,6 +6,7 @@ the right type; unknown fields and unknown enum values pass through (the page re
 generically). Raises Reject with a short reason; never raises anything else for bad input.
 """
 import calendar
+import math
 import re
 import time
 
@@ -249,6 +250,9 @@ def _check(path, val, spec, warn, depth=0):
             raise Reject(f"{path}: expected a list")
         if len(val) > cap:
             raise Reject(f"{path}: {len(val)} entries, the limit is {cap}")
+        for i, v in enumerate(val):
+            if v is None and not isinstance(item_spec, str):
+                raise Reject(f"{path}[{i}]: required")
         return [_check(f"{path}[{i}]", v, item_spec, warn, depth + 1) for i, v in enumerate(val)]
     if val is None:
         return None
@@ -265,6 +269,19 @@ def _check(path, val, spec, warn, depth=0):
     return out
 
 
+def _finite(doc):
+    """Reject NaN and the infinities anywhere in the document, unknown fields included: JSON has no such number."""
+    todo = [("", doc)]
+    while todo:
+        path, val = todo.pop()
+        if isinstance(val, float) and not math.isfinite(val):
+            raise Reject(f"{path or 'the document'}: not a finite number")
+        if isinstance(val, dict):
+            todo.extend((f"{path}.{k}" if path else str(k), v) for k, v in val.items())
+        elif isinstance(val, list):
+            todo.extend((f"{path}[{i}]", v) for i, v in enumerate(val))
+
+
 def validate(doc):
     """Return (clean document, warnings). Raises Reject."""
     if not isinstance(doc, dict):
@@ -277,6 +294,7 @@ def validate(doc):
         raise Reject("schema_version must look like MAJOR.MINOR", "schema")
     if int(m.group(1)) != MAJOR:
         raise Reject(f"feed is version {ver}, this dashboard reads {MAJOR}.x: update the dashboard", "version")
+    _finite(doc)
     warn = []
     clean = _check("", doc, TOP, warn)
     src = clean.get("source")

@@ -1,0 +1,4 @@
+[
+  {"id": "n-7", "kind": "run_crashed", "run": "run-7", "message": "the agent process exited", "at": "2026-10-20T09:00:00Z"},
+  {"id": "n-8", "kind": "run_failed", "run": "run-8", "message": "tests failed", "at": "2026-10-20T09:01:00Z"}
+]

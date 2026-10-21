@@ -116,6 +116,20 @@ class WeatherdeckSmoke(unittest.TestCase):
         bad = self.weatherdeck("ingest", stdin="this is not a feed")
         self.assertNotEqual(bad.returncode, 0)
 
+    def test_ingest_rejects_null_members_and_non_finite_numbers_and_keeps_the_last_good_feed(self):
+        good = self.weatherdeck("ingest", stdin=json.dumps(FEED))
+        self.assertEqual(good.returncode, 0, good.stdout + good.stderr)
+        stored = Path(self.data) / "sources" / "smoke-source.json"
+        before = stored.read_text()
+        machine = {"id": "box", "extras": [{"label": "temp", "value": "__NAN__"}]}
+        for body in (dict(FEED, items=[None]),
+                     dict(FEED, machines=[machine]),
+                     dict(FEED, x_extension={"deep": [{"v": "__NAN__"}]})):
+            bad = self.weatherdeck("ingest", stdin=json.dumps(body).replace('"__NAN__"', "NaN"))
+            self.assertNotEqual(bad.returncode, 0, bad.stdout + bad.stderr)
+            self.assertIn("rejected", bad.stdout + bad.stderr)
+            self.assertEqual(stored.read_text(), before)
+
 
 class SelfAudit(unittest.TestCase):
     def test_product_tree_is_clean(self):

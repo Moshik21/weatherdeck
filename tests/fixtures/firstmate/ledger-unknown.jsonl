@@ -1,0 +1,16 @@
+{"v":1,"ts":1792514000,"event":"task.dispatched","task":"alpha","kind":"ship","project":"webapp","harness":"harness-a","model":null,"backend":"tmux","seq":1}
+{"v":1,"ts":1792514001,"event":"task.liveness","task":"alpha","verdict":"busy","source":"pane"}
+{"v":1,"ts":1792514002,"event":"task.status","task":"alpha","state":"resolved","key":"k1","text":" answered: use layout b","extra":{"x":1}}
+{"v":1,"ts":1792514003,"event":"session.start","task":"ghost"}
+{"v":1,"ts":1792514004,"event":"task.dispatched","task":"beta","kind":"wizard","project":"atlas","harness":"harness-a","model":null}
+{"v":1,"ts":1792514005,"event":"task.status","task":"beta","state":"parked","key":null,"text":" parked for now"}
+{"v":1,"ts":1792514006,"event":"task.status","task":"gamma","state":null,"key":null,"text":"a line with no leading word"}
+{"v":2,"ts":1792514007,"event":"task.status","task":"delta","state":"working","key":null,"text":"from a newer format"}
+{"v":true,"ts":1792514008,"event":"task.status","task":"epsilon","state":"working","key":null,"text":"v is a boolean"}
+not json at all
+["an","array"]
+{"v":1,"ts":"1792514009","event":"task.status","task":"zeta","state":"working","key":null,"text":"ts is a string"}
+{"v":1,"ts":1792514010,"event":"task.status","state":"working","key":null,"text":"no task"}
+{"v":1,"ts":1792514011,"event":"task.status","task":"../etc","state":"working","key":null,"text":"bad task id"}
+{"v":1,"ts":NaN,"event":"task.status","task":"eta","state":"working","key":null,"text":"NaN ts"}
+{"v":1,"ts":1792514012,"event":"task.status","task":"theta","state":"WORKING","key":null,"text":"upper-case word"}

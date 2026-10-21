@@ -349,8 +349,6 @@ def _store(conn, feed, warnings, size, received_at, transport=None, client=None)
     prev_doc = store.read_json(store.sources_dir() / f"{sid}.json", {}) or {}
     prev = prev_doc.get("feed")
     sample = 1 if prod.get("mode") == "sample" else 0
-    store.write_json_atomic(store.sources_dir() / f"{sid}.json", {"received_at": received_at, "feed": feed})
-
     src = feed["source"]
     interval = feed.get("interval_s") or config.get()["thresholds"]["default_interval_s"]
     conn.execute(
@@ -365,6 +363,8 @@ def _store(conn, feed, warnings, size, received_at, transport=None, client=None)
     _record_history(conn, sid, feed, prev, received_at, sample, restarted)
     _record_norms(conn, feed, received_at)
     _record_alerts(conn, feed)
+    # Published last, once everything derived from the feed has worked: a fault above leaves the last good file and rolls the database back.
+    store.write_json_atomic(store.sources_dir() / f"{sid}.json", {"received_at": received_at, "feed": feed})
     conn.commit()
     try:
         (store.rejected_dir() / f"{sid}.json").unlink()

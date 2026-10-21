@@ -1,0 +1,5 @@
+[
+  {"id": "run-7", "space": "sp-alpha", "agent": "agent-a", "status": "crashed", "name": "Migrate the schema"},
+  {"id": "run-8", "space": "sp-alpha", "agent": "agent-b", "status": "failed", "name": "Update the docs"},
+  {"id": "run-9", "space": "sp-alpha", "agent": "agent-c", "status": "unknown"}
+]

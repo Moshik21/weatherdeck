@@ -1,0 +1,5 @@
+{"runs": [
+  {"id": "run-1", "space": "sp-alpha", "status": "paused"},
+  {"run_state": "running"},
+  {"id": "run-2", "space": "sp-alpha", "status": "running"}
+]}

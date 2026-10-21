@@ -1,0 +1,207 @@
+{
+  "schema": "lookout.feed",
+  "schema_version": "1.12",
+  "source": {
+    "id": "firstmate"
+  },
+  "producer": {
+    "name": "firstmate_push",
+    "version": "1",
+    "boot_id": "boot-1",
+    "seq": 1,
+    "mode": "live"
+  },
+  "generated_at": "2026-10-20T16:41:40Z",
+  "interval_s": 60,
+  "collectors": [
+    {
+      "id": "items",
+      "label": "firstmate ledger",
+      "as_of": "2026-10-20T16:41:40Z",
+      "status": "ok",
+      "warnings": 0
+    },
+    {
+      "id": "machines",
+      "label": "lane-capacity",
+      "as_of": "2026-10-20T16:40:40Z",
+      "stale_after_s": 600,
+      "status": "ok"
+    }
+  ],
+  "machines": [
+    {
+      "id": "desk-pc",
+      "status": "unknown",
+      "as_of": "2026-10-20T16:40:40Z",
+      "lanes": {
+        "total": 8
+      },
+      "pressure": {
+        "level": "warn",
+        "why": [
+          "memory: 3.1 GB available of 32"
+        ]
+      }
+    }
+  ],
+  "items": [
+    {
+      "id": "remote-home",
+      "title": "remote-home",
+      "machine": "desk-pc",
+      "kind": "secondmate",
+      "state": "running",
+      "started_at": "2026-10-20T16:35:26Z",
+      "state_since": "2026-10-20T16:35:26Z",
+      "agent": {
+        "state": "unknown",
+        "as_of": "2026-10-20T16:41:40Z",
+        "reason": "the fleet ledger records no liveness"
+      },
+      "doing": "second mate reports 2 lanes running"
+    },
+    {
+      "id": "add-export",
+      "title": "add-export",
+      "machine": "desk-pc",
+      "kind": "ship",
+      "project": "webapp",
+      "state": "done",
+      "started_at": "2026-10-20T16:35:20Z",
+      "state_since": "2026-10-20T16:35:21Z",
+      "agent": {
+        "state": "unknown",
+        "as_of": "2026-10-20T16:41:40Z",
+        "reason": "the fleet ledger records no liveness"
+      },
+      "link": {
+        "url": "https://github.com/acme/webapp/pull/7",
+        "label": "pull request"
+      },
+      "state_detail": "PR https://github.com/acme/webapp/pull/7 checks green"
+    },
+    {
+      "id": "tidy-config",
+      "title": "tidy-config",
+      "machine": "desk-pc",
+      "kind": "ship",
+      "project": "webapp",
+      "state": "failed",
+      "started_at": "2026-10-20T16:35:18Z",
+      "state_since": "2026-10-20T16:35:19Z",
+      "agent": {
+        "state": "unknown",
+        "as_of": "2026-10-20T16:41:40Z",
+        "reason": "the fleet ledger records no liveness"
+      },
+      "state_detail": "the lint step failed twice"
+    },
+    {
+      "id": "cache-warm",
+      "title": "cache-warm",
+      "machine": "desk-pc",
+      "kind": "ship",
+      "project": "atlas",
+      "state": "paused",
+      "started_at": "2026-10-20T16:35:17Z",
+      "state_since": "2026-10-20T16:35:17Z",
+      "agent": {
+        "state": "unknown",
+        "as_of": "2026-10-20T16:41:40Z",
+        "reason": "the fleet ledger records no liveness"
+      },
+      "state_detail": "paused until the nightly job ends"
+    },
+    {
+      "id": "flaky-test",
+      "title": "flaky-test",
+      "machine": "desk-pc",
+      "kind": "ship",
+      "project": "atlas",
+      "state": "blocked",
+      "started_at": "2026-10-20T16:35:16Z",
+      "state_since": "2026-10-20T16:35:16Z",
+      "agent": {
+        "state": "unknown",
+        "as_of": "2026-10-20T16:41:40Z",
+        "reason": "the fleet ledger records no liveness"
+      },
+      "state_detail": "waiting on the staging database"
+    },
+    {
+      "id": "docs-sweep",
+      "title": "docs-sweep",
+      "machine": "desk-pc",
+      "kind": "ship",
+      "project": "webapp",
+      "state": "waiting",
+      "started_at": "2026-10-20T16:35:15Z",
+      "state_since": "2026-10-20T16:35:15Z",
+      "agent": {
+        "state": "unknown",
+        "as_of": "2026-10-20T16:41:40Z",
+        "reason": "the fleet ledger records no liveness"
+      },
+      "state_detail": "which of the two layouts should the index page use?"
+    },
+    {
+      "id": "map-tiles",
+      "title": "map-tiles",
+      "machine": "desk-pc",
+      "kind": "scout",
+      "project": "atlas",
+      "state": "running",
+      "started_at": "2026-10-20T16:35:14Z",
+      "state_since": "2026-10-20T16:35:14Z",
+      "agent": {
+        "state": "unknown",
+        "as_of": "2026-10-20T16:41:40Z",
+        "reason": "the fleet ledger records no liveness"
+      },
+      "doing": "reading the tile cache code"
+    },
+    {
+      "id": "fix-login",
+      "title": "fix-login",
+      "machine": "desk-pc",
+      "kind": "ship",
+      "project": "webapp",
+      "state": "running",
+      "started_at": "2026-10-20T16:35:13Z",
+      "state_since": "2026-10-20T16:35:13Z",
+      "agent": {
+        "state": "unknown",
+        "as_of": "2026-10-20T16:41:40Z",
+        "reason": "the fleet ledger records no liveness"
+      },
+      "doing": "bug reproduced"
+    }
+  ],
+  "attention": [],
+  "next": [],
+  "done": [
+    {
+      "id": "abandoned@1792514126",
+      "title": "abandoned (cleaned up, no merge recorded)",
+      "at": "2026-10-20T16:35:26Z"
+    },
+    {
+      "id": "local-fix@1792514125",
+      "title": "local-fix",
+      "via": "local",
+      "at": "2026-10-20T16:35:25Z"
+    },
+    {
+      "id": "old-bug@1792514123",
+      "title": "old-bug",
+      "via": "pr",
+      "link": {
+        "url": "https://github.com/acme/webapp/pull/5",
+        "label": "pull request"
+      },
+      "at": "2026-10-20T16:35:23Z"
+    }
+  ],
+  "omitted": []
+}

@@ -1,0 +1,6 @@
+[
+  {"id": "sp-alpha", "name": "alpha", "host": "mini-host", "phase": "running"},
+  {"id": "sp-delta", "name": "delta", "host_name": "laptop-host", "phase": "offline"},
+  {"id": "sp-eps", "name": "eps", "host_name": "laptop-host", "status": "not sharing"},
+  {"id": "sp-zeta", "name": "zeta", "host": "dock-host", "phase": "paused"}
+]

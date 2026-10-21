@@ -1,0 +1,12 @@
+{"v":1,"ts":1792514000,"event":"task.cleaned_up","task":"orphan"}
+{"v":1,"ts":1792514001,"event":"task.dispatched","task":"live","kind":"ship","project":"webapp","harness":"harness-a","model":null}
+{"v":1,"ts":1792514002,"event":"task.status","task":"live","state":"working","key":null,"text":" going"}
+{"v":1,"ts":1792514010,"event":"task.dispatched","task":"twice-clean","kind":"ship","project":"webapp","harness":"harness-a","model":null}
+{"v":1,"ts":1792514012,"event":"task.merged","task":"twice-clean","via":"local"}
+{"v":1,"ts":1792514013,"event":"task.cleaned_up","task":"twice-clean"}
+{"v":1,"ts":1792514014,"event":"task.cleaned_up","task":"twice-clean"}
+{"v":1,"ts":1792514020,"event":"task.cleaned_up","task":"orphan-late"}
+{"v":1,"ts":1792514030,"event":"task.dispatched","task":"dropped-twice","kind":"ship","project":"webapp","harness":"harness-a","model":null}
+{"v":1,"ts":1792514031,"event":"task.pr_ready","task":"dropped-twice","pr":"https://github.com/acme/webapp/pull/40"}
+{"v":1,"ts":1792514032,"event":"task.cleaned_up","task":"dropped-twice"}
+{"v":1,"ts":1792514033,"event":"task.cleaned_up","task":"dropped-twice"}

@@ -1,0 +1,6 @@
+[
+  {"id": "run-1", "space": "sp-alpha", "agent": "agent-b", "status": "running"},
+  {"id": "run-5", "space": "sp-delta", "agent": "agent-a", "status": "running", "task": "was running when the host went away"},
+  {"id": "run-6", "space": "sp-eps", "agent": "agent-c", "status": "idle", "accepts_message": true},
+  {"id": "run-10", "space": "sp-zeta", "agent": "agent-b", "status": "running", "task": "was running in a Space of an unknown phase"}
+]

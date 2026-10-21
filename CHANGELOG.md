@@ -4,6 +4,92 @@ All notable changes to Weatherdeck (called Lookout until this rename; entries fr
 version follows [semantic versioning](https://semver.org/). The feed schema has its own version (`lookout.feed`, see
 [docs/feed-spec.md](docs/feed-spec.md)); a feed of any 1.x version is accepted.
 
+## [0.10.4] - 2026-10-20
+
+0.10.4 is the first public release since 0.10.1 and carries everything in 0.10.2 and 0.10.3 (read those entries below). The only change in 0.10.4 itself is that the example firstmate pusher's test fixtures use a neutral machine name.
+
+## [0.10.3] - 2026-10-20
+
+In plain words: 0.10.2 made the household (`tv`), guest and public views allowlist projections, so they keep only the fields the host
+lists for them. This release closes the remaining gap: a listed field that holds a word, a version or a short name could still carry
+a whole sentence, and that sentence reached every redacted view. Those fields now keep only a legal value, and an unknown value
+degrades to `unknown` or a blank. Names keep a short, plain shape, so a few words of text in a name field (a machine, source or group
+label) still pass by design; a host must not put private text in a label. The default install (loopback, one listener, no tokens) is
+not exposed across a boundary by this.
+
+### Fixed: a sentence can no longer ride in a field that holds a word, on the household (`tv`), guest and public views
+
+The previous fix kept only the fields the host lists, but a listed field was kept whatever it held. A field that is only meant to
+hold a word, a version or a short name (a lane's activity, a call's kind and severity, a hold's bucket, whose turn it is, a lane's
+cause, last word and state, the parts of a lane's sentence, an item's, a machine's and an agent's state, a release gate's verdicts, a
+machine's role, status and pressure, a source's kind, collectors and versions, a group's colour, and a meter's provider, account, windows and
+runway) still accepts any text in a feed, so a source could put a sentence there and it reached every redacted view. Those views now
+keep only a legal value in each of them: where the feed spec lists the words, anything else becomes `unknown` (or nothing where the field
+has no unknown word, as for a last word or a phase); otherwise one word or a short name stays and a sentence does not. A meter chip
+whose name was replaced is worded again from what is left, without its running-out sentence. The names the board draws as an entity's
+own (machine, source, group, project, station, queue, deploy, collector and folder labels) stay as sent: some have no id to fall back on,
+and a row's chip, the glance and the coming-up list copy them. The full view, and what the views show for every legitimate value, do not
+change.
+
+## [0.10.2] - 2026-10-20
+
+In plain words: before this release, the household (`tv`), guest and public views could show private text that the host had not
+listed for them: a machine's pressure reasons, a feed's own extension fields at any depth, and the reasons a list was cut (the
+household and guest views also showed history notes). The default install (loopback, one listener, no tokens) was not exposed
+across a boundary by this. Now each of those views is an allowlist projection: it keeps only the fields the host lists for it, and
+anything unlisted stays private. This release also rejects a feed that would poison the saved board, and adds two example pushers.
+
+### Fixed: the household (`tv`), guest and public views keep only the fields the host lists for them
+
+A redacted view was the full view with chosen fields blanked, so a field nobody had thought to blank came through. A feed's own
+extension fields (any key the schema does not name, which the host passes through) were in every redacted view, as were a machine's
+pressure reasons (`pressure.why`), the reason a list was cut (`omitted[].reason`), a source's reasons for slowing (`pace.why`) and the
+sentence an adapter gives for a version gap (`skew[].effect`); the household and guest views also carried the Logbook's note text. Each redacted level now keeps only the keys `src/weatherdeck/allowlist.py` lists, so an unknown or later field
+is private until it is listed, and those four are gone from all three levels (the page shows a machine's pressure level without its
+reasons, a slowed source without its why ("no reason given") and a version gap without its sentence, and no notes on the household and
+guest views, as the public view already had none). The guest view also carried every add-in card whole (headline, numbers, link and
+title); it now keeps a card's tool name, status, mode and age, as the household view does without the title.
+
+### Fixed: a feed with a null list entry or a non-finite number no longer poisons the board
+
+A push of `"items": [null]` (or a null in any list of objects) was refused as an internal fault after its source file had
+already been written, so every later view of the board failed with a 500 and a restart read the same file. A `NaN` or
+infinite number in `machines[].extras[].value`, or in any unknown extension field, was accepted and sent on in the view as
+`NaN`, which a browser cannot parse. Both are now rejected at validation (code 65), and the source file is published only
+after the history, norms and alerts it feeds have been worked out, so a push that is refused or faults leaves the previous
+feed in place.
+
+### Added: a pusher for a firstmate home (`examples/adapter/firstmate_push.py`)
+
+An example adapter that puts a firstmate home on the board from the two files that home documents for outside readers: its fleet
+ledger (`state/fleet-ledger.jsonl`, `fleet-ledger.v1`) and, when it exists, `state/lane-capacity.json` (`fm-lane-capacity.v1`). Standard
+library only, read-only, no model calls. `task.dispatched` and `task.status` become `items[]` (the status word sets `state`; the line's
+text goes to `doing` or `state_detail`, never `summary`), `task.pr_ready` a `link`, `task.merged` and `task.cleaned_up` a `done[]` row (a cleanup with no merge before it is titled "cleaned up,
+no merge recorded", with no `via` or link, so nothing is shown as landed that the ledger does not say landed); the lane-capacity file
+gives the machine's `lanes.total` and `pressure`. The ledger records no liveness, so every row says `agent.state: unknown`; repeated
+records are one task, one state and one `done[]` row; with no ledger it pushes nothing, so the source reads as silent; and lanes the
+home counts that the ledger cannot show are declared in `omitted[]`.
+Uses feed 1.12 fields only; nothing in the host or the page changed. README, "Feed it from a firstmate home".
+
+### Checked on
+- `python3 -m unittest discover -s tests` and `python3 -I scripts/self-audit`; the new tests (`tests/test_firstmate_push.py`, fixtures in
+  `tests/fixtures/firstmate/`, one of them written by firstmate's own ledger writer in a scratch home) on Python 3.9.6, 3.11, 3.13 and 3.14.
+- Not checked: a live firstmate home pushing to a live host over a day; the lane-capacity producer was not merged in firstmate when this was
+  written, so its file shape comes from that branch's documentation and a synthetic fixture.
+
+### Added: a pusher for Cua Spaces (`examples/adapter/cua_push.py`)
+
+- **Cua Spaces and their agent runs on the board**, from the `cua` command's `--json` output, read-only and polled every 60 s (never below 30).
+  A host is a machine with its Spaces in `extras` (an offline or not-sharing host is `down`, never ok); a run is a lane whose word and
+  cause come from Cua's own status (`cua-run-crashed`, `cua-run-failed`, `cua-run-running`, and so on); an access request or a run failure is a call;
+  a turn end is an event; usage is one allowance chip with the runway unknown. Cua reports no load, memory or disk, a run's percent, or
+  a run's state on an offline host, so none of those is sent. A missing cua, a cua nobody is signed in to, a command it lacks and an answer of
+  an unexpected shape each have a plain outcome ([docs/cua.md](docs/cua.md)).
+- **Not checked against a live cua**: it was not available. Every command and field shape is assumed from Cua's published description, and
+  the fixtures in `tests/fixtures/cua/` are hand-written, not recorded. Cua's tool contract (v0.7.0) is experimental, and whether polling counts
+  against a plan's limits is not documented. The relay (`relay.cua.ai`) can read what it proxies: prefer `direct:` Spaces.
+- `tests/test_cuapush.py` (see CONTRIBUTING.md, "Tests"). No feed field is added: it sends feed 1.12 as it stands.
+
 ## [0.10.1] - 2026-10-16
 
 ### Fixed: a theme changed by the page address while the crow flies

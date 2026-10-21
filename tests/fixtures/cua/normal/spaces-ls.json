@@ -1,0 +1,5 @@
+[
+  {"id": "sp-alpha", "name": "alpha", "host": "mini-host", "phase": "running", "status": "sharing"},
+  {"id": "sp-beta", "name": "beta", "host": "mini-host", "phase": "running", "status": "sharing"},
+  {"id": "sp-gamma", "name": "gamma", "host": "laptop-host", "phase": "ready", "status": "sharing"}
+]

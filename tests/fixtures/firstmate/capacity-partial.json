@@ -1,0 +1,21 @@
+{
+  "schema": "fm-lane-capacity.v1",
+  "generated_epoch": 1792514440,
+  "machine": "desk-pc",
+  "lanes": {
+    "ids": [
+      "a"
+    ]
+  },
+  "pressure": {
+    "level": "unknown",
+    "why": [
+      "no beat",
+      "x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x",
+      42
+    ]
+  },
+  "future_member": {
+    "a": 1
+  }
+}

@@ -204,6 +204,30 @@ Preview any state without touching data: add `#controls=1` to the page URL and u
 (late, stale, lost, host down, empty, loading, night, anchor, sky, motion, theme). `#night=1` forces
 the night palette, `#theme=ship-deck` previews a theme.
 
+## Feed it from a firstmate home
+
+`examples/adapter/firstmate_push.py` puts a firstmate home (a crew of coding agents run by the firstmate tool) on the board from the two files that home documents for outside readers: its fleet ledger (`state/fleet-ledger.jsonl`, `fleet-ledger.v1`, written while the home has the flag file `config/fleet-ledger`) and, when it exists, `state/lane-capacity.json` (`fm-lane-capacity.v1`). Standard library only; it opens those two files read-only, runs no firstmate script and writes nothing in the home.
+
+```
+python3 examples/adapter/firstmate_push.py --home ~/firstmate --print                    # show the feed, push nothing
+python3 examples/adapter/firstmate_push.py --home ~/firstmate --sinks sinks.txt          # push every 60 s (--every, --once)
+```
+
+Use one `--source ID` per home (default `firstmate`). `--machine ID` names the machine the home runs on; without it the machine in the lane-capacity file is used, and without that the work is placed on no machine. The source never sets `source.machine`, so on a machine that also reports itself (the beat), that source's row for the machine stands and this one adds only its lane count.
+
+| Ledger record | Feed field |
+| --- | --- |
+| `task.dispatched` | an `items[]` row: `id` and `title` are the task id (the ledger records no title), `kind`, `project`, `started_at` |
+| `task.status` | that row's `state` from the line's leading word (`working` running, `needs-decision` waiting, `blocked`, `paused`, `done`, `failed`; any other word, including `resolved`, or none: `unknown`), `state_since` when the word began, and the line's text (cut at 300 characters, control characters dropped) in `doing` while running and in `state_detail` otherwise. Never `summary` |
+| `task.pr_ready` | that row's `link` (the latest PR) |
+| `task.merged` | a `done[]` row (`via` is `pr` or `local`, `link` the PR), and the row leaves `items[]` |
+| `task.cleaned_up` | the row leaves `items[]`. With no merge before it, a `done[]` row is added whose title says so (`<task> (cleaned up, no merge recorded)`), with no `via` and no `link`: the record says the worker was removed, not that anything landed. After a merge it adds nothing |
+| `lane-capacity.json` | `machines[].lanes.total` (the home's own open-lane count), `machines[].pressure` (when it says ok, warn or critical), both as of the file's `generated_epoch`, with a collector that goes stale after 10 minutes |
+
+What it leaves unknown, and why. The ledger has no busy or idle state, so every row says `agent.state: unknown` and none says how many lanes are running. It has no sequence numbers, so a record is trusted for what it says: a record delivered again whole (same time, same members) is skipped, a repeated status changes nothing, a repeated merge or cleanup is one `done[]` row, the last record wins, and a status after a task's merge or cleanup does not bring it back unless a new dispatch follows (a reused task id is a new task). A replayed batch can make a state look younger than it is, because `state_since` is the time the record was written, not when the worker wrote the line. It never sends `attention[]`: a `needs-decision` line is shown as a waiting row, because the ledger does not say whose turn it is. Work begun before the ledger was turned on has no records, so when lane-capacity counts more open lanes than the ledger shows, `omitted[]` says the true total and the rows show "+N more". A line that is not a usable record (not JSON, a version other than 1, a missing time, a task id that is not well formed) is counted in the `items` collector's `warnings`; a kind, PR address or state word that is not well formed is left out of its row; unknown events and members are ignored. A line with no newline yet is a write in progress and is not read.
+
+With no ledger file (the flag is off, or nothing was recorded) the pusher pushes nothing and says so once, so the board shows the source as silent rather than as an empty fleet. An empty ledger is pushed as no rows. A lane-capacity file that cannot be used is reported in a `machines` collector as an error and the ledger still goes. It reads the whole ledger on every pass and the ledger is never rotated; to bound that, truncate it as firstmate's `docs/fleet-ledger.md` describes. Tests and their recorded fixtures: `tests/test_firstmate_push.py`, `tests/fixtures/firstmate/`.
+
 ## Privacy and safety
 
 - Binds only the addresses you list; `0.0.0.0` and `::` are refused. Default: localhost only.

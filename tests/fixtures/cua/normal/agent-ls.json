@@ -1,0 +1,6 @@
+[
+  {"id": "run-1", "space": "sp-alpha", "agent": "agent-a", "name": "Fix the login loop", "status": "running", "task": "running the test suite", "started_at": "2026-10-20T08:00:00Z"},
+  {"id": "run-2", "space": "sp-alpha", "agent": "agent-b", "status": "idle", "accepts_message": true, "started_at": "2026-10-20T07:00:00+00:00"},
+  {"id": "run-3", "space": "sp-beta", "agent": "agent-c", "status": "idle", "accepts_message": false},
+  {"id": "run-4", "space": "sp-gamma", "agent": "agent-a", "started_at": 1792483200}
+]

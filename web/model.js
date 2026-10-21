@@ -118,7 +118,7 @@ function softwareOf(s) {
   return { s, adapter: p.version ? L("adapter_v", { v: p.version }) : L("adapter_unknown"), pusher: pu.version ? L("pusher_v", { v: pu.version }) : L("pusher_unknown"),
     host: p.host || null, known: !!p.version,
     skewShort: (s.skew || []).length ? L("skew_trust", { name: srcName(s), v: p.version }) : null,
-    skew: (s.skew || []).map(k => L("skew_note", { name: srcName(s), v: p.version, since: k.since, newer: k.newer_version, other: other(k), effect: k.effect })) };
+    skew: (s.skew || []).map(k => L(k.effect ? "skew_note" : "skew_note_n", { name: srcName(s), v: p.version, since: k.since, newer: k.newer_version, other: other(k), effect: k.effect })) };
 }
 /* The newest receive time of any reporting source: what "last known" is as of. */
 const newestAt = () => (S.view ? Math.max(0, ...reporting().map(s => s.received_at || 0)) : 0);
@@ -167,7 +167,7 @@ function cardState(c) {
   const ageS = Math.max(0, nowS() - epoch(c.updated_at)), stale = ageS > (c.stale_after_s || 900);
   const key = stale ? "stale" : c.status, look = stale ? CARD_LOOK.unknown : CARD_LOOK[c.status] || CARD_LOOK.unknown;
   const word = stale ? L("card_stale", { t: age(ageS) }) : L("card_" + c.status);
-  return { tool: c.tool, title: c.title, key, glyph: look[0], slot: look[1], word, ageS, mode: c.mode || null, headline: c.headline || null,
+  return { tool: c.tool, title: c.title || c.tool, key, glyph: look[0], slot: look[1], word, ageS, mode: c.mode || null, headline: c.headline || null,
     numbers: (c.numbers || []).map(n => n.label + " " + n.value + (n.unit ? " " + n.unit : "")), link: c.link || null,
     last: stale ? L("card_last", { s: L("card_" + c.status) }) : null };
 }
@@ -643,7 +643,7 @@ function stripChips(B) {
   for (const sw of B.software.filter(x => x.skew.length)) {
     const p = sw.s.producer || {}, first = sw.s.skew[0];
     out.push({ key: "skew:" + sw.s.id, slot: "ink2", title: sw.skew.join("; "),
-      forms: [L("strip_skew", { name: srcName(sw.s), v: p.version, effect: first.effect }), L("strip_skew_n", { name: srcName(sw.s), v: p.version, since: first.since }), L("strip_skew_s", { name: srcName(sw.s), v: p.version })] });
+      forms: [...(first.effect ? [L("strip_skew", { name: srcName(sw.s), v: p.version, effect: first.effect })] : []), L("strip_skew_n", { name: srcName(sw.s), v: p.version, since: first.since }), L("strip_skew_s", { name: srcName(sw.s), v: p.version })] });
   }
   for (const q of B.queueing.filter(q => q.state !== "backed_up")) out.push(qChip(q));
   for (const c of B.coming.slice(0, 2)) {
