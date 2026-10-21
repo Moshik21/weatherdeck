@@ -18,5 +18,5 @@ def require_python(version_info=None):
 
 require_python()
 
-VERSION = "0.10.4"
+VERSION = "0.10.5"
 NAME = "Weatherdeck"

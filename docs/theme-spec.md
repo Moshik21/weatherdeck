@@ -1593,9 +1593,9 @@ in the one order (24.2), the working ones grouped by the goal they serve (else b
   runs no script and writes nothing; the television, guest and public views carry no `answer_link`. A door opens the call's page here.
 - **Problems** (called Needs attention before) lists, in this order: the critical cards; lanes whose word is Needs attention (or, for a feed that sends no lane
   word, lanes whose row word is Stuck); the lanes whose row word is Can't tell, one line per machine; a feed that is silent, rejected or
-  missing; a waiting number that could not be verified; and add-in cards that read bad. A line carries its icon and says what is wrong.
+  missing; a collector that failed or is disabled; a waiting number that could not be verified; and add-in cards that read bad. A line carries its icon and says what is wrong.
   A tool's own incident cards join it as add-in cards when a tool sends them.
-- **All fine** is lit only when both lists are empty and every expected feed reports. Otherwise it is dim and says how much is open.
+- **All fine** is lit only when both lists are empty and every expected feed reports. A collector that failed or is disabled is a line of Problems, so a surface the board could not read never reads as fine. Otherwise it is dim and says how much is open.
   A silent feed is itself a line of Problems, so quiet never hides a silent source. The number on Needs you is the one
   waiting-on-you number (the call band's, the Bridge door's and the ship plates'); nothing on Problems is counted in it. A copy whose
   maker stopped remaking it (feed 1.12 `made_at`, past its limit) is a line of Problems and leads the header's trust line: "its queue copy

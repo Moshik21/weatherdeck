@@ -254,16 +254,19 @@ def build_spaces(data, rep, now_s):
 
 
 def build_runs(data, rep, spaces, now_s):
-    """(items, item id by run id). One item per run; the lane word and cause come from Cua's status alone."""
+    """(items, item id by run id, machines a left-out row may belong to). One item per run; the lane word and cause come from Cua's status alone.
+    A left-out row names its Space's machine; one naming no usable Space could be on any, which is None in the set."""
     rows = rows_of(data, "runs")
     if rows is None:
         rep.bad("runs", "`cua agent ls` printed an unexpected shape; no run is shown")
-        return [], {}
-    items, by_run, skipped, odd = [], {}, 0, set()
+        return [], {}, set()
+    items, by_run, skipped, odd, dropped = [], {}, 0, set(), set()
     for row in rows:
         rid = pick(row, "id") if isinstance(row, dict) else None
         if not rid or rid in by_run:
             skipped += 1
+            info = spaces.get(pick(row, "space")) if isinstance(row, dict) else None
+            dropped.add(info["machine"] if info else None)
             continue
         space = pick(row, "space")
         info = spaces.get(space) if space else None
@@ -290,7 +293,7 @@ def build_runs(data, rep, spaces, now_s):
         rep.warn("runs", f"`cua agent ls`: {skipped} row(s) without an id, or repeating an earlier id, were left out")
     if odd:
         rep.warn("runs", "`cua agent ls`: unrecognised run status " + ", ".join(sorted(repr(w) for w in odd)) + "; those runs read Can't tell")
-    return items, by_run
+    return items, by_run, dropped
 
 
 def build_notices(data, rep, by_run, seen):
@@ -354,19 +357,19 @@ def build(got, now, interval, boot_id, seq, seen, noted):
     (the cua version and the problems already said) are what makes events[] incremental; with them empty it is pure."""
     now_s, rep = now_iso(now), Report(got)
     machines, spaces, omitted = build_spaces(got["spaces"][1], rep, now_s) if got["spaces"][0] == "ok" else ([], {}, [])
-    items, by_run = build_runs(got["runs"][1], rep, spaces, now_s) if got["runs"][0] == "ok" else ([], {})
+    items, by_run, dropped = build_runs(got["runs"][1], rep, spaces, now_s) if got["runs"][0] == "ok" else ([], {}, set())
     cards, events = build_notices(got["notices"][1], rep, by_run, seen) if got["notices"][0] == "ok" else ([], [])
     meters = build_usage(got["usage"][1], rep, got["usage_at"]) if got["usage"][0] == "ok" else None
     items.sort(key=lambda i: (LANE_RANK.get(i["lane"]["state"], 4), i["id"]))
     lanes = {}
-    for it in items:                            # the source's own count of runs per host; a host that is offline has no `running`
+    for it in items:                            # the source's own count of runs per host; a host that is offline, has a run of unknown state, or may have had a run row left out, has no `running`
         row = lanes.setdefault(it.get("machine"), {"total": 0, "running": 0, "unread": False})
         row["total"] += 1
         row["running"] += it["state"] == "running"
-        row["unread"] |= it["lane"]["cause"] in ("cua-host-offline", "cua-space-phase-unknown")
+        row["unread"] |= it["lane"]["cause"] in ("cua-host-offline", "cua-space-phase-unknown", "cua-run-unknown", "cua-run-status-unrecognised")
     for m in machines:
         if m["id"] in lanes:
-            m["lanes"] = {"total": lanes[m["id"]]["total"]} if lanes[m["id"]]["unread"] else {"running": lanes[m["id"]]["running"], "total": lanes[m["id"]]["total"]}
+            m["lanes"] = {"total": lanes[m["id"]]["total"]} if lanes[m["id"]]["unread"] or m["id"] in dropped or None in dropped else {"running": lanes[m["id"]]["running"], "total": lanes[m["id"]]["total"]}
     for surface, rows, cap in (("items", items, 60), ("attention", cards, 30), ("machines", machines, 12)):
         if len(rows) > cap:
             omitted.append({"surface": surface, "shown": cap, "total": len(rows), "reason": f"the feed carries at most {cap} {surface}"})

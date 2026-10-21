@@ -357,7 +357,7 @@ def freshness(collectors, generated_at, received_at, now, limits=None, interval_
     """A source's collectors with how old each answer is on the host's clock: its age when the source built the feed
     (generated_at - as_of, one clock) plus the time since the host received it. `limit_s` is the collector's own
     `stale_after_s` (1.2), else the host's `collector_stale_s` for its id, else none. state: `ok`, `old` (past its
-    limit or said stale), `error`. 1.12: a collector that says when its copy was made (`made_at`, its maker's own stamp) is aged
+    limit or said stale), `error`, `disabled` (the source says it does not read that surface: never `ok`). 1.12: a collector that says when its copy was made (`made_at`, its maker's own stamp) is aged
     from that instead of `as_of`, so a copy re-read or re-touched without being remade still ages (`made: true`); with no limit
     of its own, its limit is twice its maker's `refresh_s`. -> [{id, label, age_s, limit_s, state, error, made, refresh_s}]"""
     out = []
@@ -371,7 +371,7 @@ def freshness(collectors, generated_at, received_at, now, limits=None, interval_
         age = None if received_at is None else (max(0.0, gen - a) if gen is not None and a is not None else 0.0) + since
         refresh = _num(c.get("refresh_s"))
         limit = _num(c.get("stale_after_s")) or _num((limits or {}).get(c["id"])) or (2 * refresh if made is not None and refresh else None)
-        state = "error" if c.get("status") == "error" else "old" if c.get("status") == "stale" or (limit and age is not None and age > limit) else "ok"
+        state = "error" if c.get("status") == "error" else "disabled" if c.get("status") == "disabled" else "old" if c.get("status") == "stale" or (limit and age is not None and age > limit) else "ok"
         out.append({"id": c["id"], "label": c.get("label") or c["id"], "age_s": int(age) if age is not None else None,
                     "limit_s": int(limit) if limit else None, "state": state, "error": c.get("error"),
                     "made": made is not None, "refresh_s": int(refresh) if refresh else None})

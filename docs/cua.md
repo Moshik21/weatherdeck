@@ -31,7 +31,8 @@ whether listing or status calls count against a plan's limits, nor what the rela
 ## What it runs
 
 Only read-only commands, each with `--json` where it takes one. A command this cua does not have is a surface left empty and marked
-`disabled` in the feed's `collectors[]`, never a zero.
+`disabled` in the feed's `collectors[]`, never a zero. The board says that collector in Problems ("disabled, not read") and does not light
+All fine while it is disabled, so a Cua with fewer commands never reads as all clear.
 
 | Command | Used for | Shape assumed |
 | --- | --- | --- |
@@ -60,7 +61,9 @@ with no host goes under "host not reported".
 
 Cua reports no host load, memory or disk, so the machine row carries none: they are absent, not zero. `lanes` counts the runs Cua lists for the
 host and how many are running; for a host that is offline, or whose Space has a phase not known as up, `running` is left out, because Cua documents that
-runs survive a connection drop but not the host going offline.
+runs survive a connection drop but not the host going offline. It is also left out while any run on the host reads Can't tell because Cua reported its
+status as `unknown` or a status this pusher does not know: an unknown run is not counted as not running. The same holds when a run row was left out (no id, or an id an earlier row already had): it
+leaves `running` out for the host its Space is on, and a left-out row that names no usable Space leaves it out for every host.
 
 **Runs become lanes** (`items[]`, id `space:run`, project chip "Cua"). Only Cua's status chooses the lane word, with a fixed cause id that
 this pusher owns (a board words it; it never shows the run's text as a cause). The run's own task text goes in `doing`, only while running.

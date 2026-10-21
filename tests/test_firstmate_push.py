@@ -138,6 +138,22 @@ class Gaps(Homes):
         self.assertEqual((doc["items"], doc["collectors"][0]["warnings"]), ([], 1))
         self.assertEqual(len(self.feed(text=whole + "\n")["items"]), 1)
 
+    def test_a_ledger_with_content_and_no_usable_record_is_an_error_not_an_empty_fleet(self):
+        for text in ("{truncated", "not json\n", '{"v":2,"event":"task.dispatched","task":"a","ts":1}\n\n{"v":1}\n'):
+            doc = self.feed(text=text)
+            self.assertEqual((doc["items"], doc["done"]), ([], []))
+            col = doc["collectors"][0]
+            self.assertEqual((col["id"], col["status"]), ("items", "error"), text)
+            self.assertIn("none is a usable record", col["error"])
+        first = self.feed("ledger-recorded.jsonl")
+        self.assertEqual(first["collectors"][0]["status"], "ok")
+        home = self.home("ledger-recorded.jsonl")                       # the same home, its ledger then replaced by a cut line
+        (Path(home) / "state" / "fleet-ledger.jsonl").write_bytes(b"{truncated")
+        doc = fp.build(fp.collect(home, now=NOW), "firstmate", 60, "boot-1", 2, now=NOW)
+        self.assertEqual((doc["items"], doc["collectors"][0]["status"]), ([], "error"))
+        for text in ("", "\n\n"):                                       # an empty ledger, or one of blank lines, has nothing wrong with it
+            self.assertEqual(self.feed(text=text)["collectors"][0]["status"], "ok")
+
     def test_unknown_events_members_versions_and_lines_are_ignored(self):
         doc = self.feed("ledger-unknown.jsonl")
         items = self.items(doc)

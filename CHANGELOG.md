@@ -4,6 +4,32 @@ All notable changes to Weatherdeck (called Lookout until this rename; entries fr
 version follows [semantic versioning](https://semver.org/). The feed schema has its own version (`lookout.feed`, see
 [docs/feed-spec.md](docs/feed-spec.md)); a feed of any 1.x version is accepted.
 
+## [Unreleased]
+
+## [0.10.5] - 2026-10-21
+
+In plain words: the page no longer says ALL FINE over a collector that failed or is disabled, and the example firstmate and Cua pushers no longer turn a torn ledger or an unknown run into an empty fleet or a zero.
+
+### Fixed: the page no longer says ALL FINE over a collector that failed or is disabled
+
+A source could send a collector as `error` and the board only noted it in small print (the trust line and the Crow's nest) while the
+All fine tile stayed lit. A collector sent as `disabled` was read by the host as `ok` (`freshness[].state`), so it was not said at all.
+Now `disabled` is its own freshness state, and a collector that failed or is disabled is a line of Problems ("atlas: items failed",
+"atlas: items disabled, not read"), so All fine stays dark while any surface is unread. Because it is a Problem, the Bridge says
+"Nothing was waiting at the last report" instead of "Nothing is waiting on you" while one is open. A collector that is only old keeps its note.
+The feed spec and schema are unchanged; `disabled` was already a legal collector status.
+
+### Fixed: the example pushers no longer turn "unknown" into an empty fleet or a zero
+
+The firstmate pusher sent a ledger with no usable record in it (a file cut down to one torn line, say) as a fresh, empty, successful snapshot,
+so every open task vanished and the `items` collector said `ok`. Now a ledger that has lines but no usable record is sent with the `items`
+collector as `error` and no rows; an absent ledger still pushes nothing, an empty one is still no rows, and a torn line after usable
+records is still a warning. The Cua pusher counted a run whose state is `unknown` (or a status it does not know) as zero running, so a host's
+`lanes` said `running: 0`. Now `running` is left out of that host's `lanes`, as it already was for an offline host. A run row that is left out
+(no id, or an id repeated from an earlier row) also leaves `running` out for the host its Space is on, and one that names no usable Space
+leaves it out for every host. The feed spec and schema
+are unchanged.
+
 ## [0.10.4] - 2026-10-20
 
 0.10.4 is the first public release since 0.10.1 and carries everything in 0.10.2 and 0.10.3 (read those entries below). The only change in 0.10.4 itself is that the example firstmate pusher's test fixtures use a neutral machine name.

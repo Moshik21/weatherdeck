@@ -174,11 +174,13 @@ class Freshness(unittest.TestCase):
         cols = [{"id": "attention", "label": "Tracker", "as_of": iso(NOW - 30 - 600), "stale_after_s": 300},
                 {"id": "meters", "as_of": gen},
                 {"id": "items", "as_of": gen, "status": "error", "error": "no answer"},
-                {"id": "queue", "as_of": gen, "status": "stale"}]
+                {"id": "queue", "as_of": gen, "status": "stale"},
+                {"id": "machines", "as_of": gen, "status": "disabled"}]
         out = {c["id"]: c for c in gaps.freshness(cols, gen, NOW - 20, NOW, {"meters": 900})}
         self.assertEqual((out["attention"]["age_s"], out["attention"]["state"], out["attention"]["label"]), (620, "old", "Tracker"))
         self.assertEqual((out["meters"]["age_s"], out["meters"]["limit_s"], out["meters"]["state"]), (20, 900, "ok"))
         self.assertEqual((out["items"]["state"], out["queue"]["state"]), ("error", "old"))
+        self.assertEqual(out["machines"]["state"], "disabled")   # a surface the source does not read is never "ok"
 
 
 class Countdown(unittest.TestCase):

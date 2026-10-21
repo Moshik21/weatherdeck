@@ -229,6 +229,9 @@ def collect(home, machine=None, now=None):
                         "these are the newest" % CAP_DONE})
 
     collectors = [{"id": "items", "label": "firstmate ledger", "as_of": as_of, "status": "ok", "warnings": bad}]
+    if bad and not records:
+        # Lines but none usable: this cannot say that nothing is open, so the surface is reported as failed, not as empty.
+        collectors[0].update(status="error", error="state/fleet-ledger.jsonl has %d line(s) and none is a usable record, so what is open is not known" % bad)
     if cap:
         collectors.append({"id": "machines", "label": "lane-capacity", "as_of": now_iso(cap["at"]), "stale_after_s": CAPACITY_STALE_S,
                            "status": "ok"})

@@ -50,7 +50,8 @@ vm.runInContext(`globalThis.run = (view, labels, display, now, rowsMax, seen) =>
     gunDeck: deckCount("gun-deck", B, { id: "spar", flagship: true }).text, gunLoud: !!deckCount("gun-deck", B, { id: "spar", flagship: true }).loud,
     gunRows: ids(lanesOf(B, { flagship: true })), more: B.more, sea: ids(B.shown),
     rows: Object.fromEntries(B.lanes.map(l => [l.id, { key: l.rowKey, word: l.rowWord, old: l.rowOld, sentence: l.sentence, stage: l.stage }])),
-    housekeeping: hk ? ids(hk.rows) : [], plan: plan.map(p => p.kind + ":" + p.key), problems: attentionLines(B, views).map(x => x.key + " " + (x.who || "") + " " + x.text), since: B.since };
+    housekeeping: hk ? ids(hk.rows) : [], plan: plan.map(p => p.kind + ":" + p.key), problems: attentionLines(B, views).map(x => x.key + " " + (x.who || "") + " " + x.text), since: B.since,
+    fineOn: !waitingOnYou(B.asks) && !attentionLines(B, views).length && B.trust.live === B.trust.total && B.trust.total > 0 };
 };`, ctx);
 process.stdout.write(JSON.stringify(ctx.run(...JSON.parse(fs.readFileSync(0, "utf8")))));
 """
@@ -212,6 +213,32 @@ class PageRule(unittest.TestCase):
             row = self.got["rows"][lid]
             self.assertEqual((row["key"], row["old"]), (key, False), lid)
             self.assertEqual(row["word"], WORDS["row_" + key], lid)
+
+
+@unittest.skipUnless(NODE, "Node is not installed: the page half is not run")
+class CollectorHonesty(unittest.TestCase):
+    """Unknown is never green: a collector that failed, or is disabled, keeps the page from saying ALL FINE."""
+
+    def fine(self, collectors):
+        feed_ = feed("atlas", "keel", [])
+        feed_["collectors"] = collectors
+        return run_page(build_view([feed_]))
+
+    def test_a_current_source_with_no_collector_trouble_is_all_fine(self):
+        got = self.fine([{"id": "items", "status": "ok", "as_of": iso(0)}])
+        self.assertEqual((got["asks"], got["problems"], got["fineOn"]), (0, [], True))
+
+    def test_a_failed_collector_is_a_problem_and_not_all_fine(self):
+        got = self.fine([{"id": "items", "status": "error", "as_of": iso(0), "error": "synthetic reader failure"}])
+        self.assertFalse(got["fineOn"])
+        self.assertEqual(len(got["problems"]), 1)
+        self.assertIn("items failed", got["problems"][0])
+
+    def test_a_disabled_collector_is_said_and_not_all_fine(self):
+        got = self.fine([{"id": "items", "status": "disabled", "as_of": iso(0)}])
+        self.assertFalse(got["fineOn"])
+        self.assertEqual(len(got["problems"]), 1)
+        self.assertIn("items disabled", got["problems"][0])
 
 
 if __name__ == "__main__":

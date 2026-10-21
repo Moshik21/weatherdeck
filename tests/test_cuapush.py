@@ -224,6 +224,29 @@ class OfflineHost(unittest.TestCase):
         doc = cua_push.build(got, T0, 60, "boot", 1, set(), {})
         self.assertEqual(doc["machines"][0]["status"], "warn")
 
+    def test_a_run_whose_state_is_unknown_does_not_make_the_running_count_zero(self):
+        for status in ("unknown", "sleeping"):         # Cua's own "unknown", and a status Cua does not report
+            got = read("offline-host")
+            got["spaces"] = ("ok", [{"id": "sp-x", "host": "lab", "phase": "ready"}])
+            got["runs"] = ("ok", [{"id": "r1", "space": "sp-x", "status": status}])
+            doc = cua_push.build(got, T0, 60, "boot", 1, set(), {})
+            self.assertEqual(doc["items"][0]["state"], "unknown")
+            self.assertEqual(doc["machines"][0]["lanes"], {"total": 1}, status)
+        got = read("offline-host")
+        got["spaces"] = ("ok", [{"id": "sp-x", "host": "lab", "phase": "ready"}])
+        got["runs"] = ("ok", [{"id": "r1", "space": "sp-x", "status": "idle"}, {"id": "r2", "space": "sp-x", "status": "failed"}])
+        doc = cua_push.build(got, T0, 60, "boot", 1, set(), {})
+        self.assertEqual(doc["machines"][0]["lanes"], {"running": 0, "total": 2})       # idle and failed are Cua's words: a counted zero
+        for runs, lanes in (([{"space": "sp-x", "status": "running"}, {"id": "r2", "space": "sp-x", "status": "idle"}], {"total": 1}),     # no id
+                            ([{"id": "r1", "space": "sp-x", "status": "idle"}, {"id": "r1", "space": "sp-x", "status": "running"}], {"total": 1}),   # id repeated
+                            ([{"status": "running"}, {"id": "r2", "space": "sp-x", "status": "idle"}], {"total": 1})):    # names no usable Space
+            got["runs"] = ("ok", runs)
+            self.assertEqual(cua_push.build(got, T0, 60, "boot", 1, set(), {})["machines"][0]["lanes"], lanes, runs)
+        got["spaces"] = ("ok", [{"id": "sp-x", "host": "lab", "phase": "ready"}, {"id": "sp-y", "host": "den", "phase": "ready"}])
+        got["runs"] = ("ok", [{"id": "r1", "space": "sp-x", "status": "idle"}, {"id": "r2", "space": "sp-y", "status": "idle"}, {"space": "sp-y", "status": "running"}])
+        lanes = {m["id"]: m["lanes"] for m in cua_push.build(got, T0, 60, "boot", 1, set(), {})["machines"]}
+        self.assertEqual(lanes, {"lab": {"running": 0, "total": 1}, "den": {"total": 1}})     # a dropped row only unreads the host its Space is on
+
     def test_a_phase_this_pusher_does_not_know_reads_unknown(self):
         got = read("offline-host")
         got["spaces"] = ("ok", [{"id": "a", "host": "h", "phase": "hibernating"}, {"id": "b"}])

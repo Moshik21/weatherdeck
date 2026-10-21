@@ -228,11 +228,11 @@ words, never in amber: they are things to know, not calls.
   The view's `gaps.deploys[]` adds `state` (`current`, `behind`, `unknown`) and `oldest_s`. A source measures this
   itself (a configured command or file for the deployed version, the repository for the head); the host never asks
   anything.
-- **Freshness.** Each source in the view has `freshness[]` `{id, label, age_s, limit_s, state (ok|old|error), error}`:
+- **Freshness.** Each source in the view has `freshness[]` `{id, label, age_s, limit_s, state (ok|old|error|disabled), error}`:
   each collector's answer age on the host's clock (`generated_at - as_of`, one clock, plus the time since receipt), its
   limit (`stale_after_s`, else `thresholds.collector_stale_s[id]`) and whether it is too old; every redacted view drops its `error`,
-  as it drops the collector's own. The page says an old or
-  failed one in the trust line ("atlas-main: tracker answer 14 min old") and in the Crow's nest, and the age of the answer behind
+  as it drops the collector's own. A collector the source marks `disabled` has state `disabled`, never `ok`. The page says an old,
+  failed or disabled one in the trust line ("atlas-main: tracker answer 14 min old") and in the Crow's nest, and the age of the answer behind
   the waiting number (`waiting.as_of`, `waiting.age_s`) on the call plate itself ("answer 12 min old").
 - **Burn rate.** An allowance chip whose account's `runway` says `exhausts_before_reset` with a `projected_empty_at`
   gets `countdown_s`, the seconds until that projected time, and leads with it ("out in 3 h 10 min"); one that is

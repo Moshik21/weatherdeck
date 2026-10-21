@@ -899,13 +899,16 @@ function trustLine(B) {
   }
   for (const s of rep) { const sk = softwareOf(s).skewShort; if (sk) skewNotes.push(sk); }
   for (const s of rep) if (s.rejected) problems.push(L("rejected_since", { name: srcName(s), t: hm(s.rejected.since), reason: s.rejected.reason }));
-  // A collector whose answer is too old (or failed) is said here, not only in the Crow's nest (feed 1.2: collectors).
-  // They do not make "nothing was waiting" a past fact unless the answer behind the number is the old one.
+  // A collector whose answer is too old, failed or disabled is said here, not only in the Crow's nest (feed 1.2: collectors).
+  // An old one is a note and does not make "nothing was waiting" a past fact unless the answer behind the number is the old one;
+  // a failed or disabled one is a Problem, which the Bridge numeral reads as "at the last report" (board.js).
   const oldNotes = [...skewNotes];
   // A copy whose maker stopped remaking it (feed 1.12 `made_at`) is a problem, said loudly: it can look fresh while it is re-read.
   for (const f of B.staleCollectors || []) {
-    if (f.made && f.state === "old") problems.push(L(f.refreshS ? "collector_made_stale" : "collector_made_stale_n", { name: f.name, what: f.label, t: f.s != null ? age(f.s) : "?", every: dur(f.refreshS || 0) }));
-    else oldNotes.push(f.state === "error" ? L("collector_failed", { name: f.name, what: f.label }) : L("collector_old", { name: f.name, what: f.label, t: f.s != null ? age(f.s) : "?" }));
+    // A collector that failed or is switched off leaves a surface unread: said as a Problem, so the page never says all fine over it.
+    if (f.state === "error" || f.state === "disabled") problems.push(L(f.state === "error" ? "collector_failed" : "collector_disabled", { name: f.name, what: f.label }));
+    else if (f.made && f.state === "old") problems.push(L(f.refreshS ? "collector_made_stale" : "collector_made_stale_n", { name: f.name, what: f.label, t: f.s != null ? age(f.s) : "?", every: dur(f.refreshS || 0) }));
+    else oldNotes.push(L("collector_old", { name: f.name, what: f.label, t: f.s != null ? age(f.s) : "?" }));
   }
   // A source that stretched its own intervals says why, and how often it now reports: slower on purpose, not silent and not
   // as fresh as before (feed 1.4: pace). It comes before the old answers it explains.

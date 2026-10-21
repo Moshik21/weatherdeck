@@ -11,11 +11,11 @@ ok    interpreter: /usr/bin/python3 (a real interpreter, not an alias)
 ok    systemd user timers survive logout: lingering is on for me, so the user manager and its units outlive the last login
 ok    token file: /home/me/.config/weatherdeck/token is there and not empty (its content is never shown)
 ok    token file mode: 0600, private to this user
-ok    host: http://192.0.2.10:8787 answers (Weatherdeck 0.10.4-1a2b3c4d)
+ok    host: http://192.0.2.10:8787 answers (Weatherdeck 0.10.5-1a2b3c4d)
 FAIL  host received: SILENT: the host's last accepted push from beat-laptop was 22 min ago by its own clock, more than 3 intervals (45 s); next: the service and push state lines above say why
 FAIL  push state (beat): PUSH_REFUSED: the host refused the beat's pushes since 2026-10-15T14:03:00Z: HTTP 401 a valid bearer token is required; next: the host does not hold this token: ...
 ok    clock skew: 0.3 s behind the host's
-ok    version: 0.10.4 on both
+ok    version: 0.10.5 on both
 overall: NOT live: 2 check(s) failed; first: host received SILENT
 ```
 

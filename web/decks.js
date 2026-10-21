@@ -166,7 +166,7 @@ function nestRows(B, ship) {
         ...(B.slowed || []).filter(f => f.source === s.id).map(() => L("slowed_short")),
         // Feed 1.12: a copy's age since its maker made it, said while it is fine too (an old one is said below as old)
         ...(B.madeAges || []).filter(f => f.source === s.id && f.state === "ok" && f.s != null).map(f => L("collector_made_short", { what: f.label, t: age(f.s) })),
-        ...(B.staleCollectors || []).filter(f => f.source === s.id).map(f => f.state === "error" ? L("collector_failed_short", { what: f.label }) : L("collector_old_short", { what: f.label, t: f.s != null ? age(f.s) : "?" }))].filter(Boolean).join(" · "),
+        ...(B.staleCollectors || []).filter(f => f.source === s.id).map(f => f.state === "error" ? L("collector_failed_short", { what: f.label }) : f.state === "disabled" ? L("collector_disabled_short", { what: f.label }) : L("collector_old_short", { what: f.label, t: f.s != null ? age(f.s) : "?" }))].filter(Boolean).join(" · "),
       right: machineName(s.machine), s });
   }
   for (const q of B.queues || []) {
@@ -443,7 +443,7 @@ function itemModel(r, B, ship) {
           (c.over_budget ? " · " + L("cost_over") : "")]);
       }
       if (s.rejected) M.look.push([L("rejected_head"), s.rejected.reason + " · " + hm(s.rejected.since)]);
-      if ((s.freshness || []).length) M.look.push([L("collectors_head"), s.freshness.map(c => c.label + " " + (c.state === "ok" ? (c.age_s != null ? age(c.age_s) : c.state) : c.state === "error" ? L("collector_error_word") : L("old", { t: c.age_s != null ? age(c.age_s) : "?" }))).join(" · ")]);
+      if ((s.freshness || []).length) M.look.push([L("collectors_head"), s.freshness.map(c => c.label + " " + (c.state === "ok" ? (c.age_s != null ? age(c.age_s) : c.state) : c.state === "error" ? L("collector_error_word") : c.state === "disabled" ? L("collector_disabled_word") : L("old", { t: c.age_s != null ? age(c.age_s) : "?" }))).join(" · ")]);
       else if ((s.collectors || []).length) M.look.push([L("collectors_head"), s.collectors.map(c => c.id + " " + (c.status || "?")).join(" · ")]);
       M.open.push({ route: deckRoute("logbook", null, r.ship), label: L("open_logbook") });
       M.evidence = evidenceOf(s.id, null);
