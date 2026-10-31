@@ -224,7 +224,7 @@ function renderCall(B, g) {
     for (const [k, v] of Object.entries(seaDoor("bridge"))) el.setAttribute(k, v);
     el.classList.add("plate", "calm");
     // Never say "nothing is waiting" as a present fact while a source is not reporting (docs/feed-spec.md).
-    el.append(t("numeral", "ink", L(B.trust.problems.length ? "all_clear_last" : "all_clear")), t("body", "ink2", [L("calm_line", { moving: B.underway.length, off: B.off.length, waiting: B.waiting.length, landed: B.score.n, when: landedWhen(B) }), answerWord(B)].filter(Boolean).join(" ")));
+    el.append(t("numeral", "ink", L(B.trust.problems.length ? "all_clear_last" : "all_clear")), t("body", "ink2", [L("calm_line", { moving: B.underway.length + B.scouts.length, off: B.off.length, waiting: B.waiting.length, landed: B.score.n, when: landedWhen(B) }), answerWord(B)].filter(Boolean).join(" ")));
     if (B.also.length) el.append(t("body", "ink2", L("fyi") + " " + B.also.map(alsoText).join("; ")));
     // Without a scene behind it the plate keeps its whole zone, so it lists what landed today.
     if (!S.theme.scene && !g.phone && B.doneToday.length) {
@@ -281,7 +281,7 @@ function renderOpenBanner(B, el) {
   for (const [k, v] of Object.entries(seaDoor("bridge"))) el.setAttribute(k, v);
   el.classList.add("plate", "calm", "open");
   const head = L(B.trust.problems.length ? "all_clear_last" : "all_clear");
-  const line = [L("calm_line", { moving: B.underway.length, off: B.off.length, waiting: B.waiting.length, landed: B.score.n, when: landedWhen(B) }), answerWord(B),
+  const line = [L("calm_line", { moving: B.underway.length + B.scouts.length, off: B.off.length, waiting: B.waiting.length, landed: B.score.n, when: landedWhen(B) }), answerWord(B),
     B.also.length ? L("fyi") + " " + B.also.map(alsoText).join("; ") : null].filter(Boolean).join(" ");
   el.setAttribute("aria-label", head + ". " + line + " " + (el.getAttribute("aria-label") || ""));
   el.append(lbl(head, "ink", "nowrap head"), t("body", "ink2", line, "ellipsis line"));
