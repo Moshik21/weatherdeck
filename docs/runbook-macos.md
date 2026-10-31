@@ -45,6 +45,20 @@ open `http://<address>:8787/?key=<token>` once on each viewing device.
 **Upgrade.** `weatherdeck off`, replace the program folder with the new unzipped one (data and config
 live elsewhere and are kept), `weatherdeck on`; check with `weatherdeck status`.
 
+**Linux and WSL.** Run the host under a systemd user service. Save as
+`~/.config/systemd/user/weatherdeck.service`, then `systemctl --user enable --now weatherdeck`:
+
+```
+[Service]
+ExecStart=/usr/bin/python3 %h/weatherdeck/bin/weatherdeck run
+Restart=on-failure
+[Install]
+WantedBy=default.target
+```
+
+Stop and restart it with `systemctl --user stop weatherdeck` and `systemctl --user restart weatherdeck`.
+See [hosting.md](hosting.md) for `weatherdeck off` and `restart` under a service manager.
+
 ## Machine beat (health of this Mac)
 
 `bin/weatherdeck-beat` ([beat.md](beat.md)) samples memory pressure, swap rate, run queue and disk every
