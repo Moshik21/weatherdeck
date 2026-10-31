@@ -472,7 +472,7 @@ default theme provides the same components without art (`default/tokens.json`, `
 - **Night.** Dark parchment with the night amber band, so the plate is still the brightest block,
   but not a light one. With `theme.oled_safe` on, the day plate uses this table too.
 - **Calm (nothing waits).** The call zone shows a plain plate instead: "Nothing waits on you"
-  (`numeral`, ink), then what is under way and what landed, in words (`body`, ink2). The crow rests
+  (`numeral`, ink), then what is under way (scouts included) and what landed, in words (`body`, ink2). The crow rests
   on the stern rail in the scene. It is never a zero in an empty box.
 
 ### 9.3 Alarm: a critical

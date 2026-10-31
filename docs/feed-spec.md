@@ -179,6 +179,8 @@ The host also derives `health.state: "lost"` itself when the source carrying a m
 
 **Off course is `needs_action` plus `running_long`, and nothing else.** A lane that an `action` attention card names is treated as `needs_you` whether or not its source set the flag.
 
+The calm line and log header count scouts in "under way". The Lists page counts under way and scouting separately.
+
 **No agent at the work** (1.2). A lane whose `agent.state` is `ended` or `gone`, for at least `thresholds.agent_gone_min` minutes counted from `agent.since`, is `needs_action` with kind `agent_gone`, whatever its state said: nobody will move it. Exempt: work that is done or failed (failed already needs action), and work whose PR is open or merged (its agent's part is over). An agent that is `alive`, `unknown` or not reported never changes the class, so an agent idle between turns, or waiting on a long run it launched, is never flagged.
 
 **`reported`** (optional, on an item): `{label, percent, basis: "reported", at}`: a progress figure the worker states about itself (an agent saying "about 60%, writing tests"). It is never merged into `progress`. The page draws it as a separate dashed mark ("reported 60%, writing tests, 4 min ago") and, when `progress` has no honest percent, a dashed "~60%" marked "reported", because it is lower trust than measured, step-derived progress. No adapter has to send it; the public profile keeps the percent and drops the label.
