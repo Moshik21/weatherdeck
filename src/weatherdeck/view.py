@@ -712,9 +712,24 @@ def build(now=None, redaction="none"):
                     "how": labels["host_lost_how"], "source": hl.get("source")})
         for a in attention:
             a["aside"] = aside(a, now)
+        # Match an owner's queued row with a relay that prefixes its id with the owner.
+        relayed = set()
+        for sid in newest:
+            for n in feeds[sid]["feed"]["next"]:
+                owner, sep, _ = n["id"].partition("/")
+                if sep and owner != sid and owner in feeds:
+                    iid = norm_id(owner, n["id"])
+                    if any(own["id"] == iid for own in feeds[owner]["feed"]["next"]):
+                        relayed.add((owner, iid))
         nxt, seen = [], set()
         for sid in newest:
             for n in feeds[sid]["feed"]["next"]:
+                owner, sep, _ = n["id"].partition("/")
+                relay = (owner, norm_id(owner, n["id"])) if sep and owner != sid else None
+                if relay in relayed and age(owner) <= th["lost_after_s"]:
+                    continue
+                if (sid, n["id"]) in relayed and age(sid) > th["lost_after_s"]:
+                    continue
                 if n["id"] not in seen:
                     seen.add(n["id"])
                     nxt.append(dict(n, source=sid, aside="deferred" if aside(n, now) == "deferred" else None))
