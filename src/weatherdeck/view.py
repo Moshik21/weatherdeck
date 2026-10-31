@@ -198,7 +198,8 @@ def redact(view, level, labels):
     household: for a screen the household can see. Item and group titles, repo (group) names, ids
                and pull-request links stay; free text a worker wrote about what it is doing
                (details, state text, last events, attention details and recommendations, gate notes, failing test
-               names) and everything machines say about themselves in prose is stripped.
+               names) and everything machines say about themselves in prose is stripped. A supervision card's fixed-format
+               heartbeat age is retained.
     guest:     titles, details, links and ids; group and machine names stay.
     public:    guest, plus step labels, flags, queue and done rows, attention text, machine extras,
                timeline text and error texts. What is left is counts, names of groups and machines,
@@ -231,7 +232,11 @@ def redact(view, level, labels):
                 it["reported"] = dict(rep, label=None)
             (it.get("progress") or {})["reason"] = None
         for a in view["attention"] + view["attention_pending"]:
-            a["detail"], a["recommend"], a["say"], a["answer_link"] = None, None, None, None   # 1.6: the answer address is the full profile's
+            detail = a.get("detail")
+            if not (a.get("kind") == "service" and re.match(r"^service:supervision(?::|$)", a.get("id") or "")
+                    and isinstance(detail, str) and re.fullmatch(r"heartbeat [0-9]+ ?s old", detail)):
+                a["detail"] = None
+            a["recommend"], a["say"], a["answer_link"] = None, None, None   # 1.6: the answer address is the full profile's
             a.pop("options", None)   # 1.9: so are the choices
             _hold_words(a)
         for n in view["next"]:
