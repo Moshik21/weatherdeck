@@ -1206,7 +1206,8 @@ The host builds one chip per account (`meters.chips`, the feed spec): provider, 
 left and the reset time, in a fixed order (provider, account, id). On the TV they are one last row of the log,
 "ALLOWANCE  Orbit Team plan wk 18% Mon 07:08 · ...", each in the fullest form that lets them all fit; in the shortest
 form those that still do not fit fold into "+N". A low chip is ink, an empty one trouble; never amber. The phone and the
-Crow's nest give each chip in full words with its running-out sentence, which comes only from the source's projection.
+Crow's nest give each chip in full words with its running-out sentence, which comes only from the source's projection. When
+`display.tz` is null, reset words use the host zone and include its UTC offset at the reset time.
 
 ### 18.4 Landed
 

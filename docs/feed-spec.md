@@ -197,7 +197,7 @@ The calm line and log header count scouts in "under way". The Lists page counts 
 - `runway` is **the source's own projection**. The host never projects anything from percentages: the sentence "may run out Sun 23:08, before the Week reset Mon 07:08" exists only when the source says `exhausts_before_reset` with a `projected_empty_at`, and it always names the account it is about.
 - Send only accounts the user uses. A provider whose tool is merely installed, with nothing measured, should send nothing (and say so once, as a note), not an "unavailable" account.
 
-The view adds `meters.chips[]`, one per account in a fixed order (provider, then account, then id), never sorted by percentage: `{id, source, provider, account, window{id, label, short}, left, resets_at, resets, state (ok|low|out|unavailable), projection, sentence, forms[]}`, where `forms` are the chip's words from fullest ("Orbit Team plan wk 18% Mon 07:08") to shortest, for the page to fit. Config `display.allowance.providers` (default `[]`, every provider) lists the providers the viewer wants shown.
+The view adds `meters.chips[]`, one per account in a fixed order (provider, then account, then id), never sorted by percentage: `{id, source, provider, account, window{id, label, short}, left, resets_at, resets, state (ok|low|out|unavailable), projection, sentence, forms[]}`, where `forms` are the chip's words from fullest ("Orbit Team plan wk 18% Mon 07:08") to shortest, for the page to fit. When `display.tz` is null, reset words use the host zone and include its UTC offset at the reset time. Config `display.allowance.providers` (default `[]`, every provider) lists the providers the viewer wants shown.
 
 ## Black holes (1.2)
 

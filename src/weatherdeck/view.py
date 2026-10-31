@@ -761,7 +761,8 @@ def build(now=None, redaction="none"):
             for a in m.get("accounts") or []:
                 accounts.append(dict(a, source=sid, as_of=m.get("as_of")))
         tz = _tzinfo(cfg["display"]["tz"])
-        chips = allowance.chips(accounts, now, tz, ((cfg["display"].get("allowance") or {}).get("providers")), labels)
+        chips = allowance.chips(accounts, now, tz, ((cfg["display"].get("allowance") or {}).get("providers")), labels,
+                                label_reset_zone=cfg["display"]["tz"] is None)
         # Each lane's kind and class (lanes.py) and its row text; a step's clock runs on for up to two intervals after a push.
         glabel = {g["id"]: g["label"] for g in groups.values()}
         # A lane a call names is waiting on the viewer whether or not its source set needs_you (feed-spec: attention.item).

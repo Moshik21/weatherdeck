@@ -61,7 +61,7 @@ def when(epoch, tz, now):
     return "%d %s" % (t.day, t.strftime("%b"))
 
 
-def chip(acc, now, tz, labels=None, stale=False):
+def chip(acc, now, tz, labels=None, stale=False, label_reset_zone=False):
     """One chip: {id, source, provider, account, window, left, resets_at, resets, state, projection, sentence, forms}.
     state is ok | low | out | unavailable. forms are the chip's words from fullest to shortest, for the page to fit."""
     L = labels or {}
@@ -86,6 +86,9 @@ def chip(acc, now, tz, labels=None, stale=False):
     left = int(round(max(0, min(100, low["percent_remaining"]))))
     reset_ep = _epoch(low.get("resets_at"))
     resets = when(reset_ep, tz, now)
+    if resets and label_reset_zone:
+        offset = datetime.fromtimestamp(reset_ep).astimezone().strftime("%z")
+        resets += " (UTC%s:%s)" % (offset[:3], offset[3:])
     back_in = max(0, int(reset_ep - now)) if status == "exhausted" and reset_ep is not None else None
     state = "out" if left <= OUT_PCT or status == "exhausted" else "low" if left < LOW_PCT or status == "exhausts_before_reset" else "ok"
     short = window_short(low)
@@ -108,7 +111,7 @@ def chip(acc, now, tz, labels=None, stale=False):
                 resets_at=low.get("resets_at"), resets=resets, state=state, sentence=sentence, forms=forms)
 
 
-def chips(accounts, now, tz, providers=None, labels=None, stale_sources=()):
+def chips(accounts, now, tz, providers=None, labels=None, stale_sources=(), label_reset_zone=False):
     """Every account's chip, only for the listed providers when a list is given, in a fixed order: provider, then
     account, then id. The order never depends on percentages, so chips do not swap places as they move."""
     want = {str(p).lower() for p in providers or [] if p}
@@ -120,6 +123,7 @@ def chips(accounts, now, tz, providers=None, labels=None, stale_sources=()):
         raw = str(acc.get("provider") or provider).lower()
         if want and raw not in want and provider.lower() not in want:
             continue
-        out.append(chip(acc, now, tz, labels, stale=acc.get("source") in stale_sources))
+        out.append(chip(acc, now, tz, labels, stale=acc.get("source") in stale_sources,
+                        label_reset_zone=label_reset_zone))
     out.sort(key=lambda c: (c["provider"].lower(), (c["account"] or "").lower(), str(c["id"])))
     return out
