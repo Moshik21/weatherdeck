@@ -489,6 +489,7 @@ default theme provides the same components without art (`default/tokens.json`, `
   machine never reads OK while a critical is on it (review fix).
 - **Supervision.** A `service` card with id `service:supervision:<source>` is worded by the page (`frontdoor.js`
   `supervisionAlarm`), in the core's labels (`supervision_*`), whoever's card it is:
+  - The household view retains the heartbeat age only in the fixed form `heartbeat <digits>s old` (or with a space before `s`); guest and public views strip it.
   - The title names whose supervisor it is, by its source's name and never "this home", and its heartbeat's age as the card's
     `detail` says it ("heartbeat 400s old"): "cinder's supervisor hasn't checked in for 6 min". A `detail` with no age says
     "for how long: not reported"; no age is invented.
