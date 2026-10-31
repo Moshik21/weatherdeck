@@ -6,6 +6,10 @@ version follows [semantic versioning](https://semver.org/). The feed schema has 
 
 ## [Unreleased]
 
+### Fixed
+
+A queued row relayed as `owner/id` and reported by its owner as `id` now counts once.
+
 ## [0.10.5] - 2026-10-21
 
 In plain words: the page no longer says ALL FINE over a collector that failed or is disabled, and the example firstmate and Cua pushers no longer turn a torn ledger or an unknown run into an empty fleet or a zero.
