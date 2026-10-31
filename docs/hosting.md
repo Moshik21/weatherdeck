@@ -44,6 +44,12 @@ to stop with a `stop.request` file (graceful on every platform) and only termina
 not stop in 8 s; it never touches a pid it cannot confirm is this host (the host answers
 `/healthz` with a per-run id), so a stale `server.json` is safe.
 
+Once a service manager owns the host, stop and restart go through it. With `Restart=always`,
+`weatherdeck off` prints stopped, then the unit brings it back; `weatherdeck restart` swaps the
+supervised process for an unsupervised one, and the unit keeps retrying with `cannot listen on port`.
+With `Restart=on-failure`, `off` stays stopped; `restart` leaves the unit inactive and the
+background process serving unsupervised. See [runbook-macos.md](runbook-macos.md) for a Linux or WSL host service.
+
 Everything under the data dir is private to the user (mode 0600/0700): `history.sqlite`, `sources/`,
 `rejected/`, `cards/`, `tokens.json` (SHA-256 of tokens only), `invites.json` (the invite registry, [onboarding.md](onboarding.md)), `ingest.log`, `server.log` (1 MB, one backup), and
 `received-log.jsonl` (rotated at `history.received_log_kb`, 2048 KB, keeping `history.received_log_keep`, 3, older files).
