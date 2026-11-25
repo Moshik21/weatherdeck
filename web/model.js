@@ -352,9 +352,11 @@ function buildLanes(mstate) {
       detail = [inState != null ? L("outside_line", { who, t: age(inState) }) : L("outside_who", { who }), detail].filter(Boolean).join(", ");
     }
     const row = it.row || {};
+    const project = typeof it.project === "string" ? it.project : null, itemKind = typeof it.kind === "string" ? it.kind : null, group = typeof it.group === "string" ? it.group : null;
     out.push({ id: it.id, it, kind, cls, waitingOn, glyph: g.glyph || "silent", slot, tier: g.tier, word, order: row.order || [1e6, 1e6], ageText: ageShort(inState),
       title: row.title || it.title || it.id, chip: row.chip || null, detail, range: laneRange(it), phase: lanePhase(it), machine: it.machine || "",
-      lv, stale, started: epoch(it.started_at) || 0, group: it.group || null, changed: S.laneChanged[it.id] || null, stage: laneStage(it, kind), inState, light: agentLight(it, kind, stale),
+      lv, stale, started: epoch(it.started_at) || 0, project, itemKind, group, watch: watchOf({ project, itemKind, group }), changed: S.laneChanged[it.id] || null,
+      stage: laneStage(it, kind), inState, light: agentLight(it, kind, stale),
       quiet: ["moving", "long", "regressed"].includes(kind) && cur.activity === "quiet" ? (cur.last_activity_age_s != null ? cur.last_activity_age_s + grown(it, lv) : -1) : null });
   }
   return out;
@@ -980,6 +982,7 @@ function boardModel(g) {
   const mstate = Object.fromEntries(B.machines.map(m => [m.id, m]));
   B.lanes = buildLanes(mstate);
   for (const l of B.lanes) Object.assign(l, { machineLabel: (mstate[l.machine] || {}).label || l.machine || L("unassigned") }, rowPlain(l));
+  B.muster = musterCounts(B.lanes);   // every sailor, including those below decks; stale states stay last known
   // The one order of rows, the sea's log and the Lists page alike (frontdoor.js sortRows; the order list is display.row_sort).
   B.sorted = sortRows(B.lanes, (cfg().display || {}).row_sort, laneFacts);
   // Becalmed: work runs on a machine, and every running lane there says its activity went quiet (items[].progress.current

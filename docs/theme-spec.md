@@ -313,7 +313,8 @@ Each `tokens.json` records every pair with its ratio, floor and use under `check
 
 `color.scene` holds sky and sea ramps for each time of day (`dawn`, `day`, `dusk`, `night`, `storm`,
 `anchor`), clouds, wood, sails (with a `furled` tone), the crow, the lantern, the iron bell, the two
-flags, fog, rain and stars. Art rules:
+flags, fog, rain and stars, plus `livery` (hull stripe / masthead pennant per machine) and `watch`
+(six belt-mark tones shared by sailors in one derived watch, section 17.2.1). Art rules:
 
 - Every scene colour is multiplied by the time-of-day light (`color.scene.light`) and snapped to
   5-bit channels, so the art reads like a 15-bit console palette. Plates and status hues are never
@@ -400,7 +401,7 @@ the amber "!" in the call plate, and the triangle stays neutral (rule 1).
 | `bar` | 20, 8, 600, 27 | landed score and latest landing, the voyage chart, "n AHEAD", the clock, trust lamp and words | during a critical it becomes the alarm |
 | `call` | 20, 41, 356, h ≤ 164 | band (count, "WAIT ON YOU", crow), the top call in full, up to 3 more, an "also" line when 3 or fewer wait | more than 4 calls: the 4th row reads "+N more waiting, on the phone". The count is always the total |
 | `scene` | full bleed. Window 384, 41, 236, 164. Horizon 146, deck 180, water 205 | sky, ship, crew, weather | mood only: nothing is said only by the scene |
-| `open` | 0.4.1, section 21.6: the open sea's zone set. `call` 20, 41, 572, 17 (one banner line); `scene.window` 20, 41, 600, 164 (the whole upper area); `since` 20, 62, 208, 32 | nothing waits on the viewer: the all-clear in one line, and the sea | the line is cut to fit; a screen reader hears it in full, and it is the Bridge's door |
+| `open` | 0.4.1, section 21.6: the open sea's zone set. `call` 20, 41, 524, 17 (one banner line); `scene.window` 20, 41, 600, 164 (the whole upper area); `since` 20, 62, 208, 32; `muster` 20, 98, 204, 46 | nothing waits on the viewer: the all-clear in one line, the ship's muster and the sea | the line is cut to fit; the muster counts every sailor including those below decks; a screen reader hears both in full, and the banner is the Bridge's door |
 | `legend` | 20, 41, 600, 164 (0.4.1: the whole upper area) | the key (section 20.5): shapes, the sea, each creature's last sighting, the replay | |
 | `machines` | hull plates (0.4.0, section 21): the flagship's under its hull (y 185, h 15); each escort's under it (near row) or over its masthead (far row) | pip, name, word per ship; the convoy's count plate | past six ships the rest are one convoy plate ("+3 SHIPS · 1 SILENT"); the count is always the total |
 | `log` | 20, 213, 600, 139, 6 rows | every off-course lane | see 9.5 |
@@ -415,7 +416,8 @@ The default theme uses the same zones, but has no scene. A plain `machines` pane
 The order is **bar, banner, call, log, more**.
 
 - **Bar.** Clock, trust lamp and words, one pip, name and word per machine, and the alarm line during
-  a critical.
+  a critical. On the phone's sea/page header, a compact second line carries the same muster as the TV plate
+  (for ship deck: `14 HANDS · 3 WATCHES · 2 ALOFT`, plus `LAST KNOWN` when any counted sailor is stale).
 - **Banner.** The scene cropped to the ship, **64 ap (128 CSS px) tall**. It was 112 ap in the
   concept and is shortened here (review fix). When the host is down, the hailing plate replaces it.
 - **Call.** Every call in full, with its detail. On a 390 x 844 viewport the call band's top edge
@@ -735,6 +737,7 @@ On the phone the plate replaces the banner, full width, and holds everything:
 - the places below decks (section 16): "Open sea", "Ship's plan", "Bridge", "Gun deck", "Chart room", "Cargo hold",
   "Crow's nest", "Logbook", each beside its plain words ("calls waiting on you", "every lane, grouped by goal, else by project", ...)
 - "Hailing the host", "Next try in seconds", "This board can't reach its host."
+- Muster nouns: "Hands", "Watches", "Aloft" (the default theme says "Workers", "Teams", "Active").
 
 The loader layers them **under** the user's config labels, so config always wins. A nautical word is
 a name, never the only explanation: every one sits beside plain words and numbers.
@@ -878,10 +881,11 @@ window.WeatherdeckTheme.register("ship-deck", {
 | `screen` | `board`, `anchor`, `hail`, `lost`, `empty`, `loading`, or `deck` below the sea (section 16) |
 | `room`, `ship` | on `deck`: `plan` or a place (`bridge`, `gun-deck`, `chart-room`, `cargo-hold`, `crows-nest`, `logbook`), and the ship (machine) id |
 | `counts` | `{landed}`: what landed today (the cargo hold's crates) |
+| `muster` | section 17.2.1: `{hands, watches, aloft, lastKnown}`; the scene receipt repeats it on the open sea, while the DOM plate and phone header draw the words |
 | `machines[]` | id, label, pip state (section 7), `critical` (bool), `silent_s`, `becalmed` (bool, section 17), `resting`, `asleep` (bool, 0.4.0) |
 | `fleet` | 0.4.0, section 21: `{ships[] {id, role (flagship, escort), slot, berth (sea, harbor, anchored)}, convoy {n, worst, stale} or null, slots}`; `slots` (0.4.1, section 21.2) is the core's roadstead for this window: `{open, ships[] {slot, x0, x1, scale (full, half)}, convoy {x0, x1} or null}`, x as fractions of the window's width |
 | `open`, `window` | 0.4.1, section 21.6: whether this is the open sea, and the scene window in stage art px `{x, y, w, h}` |
-| `crew[]` | lane id, machine id, state (section 7), project tag, `changed_s`, `stage` (section 17, or null), `light` (section 23.2: `lit`, `dark`, `unknown`, or null for finished or failed work) |
+| `crew[]` | lane id, machine id, state (section 7), `watch` (section 17.2.1), `changed_s`, `stage` (section 17, or null), `light` (section 23.2: `lit`, `dark`, `unknown`, or null for finished or failed work) |
 | `horizon` | section 23.1: `{islands[] {id, kind (queued, gate, held), step (3, 2, 1), dated, state (ok, unknown, fog)}, total, more}`; none when the page has no board yet |
 | `world` | section 17: `{host, gulls, events[], walk}`; an event has `replay: true` when it is the replay key's (section 17.4.1) |
 | `calls` | count, and whether any is new since the last frame |
@@ -952,7 +956,8 @@ These are for the implementation lane, run against the fixture scenarios in ever
    - With 7 or more off-course lanes, the overflow row's counts add up.
 8. **Phone.** At 390 x 844 the call band's top is ≤ 320 CSS px, with no horizontal scroll.
 9. **Network.** No request leaves the host. The CSP is unchanged.
-10. `scripts/self-audit` finds nothing new under `web/`.
+10. **Muster.** Count derivation uses project, then group, then item kind, then Other; HANDS equals the full scene crew before deck fitting; ALOFT excludes structured quiet activity; a stale hand makes both TV and phone readouts say LAST KNOWN. The TV anchor is inside `zones.tv.open.scene.window`, and the phone anchor is the sticky page header.
+11. `scripts/self-audit` finds nothing new under `web/`.
 
 ---
 
@@ -1093,6 +1098,23 @@ stands on the rail line in front of its group (the rail hides the sailors' legs)
 sailor whose stage changes walks to the new station in 3 whole-px steps of 100 ms; under `still` they are simply there.
 At anchor the crew sleep in hammocks, with no stations.
 
+### 17.2.1 The ship's muster and watches
+
+The open sea carries one quiet muster plate. It counts the same `crew[]` handed to the scene, before the scene chooses who fits on deck:
+**HANDS** is every sailor, including below-deck overflow; **WATCHES** is the number of derived work teams; **ALOFT** is active work
+(`moving`, `regressed`, `long` or `scout`) except a lane whose structured activity says it is quiet. Landed and old-record sailors
+remain hands because the scene still carries them; ALOFT distinguishes the ones actively at work.
+
+A watch comes only from structured lane fields, never a title or prose. Take the first non-empty value in this order:
+`items[].project`, `items[].group`, `items[].kind`; fold case, hyphens, underscores and repeated spaces for the grouping key; with none,
+use **Other**. Thus values such as `pipeline_residual` and `pipeline-residual` are one Pipeline residual watch, while Field Guide,
+Clean and Other remain separate watches. Feed kind is a type word and only names a watch when project and group are absent. This is the first mapping, not a claim that the source has explicitly declared a team.
+
+If any counted sailor is stale, the plate and phone strip append **LAST KNOWN**. The stale sailor keeps the last reported watch and
+active state under the existing silent/fog rules; the board never changes that hand to fresh or zero. The ship-deck sailor carries a
+small belt mark chosen by a fixed hash of the watch key from `color.scene.watch`; it is identity only, never status, and collisions are allowed.
+There is no looping pennant or new motion: existing walk-to-station motion remains the only crew movement.
+
 ### 17.3 Events
 
 | Event | Lane | Time | Night | Rate |
@@ -1152,9 +1174,9 @@ once more: the same creature with the same chests, dolphins, ship or flight. Hon
 `describe(scene)` returns what `paint` draws: per drawn ship its label, the sailors per station (or asleep), scouts,
 sails (`set`, `slack`, `furled`, `none`), whether gulls are perched, the weather, its windows (lit, dark and shuttered
 counted over every lane, and how many were drawn); the islands ahead (kind, due step and state of each drawn one, and
-the true count); the lighthouse (`lit`, `dark`); and the
-events playing. The core words it ("Atlas: 1 at the inspection plank, 1 at the signal staff, 2 at the rail, gulls on the yard.
-Borealis: sails slack (becalmed), ... The lighthouse is lit.") into a polite live region (`#receipt`, so the canvas,
+the true count); on the open sea the muster (`hands`, `watches`, `aloft`, `lastKnown`, section 17.2.1); the lighthouse
+(`lit`, `dark`); and the events playing. The core words it ("Atlas: 1 at the inspection plank, 1 at the signal staff, 2 at the rail, gulls on the yard.
+Borealis: sails slack (becalmed), ... Ship's muster: 14 hands · 3 watches · 2 aloft. The lighthouse is lit.") into a polite live region (`#receipt`, so the canvas,
 which is `aria-hidden`, has a text equivalent) and at the top of the Logbook.
 
 ### 17.6 Sound (opt-in)
@@ -1400,7 +1422,8 @@ fleet"); the page judges each machine on its own clock and the scene module draw
   whose count is always the true total and whose words name every state that is not OK, worst first. A ship carries on
   deck only the sailors that fit (an escort at most six), the most urgent first (calls, failed, blocked, running long,
   no word, then the rest in order); the others are **below decks**, said on the flagship's plate ("+6 BELOW"), in each
-  ship's door caption and in the scene receipt ("6 more below decks").
+  ship's door caption and in the scene receipt ("6 more below decks"). The muster is computed before this fit, so every
+  below-deck sailor remains in HANDS and in their watch.
 - **Monotonic.** More trouble never looks calmer: the ships drawn and the convoy keep their places as states change, the
   convoy plate's words only grow with trouble, and a quiet machine is never moored.
 - **No false precision.** A ship's size follows how many sailors stand on it, never a percent; distance on the
@@ -1475,11 +1498,13 @@ On a TV, with nothing waiting on the viewer, the sea is the board's picture rath
   anchor, hailing, lost contact, empty or loading), no call and no unverified waiting number (model.js `B.open`). A call
   arriving brings the panel and the narrow window back at once (its crow flies in as ever); when the last call goes,
   the sea opens again.
-- **The call plate is one banner line** (zone `open.call`): "NOTHING WAITS ON YOU" (or "NOTHING WAITED AT THE LAST
+- **The call plate is one banner line** (zone `open.call`, 20, 41, 524, 17): "NOTHING WAITS ON YOU" (or "NOTHING WAITED AT THE LAST
   REPORT" while a source that has reported is not reporting), then the calm line ("22 under way, 0 off course, 15 waiting, 13 landed in
   24 h."), the answer's age and the "also" notes, cut to fit. A screen reader hears it all; it is still the Bridge's door.
 - **The scene window is the whole upper area** (zone `open.scene.window`, 20, 41, 600, 164); the masts start below the
-  banner line (the flagship's top at y 70). The since plate moves under the banner, at the left (zone `open.since`).
+  banner line (the flagship's top at y 70). The since plate moves under the banner, at the left (zone `open.since`). Under
+  it the quiet muster plate (zone `open.muster`, 20, 98, 204, 46) carries HANDS, WATCHES and ALOFT (section 17.2.1); a
+  screen reader hears those counts with the banner.
 - **One ship** has its own stretch in the middle of the sea (10% to 80% of the window).
 - **Two or three ships: escorts at full scale.** Each escort is drawn with the flagship's own art (16 x 24 sailors at
   their stations, station furniture, scouts in its nest), a little further off: deck 152, water 176, masts from y 72
@@ -1577,7 +1602,7 @@ host, at anchor) and every place below decks keep the stage of sections 3 to 9 a
 place is a cut, because a document has no picture to zoom. The page sets `data-page` on the root; the stage's zones, the call
 plate and the log are not drawn while it is on.
 
-From the top: the header (on a TV-sized screen, **Open sea**, the way back out; the clock, "N of M feeds report" (a placeholder source, one never seen, is not in M) with the newest report's age, and the **Key** button, which sticks to the top on every size);
+From the top: the header (on a TV-sized screen, **Open sea**, the way back out; the clock, "N of M feeds report" (a placeholder source, one never seen, is not in M) with the newest report's age, and the **Key** button, which sticks to the top on every size; on the phone's sea, a compact muster line under those controls);
 what changed since this screen last looked; the three-state strip; the places below decks, each with its caption; the lanes
 in the one order (24.2), the working ones grouped by the goal they serve (else by project), with the sea after them; and one quiet block of what waits where nobody looks, the allowance and the tool cards.
 

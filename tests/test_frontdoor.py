@@ -91,6 +91,38 @@ class FrontDoor(InNode, unittest.TestCase):
             self.assertFalse(self.page_on("/sea", phone=True, screen=screen))
         self.assertFalse(self.page_on("/board", loading=True))
 
+    def test_muster_derives_watches_and_counts_every_hand_including_last_known(self):
+        lanes = [
+            {"id": "a", "project": "Pipeline_residual", "itemKind": "ship", "group": "Clean", "kind": "moving", "quiet": None},
+            {"id": "b", "project": "pipeline-residual", "itemKind": "ship", "group": "Field Guide", "kind": "long", "quiet": 900},
+            {"id": "c", "project": None, "itemKind": "task", "group": "Clean", "kind": "scout", "stale": True},
+            {"id": "d", "project": None, "itemKind": "task", "group": "Inkwell", "kind": "regressed"},
+            {"id": "e", "project": None, "itemKind": "Field Guide", "group": None, "kind": "done"},
+            {"id": "f", "project": None, "itemKind": None, "group": None, "kind": "done"},
+        ]
+        calls = {f"w{i}": {"fn": "watchOf", "args": [lane]} for i, lane in enumerate(lanes)}
+        calls["m"] = {"fn": "musterCounts", "args": [lanes]}
+        got = self.run_js(calls)
+        self.assertEqual(got["w0"], {"key": "pipeline residual", "label": "Pipeline_residual", "basis": "project"})
+        self.assertEqual(got["w1"]["key"], got["w0"]["key"])       # spelling separators do not split a watch
+        self.assertEqual(got["w2"], {"key": "clean", "label": "Clean", "basis": "group"})  # project, then group, then kind
+        self.assertEqual(got["w3"], {"key": "inkwell", "label": "Inkwell", "basis": "group"})
+        self.assertEqual(got["w4"], {"key": "field guide", "label": "Field Guide", "basis": "kind"})
+        self.assertEqual(got["w5"], {"key": "other", "label": "Other", "basis": "other"})
+        self.assertEqual(got["m"], {"hands": 6, "watches": 5, "aloft": 3, "lastKnown": True})
+
+    def test_muster_render_anchors_are_the_open_sea_plate_and_phone_header(self):
+        tokens = json.loads((ROOT / "web" / "themes" / "ship-deck" / "tokens.json").read_text())
+        open_zones = tokens["zones"]["tv"]["open"]
+        self.assertEqual(open_zones["muster"], {"x": 20, "y": 98, "w": 204, "h": 46, "inside": "scene.window",
+                                                 "holds": "total hands, derived watches and hands actively aloft; LAST KNOWN when any sailor is stale"})
+        win = open_zones["scene"]["window"]
+        muster = open_zones["muster"]
+        self.assertGreaterEqual(muster["x"], win["x"])
+        self.assertGreaterEqual(muster["y"], open_zones["since"]["y"] + open_zones["since"]["h"])
+        self.assertLessEqual(muster["x"] + muster["w"], win["x"] + win["w"])
+        self.assertLessEqual(muster["y"] + muster["h"], win["y"] + win["h"])
+
     def test_badge_counts_only_what_the_view_lists_on_that_machine(self):
         data = {
             "sources": [{"id": "s1", "machine": "alder"}, {"id": "s2", "machine": "birch"}],
