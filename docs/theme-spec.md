@@ -955,7 +955,7 @@ These are for the implementation lane, run against the fixture scenarios in ever
    - With 7 or more off-course lanes, the overflow row's counts add up.
 8. **Phone.** At 390 x 844 the call band's top is ≤ 320 CSS px, with no horizontal scroll.
 9. **Network.** No request leaves the host. The CSP is unchanged.
-10. **Muster.** Count derivation uses project, then item kind, then group, then Other; HANDS equals the full scene crew before deck fitting; ALOFT excludes structured quiet activity; a stale hand makes both TV and phone readouts say LAST KNOWN. The TV anchor is inside `zones.tv.open.scene.window`, and the phone anchor is the sticky page header.
+10. **Muster.** Count derivation uses project, then group, then item kind, then Other; HANDS equals the full scene crew before deck fitting; ALOFT excludes structured quiet activity; a stale hand makes both TV and phone readouts say LAST KNOWN. The TV anchor is inside `zones.tv.open.scene.window`, and the phone anchor is the sticky page header.
 11. `scripts/self-audit` finds nothing new under `web/`.
 
 ---
@@ -1105,9 +1105,9 @@ The open sea carries one quiet muster plate. It counts the same `crew[]` handed 
 remain hands because the scene still carries them; ALOFT distinguishes the ones actively at work.
 
 A watch comes only from structured lane fields, never a title or prose. Take the first non-empty value in this order:
-`items[].project`, `items[].kind`, `items[].group`; fold case, hyphens, underscores and repeated spaces for the grouping key; with none,
+`items[].project`, `items[].group`, `items[].kind`; fold case, hyphens, underscores and repeated spaces for the grouping key; with none,
 use **Other**. Thus values such as `pipeline_residual` and `pipeline-residual` are one Pipeline residual watch, while Field Guide,
-Clean and Other remain separate watches. This is the first mapping, not a claim that the source has explicitly declared a team.
+Clean and Other remain separate watches. Feed kind is a type word and only names a watch when project and group are absent. This is the first mapping, not a claim that the source has explicitly declared a team.
 
 If any counted sailor is stale, the plate and phone strip append **LAST KNOWN**. The stale sailor keeps the last reported watch and
 active state under the existing silent/fog rules; the board never changes that hand to fresh or zero. The ship-deck sailor carries a

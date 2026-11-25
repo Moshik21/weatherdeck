@@ -45,7 +45,7 @@ function pageBoardOn(r, o) {
 }
 
 /* The ship's muster (ship-deck theme, docs/theme-spec.md sections 8 and 17). A watch is the first non-empty lane field in
-   project, item kind, group order. Its key folds case, hyphens, underscores and repeated spaces, so the same named work stays
+   project, group, item kind order. Its key folds case, hyphens, underscores and repeated spaces, so the same named work stays
    one watch whichever source field carried it; a lane with none joins Other rather than gaining a team from its title.
    Hands count every lane the scene receives, including sailors the ship has no room to draw. Aloft is active work (moving,
    regressed, running long or scouting) unless the lane explicitly says its activity is quiet. A stale hand keeps its last-known
@@ -53,7 +53,7 @@ function pageBoardOn(r, o) {
 const ALOFT_KINDS = ["moving", "regressed", "long", "scout"];
 const watchFold = x => String(x || "").trim().toLowerCase().replace(/[-_]+/g, " ").replace(/\s+/g, " ");
 function watchOf(lane) {
-  const fields = [["project", lane && lane.project], ["kind", lane && lane.itemKind], ["group", lane && lane.group]];
+  const fields = [["project", lane && lane.project], ["group", lane && lane.group], ["kind", lane && lane.itemKind]];
   const hit = fields.find(([, v]) => typeof v === "string" && v.trim());
   const label = hit ? hit[1].trim() : "Other";
   return { key: watchFold(label) || "other", label, basis: hit ? hit[0] : "other" };

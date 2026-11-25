@@ -305,7 +305,7 @@ function paintScene(B, g, dr) {
 /* The sea's revision: its cached layers stay valid while the decks are shown, and a move back out finds them warm. */
 function seaRev(sc, animatedSet) {
   const key = JSON.stringify([sc.w, sc.h, sc.tod, sc.mode, sc.screen, sc.open, sc.storm, sc.lost, sc.machines.map(m => [m.id, m.label, m.pip, m.key, m.critical, m.becalmed, m.asleep]), sc.fleet,
-    sc.crew.map(c => [c.id, c.machine, c.state, c.tag, c.stale, c.stage, c.light]), sc.horizon, sc.calls.count, sc.drift, Math.floor(sc.minutes / 10), [...animatedSet].join(),
+    sc.crew.map(c => [c.id, c.machine, c.state, c.watch, c.stale, c.stage, c.light]), sc.horizon, sc.calls.count, sc.drift, Math.floor(sc.minutes / 10), [...animatedSet].join(),
     sc.world.host, sc.world.gulls, sc.world.events.filter(e => e.kind === "gulls").map(e => e.machine)]);
   if (key === sceneKey) return false;
   sceneKey = key; sceneRev++;

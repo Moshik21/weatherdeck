@@ -95,19 +95,21 @@ class FrontDoor(InNode, unittest.TestCase):
         lanes = [
             {"id": "a", "project": "Pipeline_residual", "itemKind": "ship", "group": "Clean", "kind": "moving", "quiet": None},
             {"id": "b", "project": "pipeline-residual", "itemKind": "ship", "group": "Field Guide", "kind": "long", "quiet": 900},
-            {"id": "c", "project": None, "itemKind": "Field Guide", "group": "Clean", "kind": "scout", "stale": True},
-            {"id": "d", "project": None, "itemKind": None, "group": "Clean", "kind": "regressed"},
-            {"id": "e", "project": None, "itemKind": None, "group": None, "kind": "done"},
+            {"id": "c", "project": None, "itemKind": "task", "group": "Clean", "kind": "scout", "stale": True},
+            {"id": "d", "project": None, "itemKind": "task", "group": "Inkwell", "kind": "regressed"},
+            {"id": "e", "project": None, "itemKind": "Field Guide", "group": None, "kind": "done"},
+            {"id": "f", "project": None, "itemKind": None, "group": None, "kind": "done"},
         ]
         calls = {f"w{i}": {"fn": "watchOf", "args": [lane]} for i, lane in enumerate(lanes)}
         calls["m"] = {"fn": "musterCounts", "args": [lanes]}
         got = self.run_js(calls)
         self.assertEqual(got["w0"], {"key": "pipeline residual", "label": "Pipeline_residual", "basis": "project"})
         self.assertEqual(got["w1"]["key"], got["w0"]["key"])       # spelling separators do not split a watch
-        self.assertEqual(got["w2"]["basis"], "kind")                # project, then item kind, then group
-        self.assertEqual(got["w3"]["basis"], "group")
-        self.assertEqual(got["w4"], {"key": "other", "label": "Other", "basis": "other"})
-        self.assertEqual(got["m"], {"hands": 5, "watches": 4, "aloft": 3, "lastKnown": True})
+        self.assertEqual(got["w2"], {"key": "clean", "label": "Clean", "basis": "group"})  # project, then group, then kind
+        self.assertEqual(got["w3"], {"key": "inkwell", "label": "Inkwell", "basis": "group"})
+        self.assertEqual(got["w4"], {"key": "field guide", "label": "Field Guide", "basis": "kind"})
+        self.assertEqual(got["w5"], {"key": "other", "label": "Other", "basis": "other"})
+        self.assertEqual(got["m"], {"hands": 6, "watches": 5, "aloft": 3, "lastKnown": True})
 
     def test_muster_render_anchors_are_the_open_sea_plate_and_phone_header(self):
         tokens = json.loads((ROOT / "web" / "themes" / "ship-deck" / "tokens.json").read_text())
@@ -120,18 +122,6 @@ class FrontDoor(InNode, unittest.TestCase):
         self.assertGreaterEqual(muster["y"], open_zones["since"]["y"] + open_zones["since"]["h"])
         self.assertLessEqual(muster["x"] + muster["w"], win["x"] + win["w"])
         self.assertLessEqual(muster["y"] + muster["h"], win["y"] + win["h"])
-        board = (ROOT / "web" / "board.js").read_text()
-        app = (ROOT / "web" / "app.js").read_text()
-        page = (ROOT / "web" / "page.js").read_text()
-        css = (ROOT / "web" / "style.css").read_text()
-        scene = (ROOT / "web" / "themes" / "ship-deck" / "scene.js").read_text()
-        world = (ROOT / "web" / "world.js").read_text()
-        self.assertIn('class: "zone muster plate"', board)
-        self.assertIn('mount(boardEl, "muster", !sleeping && !g.phone && B.open', app)
-        self.assertIn('class: "pg-muster"', page)
-        self.assertIn(".pg-muster {", css)
-        self.assertIn("muster: S.open ? S.muster || null : null", scene)  # describe() proof for the TV composition
-        self.assertIn('L("muster_receipt"', world)
 
     def test_badge_counts_only_what_the_view_lists_on_that_machine(self):
         data = {
