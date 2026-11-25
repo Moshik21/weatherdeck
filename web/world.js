@@ -373,6 +373,7 @@ function receiptWords(d) {
     parts.push(L(d.convoy.n === 1 ? "receipt_convoy_one" : "receipt_convoy", { n: d.convoy.n, words }));
   }
   if (d.horizon) parts.push(horizonWords(d.horizon));
+  if (d.muster) parts.push(L("muster_receipt", { line: musterParts(d.muster).join(" · ") }));
   if (d.lighthouse) parts.push(L("receipt_lighthouse_" + d.lighthouse));
   for (const e of d.events || []) parts.push(L("receipt_event_" + e));
   if (d.replay) parts.push(L("receipt_replay"));

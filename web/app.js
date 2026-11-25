@@ -183,7 +183,8 @@ function sceneData(B, g, dr) {
     fleet: B.fleet ? { ships: B.fleet.ships.map(x => ({ id: x.id, role: x.role, slot: x.slot, berth: x.berth })),
       convoy: B.fleet.convoy ? { n: B.fleet.convoy.n, worst: B.fleet.convoy.worst, stale: B.fleet.convoy.stale } : null, slots: road } : null,
     world: worldScene(B),
-    crew: (B.lanes || []).map(l => ({ id: l.id, machine: l.machine, state: l.kind, tag: l.group, stale: l.stale, changed_s: l.changed != null ? now - l.changed : null, stage: l.stage, light: l.light })),
+    crew: (B.lanes || []).map(l => ({ id: l.id, machine: l.machine, state: l.kind, watch: (l.watch || {}).key || "other", stale: l.stale, changed_s: l.changed != null ? now - l.changed : null, stage: l.stage, light: l.light })),
+    muster: B.muster || null,
     calls: { count: (B.askCards || []).length, new: S.anim.call },
     counts: { landed: (B.doneToday || []).length },
     weather, hail: B.hostdown ? { seconds: Math.max(0, Math.ceil((S.retryAt - performance.now()) / 1000)), trying: S.trying } : null,
@@ -414,6 +415,7 @@ function render() {
     mount(boardEl, "page", null);
     mount(boardEl, "bar", sleeping ? null : wrap(safe("bar", () => renderBar(B, g))));
     mount(boardEl, "call", sleeping ? null : wrap(safe("call", () => renderCall(B, g))));
+    mount(boardEl, "muster", !sleeping && !g.phone && B.open ? wrap(safe("muster", () => renderMuster(B))) : null);
     const side = !g.phone && !sleeping && !B.loading && !B.empty && !scenePlates() && !B.hostdown;
     mount(boardEl, "side", side ? wrap(safe("machines", () => renderMachinesPanel(B))) : null);
     const marks = !g.phone && !sleeping && !B.loading && !B.empty && scenePlates() && S.theme.scene;

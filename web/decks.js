@@ -673,7 +673,7 @@ function renderHint(g, r) {
   if (g.phone) return null;
   return h("div", { class: "zone dhint plate", style: zoneStyle(DZ().hint), "aria-hidden": "true" }, lbl(TOUR.on ? L("tour_on") : L(r.level === "item" ? "keys_item" : "keys_deck"), "ink2", "nowrap ellipsis"));
 }
-const SEA_ZONES = ["bar", "call", "side", "marks", "log", "hail", "anchor", "more", "since", "firsthint", "keybtn", "boarddoor", "legend", "seahits", "fleetstrip"];
+const SEA_ZONES = ["bar", "call", "muster", "side", "marks", "log", "hail", "anchor", "more", "since", "firsthint", "keybtn", "boarddoor", "legend", "seahits", "fleetstrip"];
 const DECK_ZONES = ["deckbar", "deck", "item", "plan", "dhint"];
 /* Called by render() when the route is below the sea. */
 function renderDecks(B, g) {

@@ -92,6 +92,8 @@ function rangeBar(r, slot, stale) {
 }
 const RANGE_SLOT = { failed: "trouble", done: "done", approval: "done", call: "moving", pr_open: "done" };
 const lampPip = tr => G(tr.lamp === "stale" ? "silent" : "lamp", tr.lamp === "live" ? "ink" : tr.lamp === "late" ? "ink2" : "fog", { cls: "lamp" });
+const musterParts = m => m ? [[m.hands, L("muster_hands")], [m.watches, L("muster_watches")], [m.aloft, L("muster_aloft")]].map(([n, w]) => n + " " + w)
+  .concat(m.lastKnown ? [L("last_known")] : []) : [];
 
 /* Where to act, led by the source's recommendation when it sent one (one line, so the band keeps its shape). */
 /* An FYI card in one line: what it is, its title (and its note when the page added one, a supervision alarm's "not reported"), and
@@ -286,6 +288,17 @@ function renderOpenBanner(B, el) {
   el.setAttribute("aria-label", head + ". " + line + " " + (el.getAttribute("aria-label") || ""));
   el.append(lbl(head, "ink", "nowrap head"), t("body", "ink2", line, "ellipsis line"));
   return el;
+}
+
+/* The open sea's muster plate. The three numerals count the whole crew model, not only the sailors that fit on deck; a stale
+   sailor keeps their last-known state and marks the aggregate LAST KNOWN. The phone draws the same facts in its sticky header. */
+function renderMuster(B) {
+  const m = B.muster, z = ZO(B, "muster");
+  if (!m || !m.hands || !z) return null;   // no zero plaque on an empty deck
+  const stat = (n, word) => h("span", { class: "mstat" }, t("numeral", "ink", String(n)), lbl(word, "ink2", "nowrap"));
+  return h("section", { class: "zone muster plate", style: zoneStyle(z), "aria-label": musterParts(m).join(" · ") },
+    h("div", { class: "mstats" }, stat(m.hands, L("muster_hands")), stat(m.watches, L("muster_watches")), stat(m.aloft, L("muster_aloft"))),
+    m.lastKnown ? lbl(L("last_known"), "fog", "mlast nowrap") : null);
 }
 
 /* ---------- machines: a panel (no scene) or plates placed on the scene (9.4) ---------- */

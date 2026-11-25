@@ -138,6 +138,11 @@ canvas.sprite { width: calc(var(--gp) * var(--sw)); height: calc(var(--gp) * var
 :root[data-layout="tv"] .call.calm.open { height: calc(var(--ap) * var(--h)); padding: 0 var(--sp-10); display: flex; align-items: center; gap: var(--sp-8); }
 .call.calm.open .head { flex: none; }
 .call.calm.open .line { flex: 1 1 auto; min-width: 0; }
+/* Ship's muster: quiet numerals on a small tarred plate in the open sea. */
+.muster { height: calc(var(--ap) * var(--h)); padding: var(--sp-3) var(--sp-6); display: grid; align-content: center; gap: var(--sp-1); }
+.muster .mstats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: var(--sp-6); }
+.muster .mstat { min-width: 0; display: grid; justify-items: center; align-content: center; }
+.muster .mlast { justify-self: end; }
 .call.calm .landed { display: grid; gap: var(--sp-4); margin-top: var(--sp-4); }
 .call.calm .lrow { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: var(--sp-gap-col); align-items: baseline; }
 /* Arrival: the theme's sprite lands, the plate unrolls in four steps, the band blinks three times at 2 Hz and
@@ -493,6 +498,8 @@ button.key-replay:not([disabled]):focus-visible, button.key-replay:not([disabled
   background: var(--c-call-band); color: var(--c-call-band-ink); }
 .pg-keybtn[aria-expanded="true"] { background: var(--c-ink); }
 .pg-keybtn:focus-visible, .pg-keybtn:hover { outline: 3px solid var(--c-ink); outline-offset: 2px; }
+/* On a phone the sea is this page, so its muster rides as a compact second line in the sticky header. */
+.pg-muster { grid-column: 1 / -1; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.25em 0.8em; color: var(--c-ink2); padding-top: 0.2em; border-top: 1px solid var(--c-rule); }
 .pg-keypanel { position: fixed; right: var(--gut); top: 3.6em; z-index: 30; width: min(36em, calc(100vw - 2 * var(--gut))); max-height: calc(100vh - 5em); overflow: auto;
   font-size: 0.92em; padding: 0.6em 0.8em; background: var(--c-panel); color: var(--c-ink); border: 2px solid var(--c-panel-hi); overscroll-behavior: contain; }
 .pg-keyhead { display: flex; justify-content: space-between; gap: 0.6em; align-items: baseline; }

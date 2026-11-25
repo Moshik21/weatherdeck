@@ -64,7 +64,7 @@
     if (P.prop === "rope") line(g, 14, 0, 14, 23, "r");
     if (P.sit) { rect(g, 5, 19, 6, 20, "p"); rect(g, 9, 19, 10, 20, "p"); rect(g, 4, 21, 6, 21, "b"); rect(g, 9, 21, 11, 21, "b"); }
     else { rect(g, 5, 18, 6, 21, "p"); rect(g, 9, 18, 10, 21, "p"); put(g, 6, 21, "P"); put(g, 10, 21, "P"); rect(g, 4, 22, 6, 22, "b"); rect(g, 9, 22, 11, 22, "b"); }
-    rect(g, 5, 12 + dy, 10, 12 + dy, "c"); rect(g, 4, 13 + dy, 11, 16 + dy, "c"); rect(g, 5, 17 + dy, 10, 17 + dy, "p");
+    rect(g, 5, 12 + dy, 10, 12 + dy, "c"); rect(g, 4, 13 + dy, 11, 16 + dy, "c"); rect(g, 5, 17 + dy, 10, 17 + dy, "w");
     rect(g, 6, 5 + dy, 9, 5 + dy, "h"); rect(g, 5, 6 + dy, 10, 6 + dy, "h"); rect(g, 5, 7 + dy, 11, 7 + dy, "H");
     rect(g, 5, 8 + dy, 10, 10 + dy, "s"); rect(g, 6, 11 + dy, 9, 11 + dy, "s");
     put(g, 5, 10 + dy, "S"); put(g, 10, 10 + dy, "S"); put(g, 6, 9 + dy, "e"); put(g, 9, 9 + dy, "e");
@@ -95,9 +95,10 @@
   const CAPS = [["#3A4A6E", "#2A3652"], ["#4A4A56", "#36363F"], ["#56603E", "#40482E"], ["#6A4A5E", "#4E3646"], ["#2E5A5E", "#224446"]];
   const SHIRTS = [{ c: "#DCD6C8", stripe: "#3A4C70", a: "#B8B0A0" }, { c: "#8A7A64", stripe: null, a: "#6E604E" },
     { c: "#C8C0AC", stripe: "#6A4A5E", a: "#A49C8A" }, { c: "#6E7A64", stripe: null, a: "#58624E" }];
-  function crewLook(id, tag) {
-    const h = hash(id), sk = SKIN[h % SKIN.length], cp = CAPS[(h >>> 3) % CAPS.length], sh = SHIRTS[hash(tag || "") % SHIRTS.length];
-    return { s: sk[0], S: sk[1], h: cp[0], H: cp[1], c: sh.c, stripe: sh.stripe, a: sh.a, p: "#3A4256", P: "#2A3042", b: "#2A2224",
+  function crewLook(S, id, watch) {
+    const h = hash(id), sk = SKIN[h % SKIN.length], cp = CAPS[(h >>> 3) % CAPS.length], sh = SHIRTS[hash(watch || "") % SHIRTS.length];
+    const watches = S && S.palette && S.palette.scene && S.palette.scene.watch, mark = Array.isArray(watches) && watches.length ? watches[hash(watch || "other") % watches.length] : sh.a;
+    return { s: sk[0], S: sk[1], h: cp[0], H: cp[1], c: sh.c, stripe: sh.stripe, a: sh.a, w: mark, p: "#3A4256", P: "#2A3042", b: "#2A2224",
       e: "#1A1420", o: "#1A1420", t: "#7A5232", m: "#A8B0BA", M: "#6A727C", x: "#EADFC4", X: "#B8A47C", r: "#8A6A48", L: "#F2C45A" };
   }
   // ghost: no word from this lane, the shape without the person: a fog outline with a dithered body.
@@ -804,7 +805,7 @@
         grp.x1 = x;
         prev = st;
         const p = crewPose(cw, animated.has(cw.id), idle, sleeping);
-        placed.push(Object.assign({ c: cw, x, y: L.deck - 23, row: sleeping && sp < 16 ? i % 2 : 0, look: crewLook(cw.id, cw.tag),
+        placed.push(Object.assign({ c: cw, x, y: L.deck - 23, row: sleeping && sp < 16 ? i % 2 : 0, look: crewLook(S, cw.id, cw.watch),
           ghost: !sleeping && (cw.stale || S.lost || silentMachine.has(cw.machine)) ? ghost : null }, p));
         x += sp;
       });
@@ -820,7 +821,7 @@
     for (const sec of L.sections) {
       const mast = L.masts.find(m => m.machine === sec.m.id);
       if (!sec.scouts.length || !mast) continue;
-      sec.scouts.forEach((cw, i) => drawGrid(c, crewSprite("spy"), mast.x - 8 + i * 6, mast.nestY - 12, crewLook(cw.id, cw.tag), cw.stale || S.lost ? ghost : null));
+      sec.scouts.forEach((cw, i) => drawGrid(c, crewSprite("spy"), mast.x - 8 + i * 6, mast.nestY - 12, crewLook(S, cw.id, cw.watch), cw.stale || S.lost ? ghost : null));
       nestFront(c, S, mast);
     }
     // Lanterns at each masthead. A silent section's goes out (lamp_out); with no host, the main one.
@@ -1072,7 +1073,7 @@
     const g = blank(8, 12), sit = pose === "sit", dy = sit ? 2 : 0;
     rect(g, 2, dy, 5, dy, "h"); rect(g, 2, 1 + dy, 6, 1 + dy, "H");
     rect(g, 2, 2 + dy, 5, 3 + dy, "s"); put(g, 4, 2 + dy, "e"); put(g, 5, 3 + dy, "S");
-    rect(g, 1, 4 + dy, 6, 7 + dy, "c");
+    rect(g, 1, 4 + dy, 6, 6 + dy, "c"); rect(g, 1, 7 + dy, 6, 7 + dy, "w");
     if (sit) { rect(g, 2, 10, 6, 10, "p"); rect(g, 6, 11, 7, 11, "b"); }
     else { rect(g, 2, 8, 3, 10, "p"); rect(g, 4, 8, 5, 10, "p"); rect(g, 1, 11, 3, 11, "b"); rect(g, 4, 11, 6, 11, "b"); }
     const armL = () => { rect(g, 0, 5 + dy, 0, 7 + dy, "a"); put(g, 0, 8 + dy, "s"); };
@@ -1164,7 +1165,7 @@
       prev = st;
       const p = miniPose(cw), gh = ghost || (cw.stale ? g.ghost : null) || (p.ghost ? g.ghost : null);
       if (p.barrel) { c.fillStyle = lit("#2A1A10"); c.fillRect(x + 4, d - 4, 4, 4); c.fillStyle = lit("#6A4A2C"); c.fillRect(x + 5, d - 3, 2, 2); }
-      drawGrid(c, miniSprite(p.pose), x - 1, d - 12, crewLook(cw.id, cw.tag), gh, p.flip);
+      drawGrid(c, miniSprite(p.pose), x - 1, d - 12, crewLook(S, cw.id, cw.watch), gh, p.flip);
       if (p.flags) { c.fillStyle = gh || lit(W.mast_dark); c.fillRect(x + 8, d - 17, 1, 6); c.fillStyle = gh || lit(scenePath(S, "flag.light") || "#E6DCC4"); c.fillRect(x + 9, d - 17, 2, 2); }
       if (p.smoke) { c.fillStyle = gh || lit("#7E7E88"); c.fillRect(x + 2, d - 16, 2, 2); c.fillRect(x + 3, d - 19, 3, 2); }
       x += ESC.sp;
@@ -1435,7 +1436,8 @@
     const events = (W0.events || []).map(e => (e.kind === "landing" ? (e.dolphins ? "dolphins" : "longboat") : e.kind === "gulls" ? (e.to ? "gulls_back" : "gulls_off") : e.kind));
     // the islands ahead, as the board draws them (section 23.1): the same entries in the same order, the true total apart
     const hor = S.screen === "board" && S.horizon ? { total: S.horizon.total, shown: S.horizon.islands.map(I => ({ kind: I.kind, step: I.step, dated: I.dated, state: I.state })), more: S.horizon.more } : null;
-    return { ships, horizon: hor, convoy: L.convoy ? { n: L.convoy.n } : null, lighthouse: S.world ? (W0.host ? "lit" : "dark") : null, events, replay: (W0.events || []).some(e => e.replay) };
+    return { ships, horizon: hor, convoy: L.convoy ? { n: L.convoy.n } : null, muster: S.open ? S.muster || null : null,
+      lighthouse: S.world ? (W0.host ? "lit" : "dark") : null, events, replay: (W0.events || []).some(e => e.replay) };
   }
 
   // ---- below decks (screen "deck", docs/theme-spec.md section 16): the ship's plan and its six places -------------------

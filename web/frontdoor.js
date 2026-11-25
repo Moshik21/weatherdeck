@@ -44,6 +44,31 @@ function pageBoardOn(r, o) {
   return !!r && r.level === "sea" && (!!r.board || !!o.phone) && !o.tv && o.screen === "board" && !o.loading;
 }
 
+/* The ship's muster (ship-deck theme, docs/theme-spec.md sections 8 and 17). A watch is the first non-empty lane field in
+   project, item kind, group order. Its key folds case, hyphens, underscores and repeated spaces, so the same named work stays
+   one watch whichever source field carried it; a lane with none joins Other rather than gaining a team from its title.
+   Hands count every lane the scene receives, including sailors the ship has no room to draw. Aloft is active work (moving,
+   regressed, running long or scouting) unless the lane explicitly says its activity is quiet. A stale hand keeps its last-known
+   state and makes the readout say LAST KNOWN; it is never silently changed to zero. */
+const ALOFT_KINDS = ["moving", "regressed", "long", "scout"];
+const watchFold = x => String(x || "").trim().toLowerCase().replace(/[-_]+/g, " ").replace(/\s+/g, " ");
+function watchOf(lane) {
+  const fields = [["project", lane && lane.project], ["kind", lane && lane.itemKind], ["group", lane && lane.group]];
+  const hit = fields.find(([, v]) => typeof v === "string" && v.trim());
+  const label = hit ? hit[1].trim() : "Other";
+  return { key: watchFold(label) || "other", label, basis: hit ? hit[0] : "other" };
+}
+function musterCounts(lanes) {
+  const rows = (lanes || []).filter(Boolean), watches = new Set();
+  for (const lane of rows) watches.add((lane.watch || watchOf(lane)).key);
+  return {
+    hands: rows.length,
+    watches: watches.size,
+    aloft: rows.filter(l => ALOFT_KINDS.includes(l.kind) && l.quiet == null).length,
+    lastKnown: rows.some(l => l.stale === true),
+  };
+}
+
 /* One rule for what waits on the viewer, so the call band, the Lists header, the Bridge door and the ship plates show one
    number (the host's `counts.waiting_on_you` is the same rule). An attention card's tier comes from its severity: a critical card
    is a Problem and an info card an FYI, each shown on its own line and never counted; any other card is a call. A lane that says
@@ -410,4 +435,4 @@ function steerNote(sl, ref, who, words) {
   return { row, detail: parts.join(" ") };
 }
 
-if (typeof module !== "undefined") module.exports = { DECKS, parseRoute, routePath, parentRoute, pageBoardOn, ASK_TIERS, ASIDE_TIERS, cardTier, askRows, waitingOnYou, laneAskCard, asksAge, asksDisagree, askLabels: () => ASK_LABELS, badgeCounts, trustCounts, sourceSaying, beatSaying, sourceSayingLabels: () => SOURCE_SAYING_LABELS, dur, supervisionLabels: () => SUPERVISION_LABELS, supervisionAlarm, ROW_KEYS, ROW_HOUSEKEEPING, OLD_RECORDS, isOldRecord, rowSortOrder, sortRows, laneKeyOf, rowState, fitTitle, steerLabels: () => STEER_LABELS, steerNote };
+if (typeof module !== "undefined") module.exports = { DECKS, parseRoute, routePath, parentRoute, pageBoardOn, watchOf, musterCounts, ASK_TIERS, ASIDE_TIERS, cardTier, askRows, waitingOnYou, laneAskCard, asksAge, asksDisagree, askLabels: () => ASK_LABELS, badgeCounts, trustCounts, sourceSaying, beatSaying, sourceSayingLabels: () => SOURCE_SAYING_LABELS, dur, supervisionLabels: () => SUPERVISION_LABELS, supervisionAlarm, ROW_KEYS, ROW_HOUSEKEEPING, OLD_RECORDS, isOldRecord, rowSortOrder, sortRows, laneKeyOf, rowState, fitTitle, steerLabels: () => STEER_LABELS, steerNote };

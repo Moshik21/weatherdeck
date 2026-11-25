@@ -6,6 +6,10 @@ version follows [semantic versioning](https://semver.org/). The feed schema has 
 
 ## [Unreleased]
 
+### Added
+
+The ship-deck open sea now carries a quiet ship's muster: total HANDS, derived WATCHES and actively working ALOFT. Hands include sailors below decks; watches use the first reported project, item kind or group (else Other); stale sailors keep their last-known count and mark the muster LAST KNOWN. Sailors in one watch share a small belt colour, and the phone's sea header carries the same compact counts.
+
 ### Fixed
 
 A queued row relayed as `owner/id` and reported by its owner as `id` now counts once.

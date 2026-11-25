@@ -515,12 +515,15 @@ function renderHeader(B) {
   const line2 = tr.problems.length || tr.oldNotes.length || tr.slowNotes.length ? tr.line2
     : [B.sample ? L("sample") : null, B.redacted ? L(profileWord()) : null, L("trust_ok", { t: age(tr.newest), host: S.server.host || "" })].filter(Boolean).join(" · ");
   const sea = !!(S.geom && !S.geom.phone);   // back out to the open sea (a phone's page board is its sea, so it has no such door)
+  const m = S.geom && S.geom.phone && B.muster && B.muster.hands ? B.muster : null;
   return h("header", { class: "pg-bar plate" + (crit ? " alarm" : "") + (sea ? " withsea" : ""), role: crit ? "alert" : "status" },
     sea ? h("a", Object.assign({ class: "pg-seadoor" }, doorAttrs({ level: "sea" }, L("back_to_sea"))), tri("left"), h("span", { class: "pg-label" }, L("place_sea"))) : null,
     h("div", { class: "pg-clock", "aria-label": hm(B.now) }, hm(B.now)),
     h(flagshipId() ? "a" : "div", Object.assign({ class: "pg-trust min0" }, flagshipId() ? doorAttrs(deckRoute("logbook", null, flagshipId()), L("open_place", { place: deckWord("logbook") })) : {}),
       h("span", { class: "pg-lamp l-" + tr.lamp, "aria-hidden": "true" }), h("span", { class: "pg-label" }, feeds), " · ", h("span", { class: "line2" }, line2)),
-    h("button", { type: "button", class: "pg-keybtn", "data-key": "toggle", "aria-expanded": String(!!S.legendOpen), "aria-controls": "pg-key" }, L("key_button")));
+    h("button", { type: "button", class: "pg-keybtn", "data-key": "toggle", "aria-expanded": String(!!S.legendOpen), "aria-controls": "pg-key" }, L("key_button")),
+    m ? h("div", { class: "pg-muster", "aria-label": musterParts(m).join(" · ") },
+      h("span", { class: "pg-label" }, musterParts(m).slice(0, 3).join(" · ")), m.lastKnown ? h("span", { class: "pg-label c-fog" }, L("last_known")) : null) : null);
 }
 function renderSinceStrip(B) {
   const d = B.since;
