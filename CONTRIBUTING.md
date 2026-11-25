@@ -202,7 +202,9 @@ own repository, not here.
   ship plate's badge counts (a card's own machine, else its source's, nothing guessed) and the trust line's source counts
   (`trustCounts`: a placeholder is left out of the total, a quiet source on a resting machine is counted apart, a source that
   reports counts), how a supervision alarm is worded (`supervisionAlarm`: whose it is and how old, critical only on
-  evidence, "not reported" when the feed does not say), and the plain rows (`rowState`: one of six row words for each synthetic lane shape, run through the host's own
+  evidence, "not reported" when the feed does not say), the ship's muster (`watchOf` and `musterCounts`: project then group then
+  item kind else Other, every hand including last-known, aloft excluding quiet activity; the open-sea muster zone inside
+  `zones.tv.open.scene.window` from `tokens.json`), and the plain rows (`rowState`: one of six row words for each synthetic lane shape, run through the host's own
   `lanes.classify`, every sentence free of raw status words and task ids, an old failed record never Stuck, a run that died while
   waiting is Waiting on someone else; `fitTitle`: whole words, no open bracket, never one word, the chip gives way first),
   an instruction left unread (`steerNote`, through the page scripts: an idle lane's amber line, the undelivered and escalated cases, and

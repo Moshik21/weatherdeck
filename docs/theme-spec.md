@@ -313,7 +313,8 @@ Each `tokens.json` records every pair with its ratio, floor and use under `check
 
 `color.scene` holds sky and sea ramps for each time of day (`dawn`, `day`, `dusk`, `night`, `storm`,
 `anchor`), clouds, wood, sails (with a `furled` tone), the crow, the lantern, the iron bell, the two
-flags, fog, rain and stars. Art rules:
+flags, fog, rain and stars, plus `livery` (hull stripe / masthead pennant per machine) and `watch`
+(six belt-mark tones shared by sailors in one derived watch, section 17.2.1). Art rules:
 
 - Every scene colour is multiplied by the time-of-day light (`color.scene.light`) and snapped to
   5-bit channels, so the art reads like a 15-bit console palette. Plates and status hues are never
@@ -400,7 +401,7 @@ the amber "!" in the call plate, and the triangle stays neutral (rule 1).
 | `bar` | 20, 8, 600, 27 | landed score and latest landing, the voyage chart, "n AHEAD", the clock, trust lamp and words | during a critical it becomes the alarm |
 | `call` | 20, 41, 356, h ≤ 164 | band (count, "WAIT ON YOU", crow), the top call in full, up to 3 more, an "also" line when 3 or fewer wait | more than 4 calls: the 4th row reads "+N more waiting, on the phone". The count is always the total |
 | `scene` | full bleed. Window 384, 41, 236, 164. Horizon 146, deck 180, water 205 | sky, ship, crew, weather | mood only: nothing is said only by the scene |
-| `open` | 0.4.1, section 21.6: the open sea's zone set. `call` 20, 41, 572, 17 (one banner line); `scene.window` 20, 41, 600, 164 (the whole upper area); `since` 20, 62, 208, 32; `muster` 20, 98, 204, 46 | nothing waits on the viewer: the all-clear in one line, the ship's muster and the sea | the line is cut to fit; the muster counts every sailor including those below decks; a screen reader hears both in full, and the banner is the Bridge's door |
+| `open` | 0.4.1, section 21.6: the open sea's zone set. `call` 20, 41, 524, 17 (one banner line); `scene.window` 20, 41, 600, 164 (the whole upper area); `since` 20, 62, 208, 32; `muster` 20, 98, 204, 46 | nothing waits on the viewer: the all-clear in one line, the ship's muster and the sea | the line is cut to fit; the muster counts every sailor including those below decks; a screen reader hears both in full, and the banner is the Bridge's door |
 | `legend` | 20, 41, 600, 164 (0.4.1: the whole upper area) | the key (section 20.5): shapes, the sea, each creature's last sighting, the replay | |
 | `machines` | hull plates (0.4.0, section 21): the flagship's under its hull (y 185, h 15); each escort's under it (near row) or over its masthead (far row) | pip, name, word per ship; the convoy's count plate | past six ships the rest are one convoy plate ("+3 SHIPS · 1 SILENT"); the count is always the total |
 | `log` | 20, 213, 600, 139, 6 rows | every off-course lane | see 9.5 |
@@ -1173,9 +1174,9 @@ once more: the same creature with the same chests, dolphins, ship or flight. Hon
 `describe(scene)` returns what `paint` draws: per drawn ship its label, the sailors per station (or asleep), scouts,
 sails (`set`, `slack`, `furled`, `none`), whether gulls are perched, the weather, its windows (lit, dark and shuttered
 counted over every lane, and how many were drawn); the islands ahead (kind, due step and state of each drawn one, and
-the true count); the lighthouse (`lit`, `dark`); and the
-events playing. The core words it ("Atlas: 1 at the inspection plank, 1 at the signal staff, 2 at the rail, gulls on the yard.
-Borealis: sails slack (becalmed), ... The lighthouse is lit.") into a polite live region (`#receipt`, so the canvas,
+the true count); on the open sea the muster (`hands`, `watches`, `aloft`, `lastKnown`, section 17.2.1); the lighthouse
+(`lit`, `dark`); and the events playing. The core words it ("Atlas: 1 at the inspection plank, 1 at the signal staff, 2 at the rail, gulls on the yard.
+Borealis: sails slack (becalmed), ... Ship's muster: 14 hands · 3 watches · 2 aloft. The lighthouse is lit.") into a polite live region (`#receipt`, so the canvas,
 which is `aria-hidden`, has a text equivalent) and at the top of the Logbook.
 
 ### 17.6 Sound (opt-in)
@@ -1497,11 +1498,13 @@ On a TV, with nothing waiting on the viewer, the sea is the board's picture rath
   anchor, hailing, lost contact, empty or loading), no call and no unverified waiting number (model.js `B.open`). A call
   arriving brings the panel and the narrow window back at once (its crow flies in as ever); when the last call goes,
   the sea opens again.
-- **The call plate is one banner line** (zone `open.call`): "NOTHING WAITS ON YOU" (or "NOTHING WAITED AT THE LAST
+- **The call plate is one banner line** (zone `open.call`, 20, 41, 524, 17): "NOTHING WAITS ON YOU" (or "NOTHING WAITED AT THE LAST
   REPORT" while a source that has reported is not reporting), then the calm line ("22 under way, 0 off course, 15 waiting, 13 landed in
   24 h."), the answer's age and the "also" notes, cut to fit. A screen reader hears it all; it is still the Bridge's door.
 - **The scene window is the whole upper area** (zone `open.scene.window`, 20, 41, 600, 164); the masts start below the
-  banner line (the flagship's top at y 70). The since plate moves under the banner, at the left (zone `open.since`).
+  banner line (the flagship's top at y 70). The since plate moves under the banner, at the left (zone `open.since`). Under
+  it the quiet muster plate (zone `open.muster`, 20, 98, 204, 46) carries HANDS, WATCHES and ALOFT (section 17.2.1); a
+  screen reader hears those counts with the banner.
 - **One ship** has its own stretch in the middle of the sea (10% to 80% of the window).
 - **Two or three ships: escorts at full scale.** Each escort is drawn with the flagship's own art (16 x 24 sailors at
   their stations, station furniture, scouts in its nest), a little further off: deck 152, water 176, masts from y 72
